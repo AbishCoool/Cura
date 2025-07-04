@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'assets/css/signup.css' %}">
+  <script defer src="{% static 'assets/js/scripts.js' %}"></script>
+</head>
+<body>
+  <div class="signup-page">
+    <h2>Welcome, Doctor</h2>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <form class="signup-form" method="POST">
+      {% csrf_token %}
+
+      <!-- Doctor ID -->
+      <input type="text" name="doctor_doctor_id" placeholder="Doctor ID (unique)" class="input-field" required value="{{ form.doctor_doctor_id.value|default_if_none:'' }}">
+      {% if form.doctor_doctor_id.errors %}
+        <div class="error">{{ form.doctor_doctor_id.errors.0 }}</div>
+      {% endif %}
+
+      <!-- Full Name -->
+      <input type="text" name="doctor_full_name" placeholder="Full Name" class="input-field" required value="{{ form.doctor_full_name.value|default_if_none:'' }}">
+      {% if form.doctor_full_name.errors %}
+        <div class="error">{{ form.doctor_full_name.errors.0 }}</div>
+      {% endif %}
+
+      <!-- Email -->
+      <input type="email" name="doctor_email" placeholder="Email" class="input-field" required value="{{ form.doctor_email.value|default_if_none:'' }}">
+      {% if form.doctor_email.errors %}
+        <div class="error">{{ form.doctor_email.errors.0 }}</div>
+      {% endif %}
+
+      <!-- Speciality -->
+      <input type="text" name="doctor_speciality" placeholder="Speciality" class="input-field" required value="{{ form.doctor_speciality.value|default_if_none:'' }}">
+      {% if form.doctor_speciality.errors %}
+        <div class="error">{{ form.doctor_speciality.errors.0 }}</div>
+      {% endif %}
+
+      <!-- Contact Number -->
+      <input type="text" name="doctor_phone" placeholder="Contact No." class="input-field" required value="{{ form.doctor_phone.value|default_if_none:'' }}">
+      {% if form.doctor_phone.errors %}
+        <div class="error">{{ form.doctor_phone.errors.0 }}</div>
+      {% endif %}
+
+      <!-- Password -->
+      <div class="password-container">
+        <input type="password" name="doctor_password" id="doctorPassword" placeholder="Password" class="input-field" required autocomplete="current-password">
+        <span class="toggle-password" onclick="togglePassword('doctorPassword')">
+          <img id="eyeIcon" src="{% static 'assets/images/eye.png' %}" alt="toggle-password" style="width: 20px; cursor: pointer;">
+        </span>
+      </div>
+      {% if form.doctor_password.errors %}
+        <div class="error">{{ form.doctor_password.errors.0 }}</div>
+      {% endif %}
+
+      <button type="submit" class="signup-button">Sign Up</button>
+    </form>
+
+    <p class="login-text">Already have an account? <a href="{% url 'doctor_login' %}">Login</a></p>
+  </div>
+
+  <script>
+    function togglePassword(fieldId) {
+      let passwordField = document.getElementById(fieldId);
+      let eyeIcon = document.getElementById("eyeIcon");
+
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        eyeIcon.src = "{% static 'assets/images/visible.png' %}";
+      } else {
+        passwordField.type = "password";
+        eyeIcon.src = "{% static 'assets/images/eye.png' %}";
+      }
+    }
+  </script>
+</body>
+</html>

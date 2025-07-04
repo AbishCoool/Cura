@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>My Patients</title>
+
+    <!-- 👇 Drop this in your static folder as shown below -->
+    <link rel="stylesheet" href="{% static 'assets/css/doctor_dashboard.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <!-- ─── Greeting ─────────────────────────────────────────── -->
+        <a href="{% url 'doctor_settings' %}" style="text-decoration: none; color: inherit;">
+            <div class="header" style="cursor: pointer;">
+                <h1>👋 Hi {{ doctor.doctor_full_name|default:user.username }}!</h1>
+
+                {% if doctor.photo %}
+                <img src="{{ doctor.photo.url }}" alt="Doctor Avatar">
+                {% else %}
+                <img src="{% static 'assets/images/profile.png' %}" alt="Doctor Avatar">
+                {% endif %}
+            </div>
+        </a>
+
+        <!-- ─── Patients list ────────────────────────────────────── -->
+        <h2 class="section-title">My Patients</h2>
+
+        <div class="family-section">
+            {% if patients %}
+            {% for pat in patients %}
+            <a href="{% url 'view_patient_reports' pat.id %}" class="family-card">
+                <h3>{{ pat.user.username|title }}</h3>
+                {% if pat.photo %}
+                <img src="{{ pat.photo.url }}" alt="{{ pat.user.username }}">
+                {% else %}
+                <img src="{% static 'assets/images/default-avatar.png' %}" alt="{{ pat.user.username }}">
+                {% endif %}
+            </a>
+
+            {% endfor %}
+            {% else %}
+            <p class="empty-text">No patients assigned yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+
+</body>
+
+</html>
