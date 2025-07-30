@@ -121,11 +121,25 @@
         font-size: 0.95rem;
       }
     }
+
+     .back-arrow {
+            font-size: 30px;
+            text-decoration: none;
+            color: #3a2370;
+            display: inline-block;
+            padding: 20px;
+            margin-bottom: -10px;
+            transition: transform 0.2s ease;
+        }
+
+        .back-arrow:hover {
+            transform: translateX(-4px);
+        }
   </style>
 </head>
 <body>
 
-  <a href="{% url 'doctor_dashboard' %}">← Back to Dashboard</a>
+   <span class="back-arrow" onclick="window.history.back()">&#8592;</span>
 
   <div class="card">
     <h2>Journal Entry ({{ entry.timestamp|date:"M d, Y – H:i" }})</h2>

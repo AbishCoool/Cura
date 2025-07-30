@@ -1,17 +1,15 @@
 # ─── views.py  (imports) ──────────────────────────────────────────────────────
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-
+from .models import UserProfile, FamilyMember, JournalEntry
 from django.core.mail import EmailMessage, send_mail
-
 from django.views.decorators.csrf import csrf_exempt
-from django.db import transaction  
-
-
+from django.db import transaction 
+from django.db.models import Q
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -20,13 +18,13 @@ import os, json
 from datetime import datetime
 import faiss
 import pickle
-
-
 from langchain_community.document_loaders import TextLoader
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from openai import OpenAI
 from dotenv import load_dotenv
+from django.urls import reverse
+
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -111,14 +109,13 @@ def doctor_dashboard(request):
         "patients": patients
     })
 
-
-# Temporary storage for user tokens (use a database in production)
-user_tokens = []
-
 @login_required
-def journal_view(request):
+def journal_view(request, member_id=None):
+    user = request.user
+    family_member = None  # ✅ Define early
+
     if request.method == 'POST':
-        user = request.user
+        # ✅ Extract values
         pain_level = request.POST.get('painLevel', 'No Pain 😃')
         energy_level = request.POST.get('energyLevel', 'Excellent – no fatigue 😃')
         shortness_of_breath = request.POST.get('breath', 'No, not at all')
@@ -128,8 +125,19 @@ def journal_view(request):
         swelling = request.POST.get('swelling', 'No swelling 🦶')
         emergency_symptoms = request.POST.get('emergency', 'No')
         extra_note = request.POST.get('extraNote', 'No additional notes provided.')
+
+        # ✅ Identify family member (if submitted)
+        family_member_id = request.POST.get('family_member_id')
+        if family_member_id:
+            try:
+                family_member = FamilyMember.objects.get(id=family_member_id, user=user)
+            except FamilyMember.DoesNotExist:
+                family_member = None
+
+        # ✅ Create Journal Entry
         JournalEntry.objects.create(
             user=user,
+            family_member=family_member,
             pain_level=pain_level,
             energy_level=energy_level,
             breath=shortness_of_breath,
@@ -141,125 +149,89 @@ def journal_view(request):
             extra_note=extra_note
         )
 
-
-        
-
-        # Define normalized mappings for a fixed range (0-10)
-        normalized_mapping = {
+        # ✅ Normalization Mapping
+        mapping = {
             'painLevel': {
-                "No Pain 😃": 0,
-                "Very Mild Pain 🙂": 1,
-                "Mild Pain 🙂": 2,
-                "Discomfort 😐": 3,
-                "Moderate Pain 😣": 4,
-                "Uncomfortable 😖": 5,
-                "Severe Pain 😢": 6,
-                "Very Severe Pain 😭": 7,
-                "Intense Pain 💀": 8,
-                "Extreme Pain 💀💀": 9,
-                "Worst Possible Pain 💀💀💀": 10
+                "No Pain 😃": 0, "Very Mild Pain 🙂": 1, "Mild Pain 🙂": 2, "Discomfort 😐": 3,
+                "Moderate Pain 😣": 4, "Uncomfortable 😖": 5, "Severe Pain 😢": 6,
+                "Very Severe Pain 😭": 7, "Intense Pain 💀": 8, "Extreme Pain 💀💀": 9, "Worst Possible Pain 💀💀💀": 10
             },
             'energyLevel': {
-                "Excellent – no fatigue 😃": 0,
-                "Good – mild fatigue 🙂": 3,
-                "Fair – moderate fatigue 😐": 6,
-                "Poor – severe fatigue 😞": 10,
+                "Excellent – no fatigue 😃": 0, "Good – mild fatigue 🙂": 3,
+                "Fair – moderate fatigue 😐": 6, "Poor – severe fatigue 😞": 10,
             },
             'breath': {
-                "No, not at all": 0,
-                "Yes, during mild activity": 3,
-                "Yes, during strenuous activity": 6,
-                "Yes, even at rest": 10
+                "No, not at all": 0, "Yes, during mild activity": 3,
+                "Yes, during strenuous activity": 6, "Yes, even at rest": 10
             },
             'chestPain': {
-                "No Pain 😃": 0,
-                "Mild discomfort 🙂": 3,
-                "Moderate pain 😣": 6,
-                "Severe pain 😖": 10
+                "No Pain 😃": 0, "Mild discomfort 🙂": 3, "Moderate pain 😣": 6, "Severe pain 😖": 10
             },
             'physicalActivity': {
-                "More than usual": 0,
-                "As much as usual": 3,
-                "Less than usual": 6,
-                "None": 10
+                "More than usual": 0, "As much as usual": 3, "Less than usual": 6, "None": 10
             },
             'stressLevel': {
-                "No stress 😃": 0,
-                "Mild stress 🙂": 3,
-                "Moderate stress 😐": 6,
-                "High stress 😖": 10
+                "No stress 😃": 0, "Mild stress 🙂": 3, "Moderate stress 😐": 6, "High stress 😖": 10
             },
             'swelling': {
-                "No swelling 🦶": 0,
-                "Mild swelling 🦶": 3,
-                "Moderate swelling 🦶": 6,
-                "Severe swelling 🦶": 10
+                "No swelling 🦶": 0, "Mild swelling 🦶": 3, "Moderate swelling 🦶": 6, "Severe swelling 🦶": 10
             },
             'emergency': {
-                "No": 0,
-                "Mild, manageable at home": 3,
-                "Moderate, resolved with rest": 6,
-                "Severe, required attention": 10
+                "No": 0, "Mild, manageable at home": 3,
+                "Moderate, resolved with rest": 6, "Severe, required attention": 10
             }
         }
 
-        # Convert each response to its normalized numeric value
-        pain_value = normalized_mapping['painLevel'].get(pain_level, 0)
-        energy_value = normalized_mapping['energyLevel'].get(energy_level, 0)
-        breath_value = normalized_mapping['breath'].get(shortness_of_breath, 0)
-        chest_value = normalized_mapping['chestPain'].get(chest_pain, 0)
-        physical_value = normalized_mapping['physicalActivity'].get(physical_activity, 0)
-        stress_value = normalized_mapping['stressLevel'].get(stress_level, 0)
-        swelling_value = normalized_mapping['swelling'].get(swelling, 0)
-        emergency_value = normalized_mapping['emergency'].get(emergency_symptoms, 0)
+        # ✅ Extract numeric values
+        values = [
+            mapping['painLevel'].get(pain_level, 0),
+            mapping['energyLevel'].get(energy_level, 0),
+            mapping['breath'].get(shortness_of_breath, 0),
+            mapping['chestPain'].get(chest_pain, 0),
+            mapping['physicalActivity'].get(physical_activity, 0),
+            mapping['stressLevel'].get(stress_level, 0),
+            mapping['swelling'].get(swelling, 0),
+            mapping['emergency'].get(emergency_symptoms, 0)
+        ]
 
+        # ✅ Generate graph for doctor
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        if family_member and family_member.name:
+            name_slug = family_member.name.replace(" ", "_")
+        else:
+            name_slug = user.username.replace(" ", "_") if user.username else "unknown_user"
+
+        chart_path = os.path.join(BASE_DIR, f"health_tracker_{name_slug}.png")
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        plt.figure(figsize=(12, 7))
         categories = [
             "Pain Level", "Energy Levels", "Shortness of Breath",
             "Chest Pain", "Physical Activity", "Stress Levels",
             "Swelling in Feet/Ankles", "Emergency Symptoms"
         ]
-        values = [pain_value, energy_value, breath_value, chest_value,
-                  physical_value, stress_value, swelling_value, emergency_value]
-
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        chart_path = os.path.join(BASE_DIR, f"health_tracker_{user.username}.png")
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        # Plot the graph with a fixed x-axis range (0-10)
-        plt.figure(figsize=(12, 7))
         plt.barh(categories, values, color='#37B897', edgecolor='black')
         plt.xlabel("Level/Severity (0-10)")
-        plt.title(f"{user.username}'s Health Report - {timestamp}")
-        plt.xlim(0, 10)  # Ensures a fixed range on the x-axis
+        plt.title(f"{name_slug}'s Health Report - {timestamp}")
+        plt.xlim(0, 10)
         plt.grid(axis='x', linestyle='--', alpha=0.7)
+        plt.tight_layout()
         plt.savefig(chart_path)
         plt.close()
 
-        # Prepare the email with the graph attached
-        email_subject = f"📝 {user.username}'s Health Report - {timestamp}"
-        email_message = f"""
-        Hello {user.username},\n\nHere is your Daily Health Tracker submission:\n
-        Pain Level: {pain_level}
-        Energy Levels: {energy_level}
-        Shortness of Breath: {shortness_of_breath}
-        Chest Pain: {chest_pain}
-        Physical Activity: {physical_activity}
-        Stress Levels: {stress_level}
-        Swelling in Feet/Ankles: {swelling}
-        Emergency Symptoms: {emergency_symptoms}
-        Additional Notes: {extra_note}
-        
-        📝 Attached is your health report graph.
-        """
+        # ✅ Skip email, just redirect
+        if family_member:
+            return redirect(reverse('home', args=[family_member.id]))
+        return redirect('home')
 
-        email = EmailMessage(email_subject, email_message, 'ngp.cura@gmail.com', ['ngp.cura@gmail.com'])
-        email.attach_file(chart_path)
-        email.send()
-        os.remove(chart_path)
+    # ✅ GET method — get member (if any)
+    if member_id:
+        try:
+            family_member = FamilyMember.objects.get(id=member_id, user=user)
+        except FamilyMember.DoesNotExist:
+            family_member = None
 
-        return redirect('journal_confirmation')
-
-    return render(request, 'journal.html')
+    return render(request, 'journal.html', {'member': family_member})
 
 @login_required
 def add_profile(request):
@@ -440,26 +412,37 @@ def assign_patients_by_doctor_id(doctor):
 
 @login_required(login_url='login')
 def home(request, user_id=None):
-    # Load the logged-in user's profile (existing logic)
-    user_profile = Profile.objects.get(user=request.user)
+    user_profile = UserProfile.objects.get(user=request.user)
 
-    # Redirect first-time users to the tour page (existing logic)
-    if user_profile.is_new:
+    # ✅ Show tour ONLY when main user is visiting their own homepage
+    if not user_id and user_profile.is_new:
         user_profile.is_new = False
         user_profile.save()
         return redirect('tour')
 
-    # New feature: Load a selected family member's home page if user_id is provided
+    # Case 1: If viewing a family member's home
     if user_id:
-        selected_user_profile = FamilyMember.objects.filter(id=user_id, user=request.user).first()
-        if not selected_user_profile:
-            messages.error(request, "User profile not found.")
+        family_member = FamilyMember.objects.filter(id=user_id, user=request.user).first()
+        if not family_member:
+            messages.error(request, "Family member not found.")
             return redirect('famil')
-    else:
-        # Default to the logged-in user's profile
-        selected_user_profile = UserProfile.objects.filter(user=request.user).first()
+        
+        context = {
+            'is_family': True,
+            'user_profile': family_member,
+            'assigned_doctor': user_profile.assigned_doctor  # From main user
+        }
 
-    return render(request, 'home.html', {'user_profile': selected_user_profile})
+    else:
+        # Case 2: Normal user home
+        context = {
+            'is_family': False,
+            'user_profile': user_profile,
+            'assigned_doctor': user_profile.assigned_doctor
+        }
+
+    return render(request, 'home.html', context)
+
 
 # ✅ Protected Views
 @login_required(login_url='login')
@@ -594,20 +577,6 @@ def chatbot_query(request):
             return JsonResponse({"answer": "An internal error occurred while processing your question."})
 
 @login_required
-def view_patient_reports(request, patient_id):
-    doctor = Doctor.objects.filter(doctor_user=request.user).first()
-    patient_profile = UserProfile.objects.filter(id=patient_id, assigned_doctor=doctor).first()
-
-    if not patient_profile:
-        messages.error(request, "Unauthorized access.")
-        return redirect("doctor_dashboard")
-
-    journal_entries = JournalEntry.objects.filter(user=patient_profile.user).order_by('-timestamp')
-    return render(request, 'patient_journals.html', {
-        'patient': patient_profile,
-        'entries': journal_entries
-    })
-@login_required
 def view_single_entry(request, entry_id):
     entry = JournalEntry.objects.filter(id=entry_id).first()
     if not entry:
@@ -690,3 +659,47 @@ def view_single_entry(request, entry_id):
         'entry': entry,
         'graph_path': f'/static/journal_graphs/entry_{entry.id}.png'
     })
+
+@login_required
+def view_user_and_family(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    family_members = FamilyMember.objects.filter(user=user)
+    return render(request, 'doctor/user_and_family.html', {
+        'user_obj': user,
+        'family_members': family_members
+    })
+
+
+def doctor_view_journals(request, user_id):
+    # Get the user and their profile
+    user = get_object_or_404(User, id=user_id)
+    profile = get_object_or_404(UserProfile, user=user)
+
+    # Get all family members for this user
+    family_members = FamilyMember.objects.filter(user=user)
+
+    # Show only journal entries submitted by user for themselves (not for family)
+    journal_entries = JournalEntry.objects.filter(
+    user=user,
+    family_member__isnull=True
+    ).order_by('-timestamp')
+
+
+    print("✅ Journals found:", journal_entries.count())  # Debug
+
+    return render(request, 'doctor/doctor_view_journals.html', {
+        'user': user,
+        'profile': profile,
+        'journal_entries': journal_entries
+    })
+
+@login_required
+def doctor_view_family_journals(request, member_id):
+    member = get_object_or_404(FamilyMember, id=member_id)
+    journal_entries = JournalEntry.objects.filter(family_member=member).order_by('-timestamp')
+
+    context = {
+        'member': member,
+        'journal_entries': journal_entries,
+    }
+    return render(request, 'doctor/doctor_view_family_journals.html', context)

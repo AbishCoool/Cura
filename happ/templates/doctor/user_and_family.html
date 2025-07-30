@@ -1,0 +1,132 @@
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{{ user_obj.username }} & Family</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #3a2370;
+            font-size: 26px;
+            margin-bottom: 30px;
+        }
+
+        .card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            text-decoration: none;
+            color: #3a2370;
+            transition: background 0.2s ease;
+        }
+
+        .card:hover {
+            background-color: #f0f8ff;
+        }
+
+        .card.highlight {
+            background-color: #8effd6;
+        }
+
+        .card .label {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .empty-text {
+            color: #777;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                flex-direction: row;
+                padding: 14px 16px;
+            }
+
+            .card .label {
+                font-size: 16px;
+            }
+
+            .card img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        .back-arrow {
+            font-size: 30px;
+            text-decoration: none;
+            color: #3a2370;
+            display: inline-block;
+            padding-left: 5px;
+            transition: transform 0.2s ease;
+        }
+
+        .back-arrow:hover {
+            transform: translateX(-4px);
+        }
+    </style>
+</head>
+
+<body>
+    <a href="{% url 'doctor_dashboard' %}" class="back-arrow">&#8592;</a>
+
+
+    <h2>{{ user_obj.username }} & Family</h2>
+
+    <div class="card-list">
+        <!-- Main user -->
+        <a href="{% url 'doctor_view_journals' user_obj.id %}" class="card">
+            <div class="label">{{ user_obj.username }}</div>
+        </a>
+
+        <!-- Family members -->
+        {% if family_members %}
+        {% for member in family_members %}
+        <a href="{% url 'doctor_view_family_journals' member.id %}"
+            class="card {% if forloop.counter == 1 %}highlight{% endif %}">
+            <div class="label">{{ member.name }} ({{ member.relationship }})</div>
+        </a>
+        {% endfor %}
+        {% else %}
+        <p class="empty-text">No family members found.</p>
+        {% endif %}
+    </div>
+</body>
+
+</html>

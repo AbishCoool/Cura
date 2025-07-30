@@ -32,7 +32,7 @@
         <div class="family-section">
             {% if patients %}
             {% for pat in patients %}
-            <a href="{% url 'view_patient_reports' pat.id %}" class="family-card">
+            <a href="{% url 'view_user_and_family' pat.user.id %}" class="family-card">
                 <h3>{{ pat.user.username|title }}</h3>
                 {% if pat.photo %}
                 <img src="{{ pat.photo.url }}" alt="{{ pat.user.username }}">

@@ -24,7 +24,7 @@ urlpatterns = [
     path('famil/', views.family_view, name='famil'),
     path('appointments/', views.appointments, name='appointments'),
     path('journal/', views.journal_view, name='journal'),
-    path('journal/confirmation/', lambda request: render(request, 'journal_confirmation.html'), name='journal_confirmation'),
+    path('journal/family/<int:member_id>/', views.journal_view, name='family_journal'),
     path('activity/', views.activity, name='activity'),
     path('addprofile/', views.add_profile, name='addprofile'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
@@ -49,9 +49,11 @@ urlpatterns = [
     path('login/doctor/', views.doctor_login, name='doctor_login'),  # <-- MAKE SURE THIS IS DEFINED!
     path('doctor/dashboard/', views.doctor_dashboard, name='doctor_dashboard'),
     path('doctor_settings/', views.doc_settings, name='doctor_settings'),
-    path('doctor/patient/<int:patient_id>/journals/', views.view_patient_reports, name='view_patient_reports'),
     path('doctor/journal/<int:entry_id>/', views.view_single_entry, name='view_single_entry'),
 
+    path('doctor/user/<int:user_id>/family/', views.view_user_and_family, name='view_user_and_family'),
+    path('doctor/user/<int:user_id>/journals/', views.doctor_view_journals, name='doctor_view_journals'),
+    path('doctor/family/<int:member_id>/journals/', views.doctor_view_family_journals, name='doctor_view_family_journals'),
 
 
     # ✅ Firebase Push Notification + Chatbot
