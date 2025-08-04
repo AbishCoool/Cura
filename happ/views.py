@@ -537,13 +537,86 @@ def save_token(request):
             return JsonResponse({"error": str(e)}, status=500)
         
 @csrf_exempt
+@login_required
 def chatbot_query(request):
     if request.method == "POST":
         data = json.loads(request.body)
         query = data.get("message", "")
 
         try:
-            docs = DB.similarity_search(query, k=3)
+            # ✅ STEP 1: Fetch user profile
+            user_profile = UserProfile.objects.filter(user=request.user).first()
+
+            if not user_profile:
+                return JsonResponse({"answer": "⚠️ No user profile found. Please complete your profile first."})
+
+            # ✅ STEP 2: Profile completeness check
+            missing = []
+            if not user_profile.age or user_profile.age <= 0:
+                missing.append("age")
+            if not user_profile.gender or user_profile.gender.lower() in ["", "not specified"]:
+                missing.append("gender")
+            if not user_profile.location or user_profile.location.lower() == "not specified":
+                missing.append("location")
+
+            if missing:
+                return JsonResponse({
+                    "answer": f"⚠️ Please complete your profile — missing: {', '.join(missing)}."
+                })
+
+            # ✅ STEP 3: Build profile context
+            context_info = (
+                f"Patient is a {user_profile.age}-year-old {user_profile.gender.lower()} "
+                f"from {user_profile.location}."
+            )
+
+            # ✅ STEP 4: Fetch latest journal entry (personal only)
+            journal = JournalEntry.objects.filter(
+                user=request.user, family_member__isnull=True
+            ).order_by("-timestamp").first()
+
+            symptom_info = ""
+            critical_alerts = []
+
+            if journal:
+                # Mappings
+                pain_map = {
+                    "No Pain 😃": 0, "Very Mild Pain 🙂": 1, "Mild Pain 🙂": 2, "Discomfort 😐": 3,
+                    "Moderate Pain 😣": 4, "Uncomfortable 😖": 5, "Severe Pain 😢": 6,
+                    "Very Severe Pain 😭": 7, "Intense Pain 💀": 8, "Extreme Pain 💀💀": 9,
+                    "Worst Possible Pain 💀💀💀": 10
+                }
+                emergency_map = {
+                    "No": 0, "Mild, manageable at home": 3,
+                    "Moderate, resolved with rest": 6, "Severe, required attention": 10
+                }
+
+                # Alert triggers
+                pain_score = pain_map.get(journal.pain_level, 0)
+                emergency_score = emergency_map.get(journal.emergency, 0)
+
+                if pain_score >= 8:
+                    critical_alerts.append("⚠️ Severe chest pain reported recently.")
+                if emergency_score == 10:
+                    critical_alerts.append("🚨 Emergency-level symptoms were recorded.")
+
+                symptom_info = (
+                    f"Recent symptoms include chest pain: {journal.chest_pain}, "
+                    f"breath: {journal.breath}, energy: {journal.energy_level}, "
+                    f"stress: {journal.stress_level}, swelling: {journal.swelling}, "
+                    f"emergency: {journal.emergency}."
+                )
+            else:
+                symptom_info = "No recent journal entry found for this patient."
+
+            # ✅ STEP 5: Enrich query with all data
+            enriched_query = f"{context_info}\n{symptom_info}\n\n{query}"
+
+            if critical_alerts:
+                enriched_query += "\n\nALERTS:\n" + "\n".join(critical_alerts)
+
+            # ✅ STEP 6: Similarity search
+            docs = DB.similarity_search(enriched_query, k=3)
 
             if not docs:
                 return JsonResponse({
@@ -552,6 +625,7 @@ def chatbot_query(request):
 
             context = "\n\n".join([doc.page_content for doc in docs])
 
+            # ✅ STEP 7: GPT Completion
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
@@ -561,12 +635,13 @@ def chatbot_query(request):
                     },
                     {
                         "role": "user",
-                        "content": f"Context:\n{context}\n\nQuestion: {query}"
+                        "content": f"Context:\n{context}\n\nPatient Info:\n{context_info}\n\nSymptoms:\n{symptom_info}\n\nQuestion: {query}"
                     }
                 ]
             )
 
             answer = response.choices[0].message.content.strip()
+
             print(f"[CHATBOT QUERY] User: {query}")
             print(f"[CHATBOT RESPONSE] Bot: {answer}")
 
@@ -574,7 +649,10 @@ def chatbot_query(request):
 
         except Exception as e:
             print("❌ Error:", str(e))
-            return JsonResponse({"answer": "An internal error occurred while processing your question."})
+            return JsonResponse({
+                "answer": "An internal error occurred while processing your question."
+            })
+
 
 @login_required
 def view_single_entry(request, entry_id):
