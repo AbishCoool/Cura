@@ -105,3 +105,130 @@ body {
 .bottom-nav a:hover {
     opacity: 0.8;
 }
+/* === STYLING FOR DYNAMIC FORMS AND LISTS === */
+
+/* The + Floating Action Button (FAB) */
+.add-fab {
+    position: fixed;
+    bottom: 80px; /* Adjust to be safely above the bottom nav bar */
+    width: 60px;
+    height: 60px;
+    background-color: #0d6efd; /* A nice blue color */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: lighter;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.2s ease;
+}
+.add-fab:hover {
+    transform: scale(1.1);
+}
+.add-fab.left {
+    left: 20px;
+}
+.add-fab.right {
+    right: 20px;
+}
+
+/* The Modal (Popup Form) Background */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* The Modal Content Box */
+.modal-content {
+    background-color: #fefefe;
+    padding: 25px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #333;
+    text-align: center;
+    font-size: 22px;
+}
+
+/* The Form Inputs inside the Modal */
+.modal-form-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.modal-form-inputs input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box; 
+}
+
+/* The Save/Cancel Buttons in the Modal */
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-buttons button {
+    flex-grow: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.save-btn {
+    background-color: #198754; /* Green */
+    color: white;
+}
+.save-btn:hover { background-color: #157347; }
+
+.cancel-btn {
+    background-color: #6c757d; /* Gray */
+    color: white;
+}
+.cancel-btn:hover { background-color: #5c636a; }
+
+/* Message for when a list is empty */
+.empty-list-message {
+    text-align: center;
+    color: #888;
+    margin: 60px 20px;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+/* General list container */
+.dynamic-list-container {
+    width: 100%;
+    padding-bottom: 80px; /* Add space at the bottom */
+}

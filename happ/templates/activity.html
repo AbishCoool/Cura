@@ -1,47 +1,59 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>My Activities</title>
-    <link rel="stylesheet" href="{% static 'assets\css\activity.css' %}">
-    <script defer src="{% static 'assets\js\scripts.js'%}"></script>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/activity.css' %}">
 </head>
-<body>
+<body data-user-id="{{ request.user.id | default:'' }}">
     <div class="container">
         <div class="header">
-            <!-- Back arrow -->
             <a href="{% url 'home' %}" class="back-button">&#8592;</a>
-            <!-- Title card -->
             <div class="title-card">
                 <h1>My Activities</h1>
                 <img src="{% static 'assets/images/activity.png' %}" alt="Activity Icon">
             </div>
         </div>
-        <section class="activity-card today">
-            <h1>Today</h1>
-            <br>
-            <div class="card">
-                <div class="card-content">
-                    <h3><span class="bold">Play a game!</span></h3>
-                    <p class="intensity">Moderate to Intensive</p>
-                    <p class="time">30-45mins</p>
-                </div>
-                <img src="{% static 'assets/images/football.png' %}" alt="Basketball Player" class="activity-img">
+
+        <div id="activity-list-container" class="dynamic-list-container">
             </div>
-        </section>
-        
-        <section class="activity-card yesterday">
-            <h1>Yesterday</h1>
-            <br>
-            <div class="card">
-                <p>You have played basketball for 1hr!</p>
-            </div>
-        </section>
-        
-        <button class="add-btn">+</button>
     </div>
-    {% include 'chatbot.html' %}
+
+    <button class="add-fab left" onclick="openModal('activity-modal')">+</button>
+    
+    <div id="activity-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Add New Activity</h3>
+            <div class="modal-form-inputs">
+                <input type="text" id="activity-name-input" placeholder="Activity Name (e.g., Evening Walk)">
+                <input type="text" id="activity-duration-input" placeholder="Duration (e.g., 30 minutes)">
+                <input type="time" id="activity-time-input">
+            </div>
+            <div class="modal-buttons">
+                <button class="cancel-btn" onclick="closeModal('activity-modal')">Cancel</button>
+                <button class="save-btn" onclick="addReminder('activity')">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="{% url 'famil' %}"><img src="{% static 'assets/images/navbar/modules.png' %}" /></a>
+        <a href="{% url 'leaderboard' %}"><img src="{% static 'assets/images/navbar/graph-active.png' %}" /></a>
+        <a href="{% url 'notifications' %}"><img src="{% static 'assets/images/navbar/bell.png' %}" /></a>
+        <a href="{% url 'settings' %}"><img src="{% static 'assets/images/navbar/settings.png' %}" /></a>
+    </div>
+
+    {% include 'chatbot.html' %}
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+    
+    <script src="{% static 'assets/js/firebase-logic.js' %}"></script>
+</body>
+</html>
 </body>
 </html>
