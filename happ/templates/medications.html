@@ -5,12 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
     <title>Medications</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/medications.css' %}">
-    <script defer src="{% static 'assets/js/scripts.js' %}"></script>
 </head>
-<body>
+<body data-user-id="{{ request.user.id | default:'' }}">
     <div class="container">
         <header>
             <div><a href="{% url 'home' %}" class="back-button">&#8592;</a></div>
@@ -18,89 +17,44 @@
                 <h1>Medications</h1>
                 <img src="{% static 'assets/images/medi.png' %}" alt="Profile pic">
             </div>
-            
         </header>
         
-        <div class="date-selector">
-            <button>&lt;</button>
-            <div class="date">4 <span>Wed April</span></div>
-            <button>&gt;</button>
-        </div>
-        
-        <div class="medicine-list">
-            <div class="medicine-card">
-                <img src="{% static 'assets/images/aspirin.png' %}" alt="Aspirin">
-                <div class="medicine-info">
-                    <h2>Aspirin</h2>
-                    <p><strong>Time:</strong> 09:00 AM</p>
-                    <p><strong>Quantity:</strong> 1 Tablet</p>
-                    <p><strong>Frequency:</strong> Once Daily</p>
-                </div>
-                <button class="forward-btn">→</button>
+        <div id="medication-list-container" class="dynamic-list-container">
             </div>
-            
-            <div class="medicine-card">
-                <img src="{% static 'assets/images/pill.png' %}" alt="Pill">
-                <div class="medicine-info">
-                    <h2>Cymbalta</h2>
-                    <p><strong>Time:</strong> 12:00 AM</p>
-                    <p><strong>Quantity:</strong> 1 Capsule</p>
-                    <p><strong>Frequency:</strong> Twice Daily</p>
-                </div>
-                <button class="forward-btn">→</button>
-            </div>
-            
-            <div class="medicine-card">
-                <img src="{% static 'assets/images/roundmed.png' %}" alt="Tablet">
-                <div class="medicine-info">
-                    <h2>Lexapro</h2>
-                    <p><strong>Time:</strong> 03:00 PM</p>
-                    <p><strong>Quantity:</strong> 1 Tablet</p>
-                    <p><strong>Frequency:</strong> Once Daily</p>
-                </div>
-                <button class="forward-btn">→</button>
-            </div>
-        </div>
-
-        <!-- ✅ Moved the reminder card inside the .container -->
-        <div id="medication-reminder" class="reminder">
-            <p>
-                <span class="bell-icon">🔔</span> 
-                Take Warfarin by <span id="countdown-timer">05:43</span> minutes
-            </p>
-            <div class="reminder-buttons">
-                <button class="yes-btn">YES</button>
-                <button class="no-btn">NO</button>
-            </div>
-        </div>
-
-    </div> <!-- ✅ Closing .container div correctly -->
-
-    <div class="bottom-nav">
-        <a href="{% url 'famil'%}"><img src="{% static 'assets/images/navbar/modules.png' %}"></a>
-        <a href="{% url 'leaderboard'%}"><img src="{% static 'assets/images/navbar/graph.png' %}"></a>
-        <a href="{%url 'notifications' %}"><img src="{% static 'assets/images/navbar/bell.png' %}"></a>
-        <a href="{% url 'settings'%}"><img src="{% static 'assets/images/navbar/settings-active.png' %}"></a>
     </div>
 
-    <script src="{% static 'assets/js/scripts.js' %}"></script>
+    <button class="add-fab left" onclick="openModal('medication-modal')">+</button>
 
-    <div id="toast" class="toast">Medication was scheduled successfully!</div>
+    <div id="medication-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Add New Medication</h3>
+            <div class="modal-form-inputs">
+                <input type="text" id="med-name-input" placeholder="Medication Name">
+                <input type="text" id="med-dosage-input" placeholder="Dosage (e.g., 250mg)">
+                <input type="text" id="med-program-input" placeholder="Program (e.g., After Breakfast)">
+                <input type="number" id="med-quantity-input" placeholder="Quantity (e.g., 1)">
+                <input type="time" id="med-time-input">
+            </div>
+            <div class="modal-buttons">
+                <button class="cancel-btn" onclick="closeModal('medication-modal')">Cancel</button>
+                <button class="save-btn" onclick="saveReminder('medication')">Save</button>
+            </div>
+        </div>
+    </div>
 
-    <script>
-        // ✅ Show toast after redirection if scheduled
-        document.addEventListener("DOMContentLoaded", function () {
-            if (localStorage.getItem("scheduleSuccess") === "true") {
-                const toast = document.getElementById("toast");
-                toast.classList.add("show");
-                setTimeout(() => {
-                    toast.classList.remove("show");
-                    localStorage.removeItem("scheduleSuccess"); // Clear flag
-                }, 3000);
-            }
-        });
-    </script>
+    <div class="bottom-nav">
+        <a href="{% url 'famil' %}"><img src="{% static 'assets/images/navbar/modules-active.png' %}" /></a>
+        <a href="{% url 'leaderboard' %}"><img src="{% static 'assets/images/navbar/graph.png' %}" /></a>
+        <a href="{% url 'notifications' %}"><img src="{% static 'assets/images/navbar/bell.png' %}" /></a>
+        <a href="{% url 'settings' %}"><img src="{% static 'assets/images/navbar/settings.png' %}" /></a>
+    </div>
 
     {% include 'chatbot.html' %}
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+    
+    <script src="{% static 'assets/js/firebase-logic.js' %}"></script>
 </body>
 </html>

@@ -23,6 +23,11 @@
     </style>
 </head>
 <body>
+    <body
+    {% if request.user.is_authenticated %}
+        data-user-id="{{ request.user.id }}"
+    {% endif %}
+>
     <header>
         CURA Health Dashboard
     </header>
@@ -30,5 +35,14 @@
         {% block content %}
         {% endblock %}
     </main>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+
+    <script src="{% static 'assets/firebase/firebase-config.js' %}"></script>
+
+    <script src="{% static 'assets/js/firebase-logic.js' %}"></script>
+</body>
+</html>
 </body>
 </html>
