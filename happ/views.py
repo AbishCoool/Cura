@@ -569,9 +569,27 @@ def home(request, user_id=None):
 def famil(request):
     return render(request, 'famil.html')
 
-@login_required(login_url='login')
-def appointments(request):
-    return render(request, 'appointments.html')
+# In your views.py file, replace the existing 'user_appointments' and 'family_appointments' functions with this:
+
+def user_appointments(request, user_id):
+    user_profile = get_object_or_404(UserProfile, user__id=user_id)
+    return render(request, 'appointments.html', {
+        'user_profile': user_profile,
+        'firebase_id': str(user_profile.user.id),
+        'is_family': False,
+    })
+
+def family_appointments(request, member_id):
+    member = get_object_or_404(FamilyMember, id=member_id)
+    # Ensure the member belongs to the current user
+    if request.user != member.user:
+        return redirect('famil')
+        
+    return render(request, 'appointments.html', {
+        'user_profile': member,
+        'firebase_id': str(member.id),
+        'is_family': True,
+    })
 
 @login_required(login_url='login')
 def journal(request):
@@ -878,63 +896,60 @@ def view_single_entry(request, entry_id):
         'graph_path': f'/static/journal_graphs/entry_{entry.id}.png'
     })
 
-def view_user_and_family(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    family_members = FamilyMember.objects.filter(user=user)
 
-    alert_messages = []
+def view_user_and_family(request, user_id: int):
+    doctor = _get_doctor_or_redirect(request)
+    if not doctor:
+        messages.error(request, "Doctor account required.")
+        return redirect('doctor_login')
 
+    try:
+        # Fetch the UserProfile object which contains the user's data and doctor link
+        user_profile = UserProfile.objects.get(user_id=user_id, assigned_doctor=doctor)
+    except UserProfile.DoesNotExist:
+        messages.error(request, "Patient not assigned to you.")
+        return redirect('doctor_dashboard')
+
+    # FIX: Get family members by filtering on the user object linked to the user_profile
+    family_members = FamilyMember.objects.filter(user=user_profile.user)
+
+    # The rest of your alert logic remains unchanged
     pain_map = {
         "No Pain 😃": 0, "Very Mild Pain 🙂": 1, "Mild Pain 🙂": 2, "Discomfort 😐": 3,
         "Moderate Pain 😣": 4, "Uncomfortable 😖": 5, "Severe Pain 😢": 6,
         "Very Severe Pain 😭": 7, "Intense Pain 💀": 8, "Extreme Pain 💀💀": 9,
         "Worst Possible Pain 💀💀💀": 10
     }
-
     emergency_map = {
-        "No": 0,
-        "Mild, manageable at home": 3,
-        "Moderate, resolved with rest": 6,
-        "Severe, required attention": 10
+        "No": 0, "Mild, manageable at home": 3, "Moderate, resolved with rest": 6, "Severe, required attention": 10
     }
-
+    alert_messages = []
+    
+    # Check for alerts for family members
     for member in family_members:
         recent_entries = JournalEntry.objects.filter(family_member=member).order_by("-timestamp")[:10]
-        
         max_pain_score = 0
         max_emergency_score = 0
         latest_timestamp = None
-
         for entry in recent_entries:
             pain_score = pain_map.get(entry.chest_pain, 0)
             emergency_score = emergency_map.get(entry.emergency, 0)
-
             if pain_score > max_pain_score:
                 max_pain_score = pain_score
                 latest_timestamp = entry.timestamp
-
             if emergency_score > max_emergency_score:
                 max_emergency_score = emergency_score
                 latest_timestamp = entry.timestamp
-
         if max_pain_score >= 8:
-            alert_messages.append({
-                "member": member.name,
-                "message": "⚠️ Severe chest pain reported.",
-                "timestamp": latest_timestamp
-            })
-
+            alert_messages.append({"member": member.name, "message": "⚠️ Severe chest pain reported.", "timestamp": latest_timestamp})
         if max_emergency_score == 10:
-            alert_messages.append({
-                "member": member.name,
-                "message": "🚨 Emergency-level symptoms recorded.",
-                "timestamp": latest_timestamp
-            })
+            alert_messages.append({"member": member.name, "message": "🚨 Emergency-level symptoms recorded.", "timestamp": latest_timestamp})
 
+    # Pass the corrected user_profile object to the template
     return render(request, 'doctor/user_and_family.html', {
-        'user_obj': user,
+        'user_obj': user_profile,  # This is the fix
         'family_members': family_members,
-        'alert_messages': alert_messages
+        'alert_messages': alert_messages,
     })
 
 
@@ -1074,3 +1089,10 @@ def doctor_add_note_for_family(request, member_id: int):
         'subject_name': f"{member.name} ({member.relationship})",
         'back_url': reverse('doctor_view_family_journals', args=[member.id]),
     })
+
+@login_required(login_url='login')
+def chatbot_view(request):
+    """
+    Renders the chatbot page.
+    """
+    return render(request, 'chatbot.html') 

@@ -75,15 +75,18 @@
           <h3>My Journal</h3>
           <img src="{% static 'assets/images/jour.png' %}" alt="Papers" />
         </a>
-
-        <a href="{% url 'appointments' %}" class="family-card">
-          <h3>Appointments</h3>
-          <img src="{% static 'assets/images/appoint.png' %}" alt="Papers" />
-        </a>
-        <a href="{% url 'activity' %}" class="family-card">
-          <h3>My Activity</h3>
-          <img src="{% static 'assets/images/acti.png' %}" alt="Papers" />
-        </a>
+        {% if is_family %}
+<a href="{% url 'family_appointments' user_profile.id %}" class="family-card">
+  {% else %}
+  <a href="{% url 'user_appointments' user_profile.user.id %}" class="family-card">
+    {% endif %}
+    <h3>Appointments</h3>
+    <img src="{% static 'assets/images/appoint.png' %}" alt="Papers" />
+  </a>
+          <a href="{% url 'activity' %}" class="family-card">
+            <h3>My Activity</h3>
+            <img src="{% static 'assets/images/acti.png' %}" alt="Papers" />
+          </a>
     </div>
   </div>
 

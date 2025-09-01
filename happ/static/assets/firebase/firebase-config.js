@@ -229,7 +229,7 @@ window.recordAction = async function recordAction(type, docId, action) {
 
 /* ---------- Live list rendering ---------- */
 window.loadDynamicData = function loadDynamicData(userId) {
-  var emptyMessage = '<div class="empty-list-message"><p>Press the + button to add a new item.</p></div>';
+  var emptyMessage = '<div class="empty-list-message"><p>There are no appointments</p></div>';
   var handleError = function (error, container) {
     console.error("FIREBASE READ FAILED:", error);
     container.innerHTML = '<div class="empty-list-message"><p>Error loading data. Check console.</p></div>';

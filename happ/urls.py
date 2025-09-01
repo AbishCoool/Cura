@@ -22,7 +22,8 @@ urlpatterns = [
 
     # ✅ Core App Pages
     path('famil/', views.family_view, name='famil'),
-    path('appointments/', views.appointments, name='appointments'),
+    path('appointments/user/<int:user_id>/', views.user_appointments, name='user_appointments'),
+    path('appointments/family/<int:member_id>/', views.family_appointments, name='family_appointments'),
     path('journal/', views.journal_view, name='journal'),
     path('journal/family/<int:member_id>/', views.journal_view, name='family_journal'),
     path('activity/', views.activity, name='activity'),
@@ -37,6 +38,7 @@ urlpatterns = [
     path('tour/', views.tour, name='tour'),
     path('rewards/checkin/', views.rewards_checkin, name='rewards_checkin'),
     path('rewards/claim/<int:tier_id>/', views.claim_reward, name='claim_reward'),
+    path('chatbot/', views.chatbot_view, name='chatbot'), 
 
 
     # ✅ Medications
