@@ -1,130 +1,662 @@
-/* Ensure Poppins applies everywhere by targeting universal and inherited properties */
+/* Import distinctive fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700&display=swap');
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (Design Tokens)
+   ============================================ */
+:root {
+    /* Color Palette */
+    --color-surface: #FAFAFA;
+    --color-surface-elevated: #FFFFFF;
+    --color-surface-subtle: #F5F3F0;
+    --color-surface-input: #FAFBFC;
+    
+    --color-primary: #1A1A2E;
+    --color-primary-soft: #2D2D44;
+    
+    --color-accent: #FF6B35;
+    --color-accent-soft: #FF8C5A;
+    --color-accent-glow: rgba(255, 107, 53, 0.15);
+    
+    --color-success: #10B981;
+    --color-success-hover: #059669;
+    --color-danger: #EF4444;
+    --color-danger-hover: #DC2626;
+    
+    --color-text-primary: #1A1A2E;
+    --color-text-secondary: #64748B;
+    --color-text-muted: #94A3B8;
+    --color-text-placeholder: #A0AEC0;
+    
+    --color-border: #E2E8F0;
+    --color-border-focus: var(--color-accent);
+    
+    /* Typography */
+    --font-display: 'Sora', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.16), 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-input-focus: 0 0 0 4px var(--color-accent-glow);
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================
+   BASE RESET & GLOBAL STYLES
+   ============================================ */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-body);
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 body {
-    background-color: #ffffff;
-    color: #333;
-    padding: 10px;
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    padding: var(--space-md);
+    min-height: 100vh;
+    min-height: 100dvh;
+    line-height: 1.6;
+    
+    /* Subtle background texture */
+    background-image: 
+        radial-gradient(ellipse at 30% 0%, rgba(255, 107, 53, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 100%, rgba(26, 26, 46, 0.03) 0%, transparent 50%);
 }
 
+/* ============================================
+   TYPOGRAPHY INHERITANCE
+   ============================================ */
+h1, h2, label, input, select, textarea, .add-button, .nav-button {
+    font-family: inherit;
+}
+
+/* ============================================
+   FORM CONTAINER
+   ============================================ */
 .form-container {
-    max-width: 400px;
+    max-width: 440px;
     margin: 0 auto;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    background-color: var(--color-surface-elevated);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-xl);
     height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
-    overflow-y: scroll;
+    overflow-y: auto;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    
+    /* Smooth scroll */
+    scroll-behavior: smooth;
+    
+    /* Entrance animation */
+    animation: containerSlideUp 500ms var(--transition-smooth) forwards;
+}
 
-    /* Hide scrollbar */
-    scrollbar-width: none; /* Firefox */
+@keyframes containerSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .form-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, and Edge */
+    display: none;
 }
 
-
-h1, h2, label, input, select, textarea, .add-button, .nav-button {
-    font-family: inherit; /* Inherit 'Poppins' from parent context */
-}
-
+/* ============================================
+   HEADINGS
+   ============================================ */
 h1 {
+    font-family: var(--font-display);
     text-align: center;
-    font-size: 1.8em;
-    margin-bottom: 20px;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: var(--space-xl);
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    position: relative;
 }
 
-.section {
-    margin-bottom: 20px;
+/* Decorative underline */
+h1::after {
+    content: '';
+    display: block;
+    width: 48px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-soft));
+    border-radius: var(--radius-full);
+    margin: var(--space-md) auto 0;
 }
 
 h2 {
-    font-size: 1.2em;
-    margin-bottom: 10px;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
 }
 
+/* Optional: Add a small accent before section titles */
+h2::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: var(--color-accent);
+    border-radius: var(--radius-full);
+}
+
+/* ============================================
+   FORM SECTIONS
+   ============================================ */
+.section {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.section:last-of-type {
+    border-bottom: none;
+    margin-bottom: var(--space-lg);
+}
+
+/* ============================================
+   LABELS
+   ============================================ */
 label {
     display: block;
-    font-weight: bold;
-    margin-top: 10px;
-    font-size: 0.9em;
+    font-weight: 500;
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-xs);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    transition: color var(--transition-fast);
 }
 
+/* Highlight label when input is focused */
+label:has(+ input:focus),
+label:has(+ select:focus),
+label:has(+ textarea:focus) {
+    color: var(--color-accent);
+}
+
+/* ============================================
+   FORM INPUTS
+   ============================================ */
 input, select, textarea {
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
-    background-color: #ffffff;
+    padding: var(--space-md);
+    margin-top: var(--space-xs);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    background-color: var(--color-surface-input);
+    color: var(--color-text-primary);
+    transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
 }
 
+input::placeholder,
+textarea::placeholder {
+    color: var(--color-text-placeholder);
+}
+
+/* Focus states */
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    background-color: var(--color-surface-elevated);
+    box-shadow: var(--shadow-input-focus);
+}
+
+/* Hover states */
+input:hover:not(:focus), 
+select:hover:not(:focus), 
+textarea:hover:not(:focus) {
+    border-color: var(--color-text-muted);
+}
+
+/* Select dropdown styling */
+select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-md) center;
+    padding-right: calc(var(--space-md) * 2 + 16px);
+}
+
+/* Textarea */
 textarea {
     resize: vertical;
-    min-height: 70px;
+    min-height: 100px;
+    line-height: 1.5;
 }
 
+/* ============================================
+   BUTTONS - ADD BUTTON
+   ============================================ */
 .add-button {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
     width: 100%;
-    padding: 10px;
-    background-color: #7DFFD4;
-    color: #000000;
+    padding: var(--space-md);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-soft) 100%);
+    color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     text-align: center;
-    font-size: 1em;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    margin-top: 10px;
-}
-
-.add-button.green {
-    background-color: #7DFFDF;
-    color: #000000;
+    margin-top: var(--space-md);
+    box-shadow: 
+        0 4px 12px rgba(255, 107, 53, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
 }
 
 .add-button:hover {
-    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(255, 107, 53, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
+.add-button:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 
+        0 2px 8px rgba(255, 107, 53, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Green variant */
+.add-button.green {
+    background: linear-gradient(135deg, var(--color-success) 0%, #34D399 100%);
+    box-shadow: 
+        0 4px 12px rgba(16, 185, 129, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.add-button.green:hover {
+    box-shadow: 
+        0 6px 20px rgba(16, 185, 129, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ============================================
+   BUTTON GROUP (Navigation Buttons)
+   ============================================ */
 .button-group {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
 }
 
 .nav-button {
     flex: 1;
-    margin: 0 5px;
-    padding: 10px;
-    font-size: 1em;
-    color: #000000;
-    background-color: #7DFFD4;
-    border: none;
-    border-radius: 4px;
+    padding: var(--space-md) var(--space-lg);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-subtle);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
     cursor: pointer;
     text-align: center;
-}
-
-.nav-button.next {
-    background-color: #7DFFD4;
+    transition: 
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
 }
 
 .nav-button:hover {
-    opacity: 0.9;
+    background-color: var(--color-surface);
+    border-color: var(--color-border);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-/* Responsive design */
+.nav-button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Next/Primary button variant */
+.nav-button.next {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-soft) 100%);
+    color: white;
+    border: none;
+    box-shadow: 
+        0 4px 12px rgba(255, 107, 53, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.nav-button.next:hover {
+    box-shadow: 
+        0 6px 20px rgba(255, 107, 53, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ============================================
+   FLOATING ACTION BUTTON (FAB)
+   ============================================ */
+.add-fab {
+    position: fixed;
+    bottom: 100px;
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-soft) 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 300;
+    text-decoration: none;
+    box-shadow: 
+        0 8px 24px rgba(255, 107, 53, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    transition: 
+        transform var(--transition-bounce),
+        box-shadow var(--transition-base);
+    
+    /* Subtle floating animation */
+    animation: fabFloat 4s ease-in-out infinite;
+}
+
+@keyframes fabFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+.add-fab:hover {
+    transform: scale(1.1) translateY(-4px);
+    box-shadow: 
+        0 12px 32px rgba(255, 107, 53, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    animation-play-state: paused;
+}
+
+.add-fab:active {
+    transform: scale(0.95);
+    box-shadow: 
+        0 4px 16px rgba(255, 107, 53, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Positioning variants */
+.add-fab.left {
+    left: var(--space-lg);
+}
+
+.add-fab.right {
+    right: var(--space-lg);
+}
+
+/* ============================================
+   MODAL OVERLAY
+   ============================================ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: var(--space-lg);
+    
+    /* Animation when shown (add via JS) */
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+}
+
+/* ============================================
+   MODAL CONTENT
+   ============================================ */
+.modal-content {
+    background-color: var(--color-surface-elevated);
+    padding: var(--space-xl);
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-width: 400px;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    /* Slide up animation */
+    transform: translateY(20px) scale(0.95);
+    transition: transform var(--transition-smooth);
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0) scale(1);
+}
+
+.modal-content h3 {
+    font-family: var(--font-display);
+    margin: 0 0 var(--space-lg) 0;
+    color: var(--color-text-primary);
+    text-align: center;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* ============================================
+   MODAL FORM INPUTS
+   ============================================ */
+.modal-form-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+}
+
+.modal-form-inputs input {
+    width: 100%;
+    padding: var(--space-md);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    background-color: var(--color-surface-input);
+    color: var(--color-text-primary);
+    transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+.modal-form-inputs input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    background-color: var(--color-surface-elevated);
+    box-shadow: var(--shadow-input-focus);
+}
+
+.modal-form-inputs input::placeholder {
+    color: var(--color-text-placeholder);
+}
+
+/* ============================================
+   MODAL BUTTONS
+   ============================================ */
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: var(--space-md);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+.save-btn {
+    background: linear-gradient(135deg, var(--color-success) 0%, #34D399 100%);
+    color: white;
+    box-shadow: 
+        0 4px 12px rgba(16, 185, 129, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(16, 185, 129, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.save-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.cancel-btn {
+    background: var(--color-surface-subtle);
+    color: var(--color-text-secondary);
+    border: 2px solid var(--color-border);
+}
+
+.cancel-btn:hover {
+    background: var(--color-surface);
+    border-color: var(--color-danger);
+    color: var(--color-danger);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.cancel-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* ============================================
+   EMPTY LIST MESSAGE
+   ============================================ */
+.empty-list-message {
+    text-align: center;
+    color: var(--color-text-muted);
+    margin: var(--space-2xl) var(--space-lg);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Add an icon or illustration placeholder */
+.empty-list-message::before {
+    content: '📋';
+    display: block;
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+    opacity: 0.6;
+}
+
+/* ============================================
+   ACCESSIBILITY - FOCUS STATES
+   ============================================ */
+*:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+.add-fab:focus-visible {
+    outline-offset: 4px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 380px) {
+    .form-container {
+        padding: var(--space-lg);
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    .modal-content {
+        padding: var(--space-lg);
+    }
+}
+
 @media (min-width: 600px) {
     .form-container {
         max-width: 500px;
@@ -133,117 +665,55 @@ textarea {
 
 @media (min-width: 768px) {
     .form-container {
-        max-width: 600px;
+        max-width: 560px;
+        padding: var(--space-2xl);
     }
 }
 
-
-/* === STYLING FOR DYNAMIC FORMS AND LISTS === */
-
-/* The + Button */
-.add-fab {
-    position: fixed;
-    bottom: 80px; /* Adjust to be above the nav bar */
-    width: 60px;
-    height: 60px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 36px;
-    text-decoration: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    border: none;
-    cursor: pointer;
-    z-index: 1000;
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
-.add-fab.left {
-    left: 25px;
-}
-
-.add-fab.right {
-    right: 25px;
-}
-
-/* The Modal (Popup Form) */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: none; /* Hidden by default */
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 25px;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-.modal-content h3 {
-    margin-top: 0;
-    color: #333;
-    text-align: center;
-}
-
-/* The Form Inputs inside the Modal */
-.modal-form-inputs {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.modal-form-inputs input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box; /* Important */
-}
-
-.modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.modal-buttons button {
-    flex-grow: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.save-btn {
-    background-color: #28a745;
-    color: white;
-}
-
-.cancel-btn {
-    background-color: #dc3545;
-    color: white;
-}
-
-/* Message for when a list is empty */
-.empty-list-message {
-    text-align: center;
-    color: #888;
-    margin-top: 50px;
-    font-size: 18px;
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-surface: #0F0F14;
+        --color-surface-elevated: #1A1A24;
+        --color-surface-subtle: #252532;
+        --color-surface-input: #1F1F2E;
+        
+        --color-text-primary: #F8FAFC;
+        --color-text-secondary: #94A3B8;
+        --color-text-muted: #64748B;
+        --color-text-placeholder: #4A5568;
+        
+        --color-border: #2D3748;
+    }
+    
+    .form-container {
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+    
+    .modal-overlay {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    
+    .modal-content {
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+    
+    select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    }
 }
