@@ -1,76 +1,629 @@
-body {
-    font-family: Arial, sans-serif;
+/* Import distinctive fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap');
+
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+    /* Color Palette */
+    --med-surface: #FAFBFC;
+    --med-surface-elevated: #FFFFFF;
+    --med-surface-subtle: #F5F3F0;
+    
+    --med-primary: #1A1A2E;
+    --med-primary-soft: #2D2D44;
+    
+    --med-accent: #FF6B35;
+    --med-accent-soft: #FF8C5A;
+    --med-accent-glow: rgba(255, 107, 53, 0.15);
+    
+    --med-health: #10B981;
+    --med-health-soft: #34D399;
+    --med-health-glow: rgba(16, 185, 129, 0.12);
+    
+    --med-info: #3B82F6;
+    --med-info-soft: #60A5FA;
+    --med-info-glow: rgba(59, 130, 246, 0.12);
+    
+    --med-text-primary: #1A1A2E;
+    --med-text-secondary: #64748B;
+    --med-text-muted: #94A3B8;
+    
+    --med-border: #E2E8F0;
+    
+    /* Typography */
+    --med-font-display: 'Sora', sans-serif;
+    --med-font-body: 'Outfit', sans-serif;
+    
+    /* Spacing */
+    --med-space-xs: 4px;
+    --med-space-sm: 8px;
+    --med-space-md: 16px;
+    --med-space-lg: 24px;
+    --med-space-xl: 32px;
+    --med-space-2xl: 48px;
+    
+    /* Border Radius */
+    --med-radius-sm: 8px;
+    --med-radius-md: 12px;
+    --med-radius-lg: 16px;
+    --med-radius-xl: 24px;
+    --med-radius-full: 9999px;
+    
+    /* Shadows */
+    --med-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --med-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --med-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+    --med-shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+    
+    /* Transitions */
+    --med-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --med-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --med-transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    --med-transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+* {
     margin: 0;
     padding: 0;
-    background-color: #ffffff;
-    text-align: center;
+    box-sizing: border-box;
 }
 
+body {
+    font-family: var(--med-font-body);
+    margin: 0;
+    padding: var(--med-space-lg);
+    background-color: var(--med-surface);
+    text-align: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Subtle gradient background */
+    background: 
+        radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.04) 0%, transparent 40%),
+        var(--med-surface);
+    background-attachment: fixed;
+    
+    animation: bodyFadeIn 0.5s var(--med-transition-smooth) forwards;
+}
+
+@keyframes bodyFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
 .container {
     width: 100%;
-    max-width: 400px;
-    margin: auto;
-    background: white;
-    border-radius: 10px;
+    max-width: 440px;
+    margin: 0 auto;
+    background: var(--med-surface-elevated);
+    border-radius: var(--med-radius-xl);
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding-bottom: 20px;
+    box-shadow: var(--med-shadow-lg);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    padding-bottom: var(--med-space-xl);
+    
+    animation: containerSlideUp 0.5s var(--med-transition-smooth) 0.1s forwards;
+    opacity: 0;
 }
 
+@keyframes containerSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #7DFFDF;
-    color: #3D2174;
-    padding: 15px;
+    background: linear-gradient(135deg, var(--med-accent) 0%, var(--med-accent-soft) 100%);
+    color: white;
+    padding: var(--med-space-lg);
+    position: relative;
+    overflow: hidden;
 }
 
+/* Decorative overlay */
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 10% 90%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.1) 0%, transparent 30%);
+    pointer-events: none;
+}
+
+/* Header title */
+header h1 {
+    font-family: var(--med-font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   HEADER BUTTONS
+   ============================================ */
 .back-btn, .info-btn {
-    background: none;
+    background: rgba(255, 255, 255, 0.2);
     border: none;
-    font-size: 20px;
-    color: #3D2174;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--med-radius-md);
+    font-size: 1.1rem;
+    color: white;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    transition: 
+        background-color var(--med-transition-fast),
+        transform var(--med-transition-fast);
+}
+
+.back-btn:hover, .info-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.back-btn:hover {
+    transform: translateX(-2px);
+}
+
+.info-btn:hover {
+    transform: scale(1.05);
+}
+
+.back-btn:active, .info-btn:active {
+    transform: scale(0.95);
+}
+
+/* ============================================
+   MEDICINE IMAGE
+   ============================================ */
+.medicine-image {
+    padding: var(--med-space-xl) var(--med-space-lg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    animation: imageFadeIn 0.5s var(--med-transition-smooth) 0.2s forwards;
+    opacity: 0;
+}
+
+@keyframes imageFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .medicine-image img {
-    width: 80px;
-    margin: 15px 0;
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.15));
+    transition: transform var(--med-transition-bounce);
 }
 
+.medicine-image img:hover {
+    transform: scale(1.08) rotate(-3deg);
+}
+
+/* Optional: Add a subtle background circle */
+.medicine-image::before {
+    content: '';
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background: var(--med-health-glow);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+/* ============================================
+   DETAILS BOX
+   ============================================ */
 .details-box {
-    background: #fff;
-    padding: 15px;
-    margin: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: var(--med-surface-elevated);
+    padding: var(--med-space-lg);
+    margin: var(--med-space-md) var(--med-space-lg);
+    border-radius: var(--med-radius-lg);
+    box-shadow: var(--med-shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     text-align: left;
+    position: relative;
+    overflow: hidden;
+    transition: 
+        transform var(--med-transition-smooth),
+        box-shadow var(--med-transition-smooth);
+    
+    animation: detailsSlideIn 0.4s var(--med-transition-smooth) 0.3s forwards;
+    opacity: 0;
+}
+
+@keyframes detailsSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Accent bar on left */
+.details-box::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--med-health) 0%, var(--med-health-soft) 100%);
+    border-radius: 0 4px 4px 0;
+}
+
+.details-box:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--med-shadow-lg);
 }
 
 .details-box h2 {
-    font-size: 18px;
-    margin-bottom: 5px;
+    font-family: var(--med-font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--med-text-primary);
+    margin-bottom: var(--med-space-sm);
+    letter-spacing: -0.01em;
 }
 
+.details-box p {
+    font-size: 0.9rem;
+    color: var(--med-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--med-space-sm);
+}
+
+/* Label styling */
+.details-box .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--med-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--med-space-xs);
+}
+
+/* ============================================
+   DOSAGE TIME BADGES
+   ============================================ */
 .dosage-time {
-    display: inline-block;
-    background: #7DFFDF;
-    color: #3D2174;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 14px;
-    margin: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--med-space-xs);
+    background: var(--med-health-glow);
+    color: var(--med-health);
+    padding: var(--med-space-sm) var(--med-space-md);
+    border-radius: var(--med-radius-full);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: var(--med-space-xs);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    transition: 
+        transform var(--med-transition-fast),
+        box-shadow var(--med-transition-fast),
+        background-color var(--med-transition-fast);
 }
 
+.dosage-time:hover {
+    background: rgba(16, 185, 129, 0.18);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+/* Clock icon before time */
+.dosage-time::before {
+    content: '⏰';
+    font-size: 0.8rem;
+}
+
+/* Different badge colors for variety */
+.dosage-time.morning {
+    background: rgba(251, 191, 36, 0.12);
+    color: #D97706;
+    border-color: rgba(251, 191, 36, 0.25);
+}
+
+.dosage-time.morning::before {
+    content: '🌅';
+}
+
+.dosage-time.afternoon {
+    background: rgba(59, 130, 246, 0.12);
+    color: #2563EB;
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+.dosage-time.afternoon::before {
+    content: '☀️';
+}
+
+.dosage-time.evening {
+    background: rgba(139, 92, 246, 0.12);
+    color: #7C3AED;
+    border-color: rgba(139, 92, 246, 0.25);
+}
+
+.dosage-time.evening::before {
+    content: '🌙';
+}
+
+/* ============================================
+   SCHEDULE BUTTON
+   ============================================ */
 .schedule-btn {
-    background: #7DFFDF;
-    color: #3D2174;
+    background: linear-gradient(135deg, var(--med-accent) 0%, var(--med-accent-soft) 100%);
+    color: white;
     border: none;
-    padding: 12px 20px;
-    font-size: 16px;
-    border-radius: 5px;
+    padding: var(--med-space-md) var(--med-space-xl);
+    font-family: var(--med-font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--med-radius-md);
     cursor: pointer;
-    width: 80%;
-    margin-top: 15px;
+    width: calc(100% - var(--med-space-2xl) * 2);
+    max-width: 320px;
+    margin: var(--med-space-lg) auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--med-space-sm);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 4px 14px rgba(255, 107, 53, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: 
+        transform var(--med-transition-fast),
+        box-shadow var(--med-transition-base);
+    
+    animation: buttonFadeIn 0.4s var(--med-transition-smooth) 0.4s forwards;
+    opacity: 0;
+}
+
+@keyframes buttonFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Shine effect */
+.schedule-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+    );
+    transition: left 0.5s ease;
+}
+
+.schedule-btn:hover::before {
+    left: 100%;
+}
+
+.schedule-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 8px 24px rgba(255, 107, 53, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.schedule-btn:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 
+        0 2px 8px rgba(255, 107, 53, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Calendar icon */
+.schedule-btn::after {
+    content: '📅';
+    font-size: 1rem;
+}
+
+/* ============================================
+   ADDITIONAL INFO SECTIONS (Optional)
+   ============================================ */
+.info-section {
+    padding: var(--med-space-md) var(--med-space-lg);
+    text-align: left;
+}
+
+.info-section h3 {
+    font-family: var(--med-font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--med-text-primary);
+    margin-bottom: var(--med-space-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--med-space-sm);
+}
+
+.info-section h3::before {
+    content: '';
+    width: 4px;
+    height: 16px;
+    background: var(--med-accent);
+    border-radius: var(--med-radius-full);
+}
+
+.info-section p {
+    font-size: 0.85rem;
+    color: var(--med-text-secondary);
+    line-height: 1.6;
+}
+
+/* Warning box */
+.warning-box {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: var(--med-radius-md);
+    padding: var(--med-space-md);
+    margin: var(--med-space-md) var(--med-space-lg);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--med-space-sm);
+    text-align: left;
+}
+
+.warning-box::before {
+    content: '⚠️';
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.warning-box p {
+    font-size: 0.85rem;
+    color: #DC2626;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.back-btn:focus-visible,
+.info-btn:focus-visible,
+.schedule-btn:focus-visible,
+.dosage-time:focus-visible {
+    outline: 2px solid var(--med-accent);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 400px) {
+    body {
+        padding: var(--med-space-md);
+    }
+    
+    .container {
+        border-radius: var(--med-radius-lg);
+    }
+    
+    header {
+        padding: var(--med-space-md);
+    }
+    
+    .details-box {
+        margin: var(--med-space-md);
+        padding: var(--med-space-md);
+    }
+    
+    .schedule-btn {
+        width: calc(100% - var(--med-space-lg) * 2);
+    }
+    
+    .dosage-time {
+        font-size: 0.8rem;
+        padding: var(--med-space-xs) var(--med-space-sm);
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --med-surface: #0F0F14;
+        --med-surface-elevated: #1A1A24;
+        --med-surface-subtle: #252532;
+        
+        --med-text-primary: #F8FAFC;
+        --med-text-secondary: #94A3B8;
+        --med-text-muted: #64748B;
+        
+        --med-border: #3D3D52;
+        
+        --med-health-glow: rgba(16, 185, 129, 0.15);
+    }
+    
+    body {
+        background: 
+            radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.04) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.03) 0%, transparent 40%),
+            var(--med-surface);
+    }
+    
+    .container {
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+    
+    .details-box {
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+    
+    .warning-box {
+        background: rgba(239, 68, 68, 0.12);
+        border-color: rgba(239, 68, 68, 0.25);
+    }
 }
