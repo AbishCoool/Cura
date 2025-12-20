@@ -1,107 +1,658 @@
-body {
-    font-family: 'Poppins', sans-serif;
+/* Import distinctive fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap');
+
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+    /* Color Palette */
+    --sched-surface: #FAFBFC;
+    --sched-surface-elevated: #FFFFFF;
+    --sched-surface-subtle: #F5F3F0;
+    --sched-surface-muted: #E8E8EC;
+    
+    --sched-primary: #1A1A2E;
+    --sched-primary-soft: #2D2D44;
+    
+    --sched-accent: #FF6B35;
+    --sched-accent-soft: #FF8C5A;
+    --sched-accent-glow: rgba(255, 107, 53, 0.15);
+    
+    --sched-health: #10B981;
+    --sched-health-soft: #34D399;
+    --sched-health-glow: rgba(16, 185, 129, 0.12);
+    
+    --sched-text-primary: #1A1A2E;
+    --sched-text-secondary: #64748B;
+    --sched-text-muted: #94A3B8;
+    
+    --sched-border: #E2E8F0;
+    
+    /* Typography */
+    --sched-font-display: 'Sora', sans-serif;
+    --sched-font-body: 'Outfit', sans-serif;
+    
+    /* Spacing */
+    --sched-space-xs: 4px;
+    --sched-space-sm: 8px;
+    --sched-space-md: 16px;
+    --sched-space-lg: 24px;
+    --sched-space-xl: 32px;
+    --sched-space-2xl: 48px;
+    
+    /* Border Radius */
+    --sched-radius-sm: 8px;
+    --sched-radius-md: 12px;
+    --sched-radius-lg: 16px;
+    --sched-radius-xl: 24px;
+    --sched-radius-full: 9999px;
+    
+    /* Shadows */
+    --sched-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --sched-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --sched-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+    --sched-shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+    
+    /* Transitions */
+    --sched-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --sched-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --sched-transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    --sched-transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+* {
     margin: 0;
     padding: 0;
-    background-color: #ffffff;
-    text-align: center;
+    box-sizing: border-box;
 }
 
+body {
+    font-family: var(--sched-font-body);
+    margin: 0;
+    padding: var(--sched-space-lg);
+    background-color: var(--sched-surface);
+    text-align: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Subtle gradient background */
+    background: 
+        radial-gradient(ellipse at 30% 0%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 100%, rgba(255, 107, 53, 0.04) 0%, transparent 40%),
+        var(--sched-surface);
+    background-attachment: fixed;
+    
+    animation: bodyFadeIn 0.5s var(--sched-transition-smooth) forwards;
+}
+
+@keyframes bodyFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
 .container {
     width: 100%;
-    max-width: 400px;
-    margin: auto;
-    background: white;
-    border-radius: 10px;
+    max-width: 440px;
+    margin: 0 auto;
+    background: var(--sched-surface-elevated);
+    border-radius: var(--sched-radius-xl);
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    box-shadow: var(--sched-shadow-lg);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    padding: 0 0 var(--sched-space-xl) 0;
+    
+    animation: containerSlideUp 0.5s var(--sched-transition-smooth) 0.1s forwards;
+    opacity: 0;
 }
 
+@keyframes containerSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
 header {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #7DFFDF;
-    color: #3D2174;
-    padding: 15px;
-    font-size: 18px;
+    background: linear-gradient(135deg, var(--sched-accent) 0%, var(--sched-accent-soft) 100%);
+    color: white;
+    padding: var(--sched-space-lg);
+    font-family: var(--sched-font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
     position: relative;
+    overflow: hidden;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Decorative overlay */
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 10% 90%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.1) 0%, transparent 30%);
+    pointer-events: none;
+}
+
+header span,
+header h1 {
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   BACK BUTTON
+   ============================================ */
 .back-btn {
     position: absolute;
-    left: 15px;
-    background: none;
+    left: var(--sched-space-md);
+    background: rgba(255, 255, 255, 0.2);
     border: none;
-    font-size: 20px;
-    color: #3D2174;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--sched-radius-md);
+    font-size: 1.1rem;
+    color: white;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: 
+        background-color var(--sched-transition-fast),
+        transform var(--sched-transition-fast);
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateX(-2px);
+}
+
+.back-btn:active {
+    transform: scale(0.95);
+}
+
+/* ============================================
+   MEDICINE TYPE SELECTOR
+   ============================================ */
+.medicine-type {
+    display: flex;
+    justify-content: center;
+    gap: var(--sched-space-sm);
+    padding: var(--sched-space-lg);
+    flex-wrap: wrap;
+    
+    animation: typeFadeIn 0.4s var(--sched-transition-smooth) 0.2s forwards;
+    opacity: 0;
+}
+
+@keyframes typeFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .medicine-type button {
-    background: #e0e0e0;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 5px;
+    background: var(--sched-surface-muted);
+    border: 2px solid transparent;
+    padding: var(--sched-space-sm) var(--sched-space-lg);
+    border-radius: var(--sched-radius-full);
+    font-family: var(--sched-font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--sched-text-secondary);
     cursor: pointer;
+    transition: 
+        background-color var(--sched-transition-fast),
+        border-color var(--sched-transition-fast),
+        color var(--sched-transition-fast),
+        transform var(--sched-transition-fast),
+        box-shadow var(--sched-transition-fast);
 }
 
+.medicine-type button:hover {
+    background: var(--sched-surface-subtle);
+    color: var(--sched-text-primary);
+    transform: translateY(-2px);
+}
+
+.medicine-type button:active {
+    transform: scale(0.97);
+}
+
+/* Active state */
 .medicine-type .active {
-    background: #7DFFDF;
-    font-weight: bold;
-    color: #3D2174;
+    background: var(--sched-accent-glow);
+    border-color: var(--sched-accent);
+    color: var(--sched-accent);
+    font-weight: 600;
+    box-shadow: 
+        0 4px 12px rgba(255, 107, 53, 0.2),
+        inset 0 0 0 1px rgba(255, 107, 53, 0.1);
 }
 
+.medicine-type .active:hover {
+    background: rgba(255, 107, 53, 0.2);
+}
+
+/* ============================================
+   SCHEDULE SECTION / BOX
+   ============================================ */
 .schedule-section, .schedule-box {
-    background: #fff;
-    padding: 15px;
-    margin: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: var(--sched-surface-elevated);
+    padding: var(--sched-space-lg);
+    margin: var(--sched-space-md) var(--sched-space-lg);
+    border-radius: var(--sched-radius-lg);
+    box-shadow: var(--sched-shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     text-align: left;
+    position: relative;
+    transition: 
+        transform var(--sched-transition-smooth),
+        box-shadow var(--sched-transition-smooth);
+    
+    animation: sectionSlideIn 0.4s var(--sched-transition-smooth) 0.3s forwards;
+    opacity: 0;
 }
 
+@keyframes sectionSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.schedule-section:hover, .schedule-box:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sched-shadow-lg);
+}
+
+/* Labels */
 .schedule-section label, .schedule-box label {
-    font-weight: bold;
+    font-family: var(--sched-font-display);
+    font-weight: 600;
+    font-size: 0.9rem;
     display: block;
-    margin-bottom: 5px;
-    color:#3D2174
+    margin-bottom: var(--sched-space-sm);
+    color: var(--sched-text-primary);
+    letter-spacing: -0.01em;
 }
 
+/* Input fields (for time, etc.) */
+.schedule-section input[type="time"],
+.schedule-section input[type="text"],
+.schedule-section input[type="number"],
+.schedule-box input[type="time"],
+.schedule-box input[type="text"],
+.schedule-box input[type="number"] {
+    width: 100%;
+    padding: var(--sched-space-md);
+    border: 2px solid var(--sched-border);
+    border-radius: var(--sched-radius-md);
+    font-family: var(--sched-font-body);
+    font-size: 1rem;
+    color: var(--sched-text-primary);
+    background: var(--sched-surface-subtle);
+    transition: 
+        border-color var(--sched-transition-fast),
+        box-shadow var(--sched-transition-fast),
+        background-color var(--sched-transition-fast);
+}
+
+.schedule-section input:focus,
+.schedule-box input:focus {
+    outline: none;
+    border-color: var(--sched-accent);
+    background: var(--sched-surface-elevated);
+    box-shadow: 0 0 0 4px var(--sched-accent-glow);
+}
+
+/* ============================================
+   DOSAGE COUNTER
+   ============================================ */
 .dosage-counter {
     display: flex;
     align-items: center;
+    gap: var(--sched-space-md);
+    background: var(--sched-surface-subtle);
+    padding: var(--sched-space-sm);
+    border-radius: var(--sched-radius-lg);
+    width: fit-content;
 }
 
 .dosage-counter button {
-    background: #7DFFDF;
+    background: linear-gradient(135deg, var(--sched-accent) 0%, var(--sched-accent-soft) 100%);
     border: none;
-    padding: 5px 10px;
-    font-size: 16px;
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
     cursor: pointer;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 
+        0 4px 12px rgba(255, 107, 53, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: 
+        transform var(--sched-transition-bounce),
+        box-shadow var(--sched-transition-fast);
+}
+
+.dosage-counter button:hover {
+    transform: scale(1.1);
+    box-shadow: 
+        0 6px 16px rgba(255, 107, 53, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.dosage-counter button:active {
+    transform: scale(0.95);
 }
 
 #dosage-amount {
-    margin: 0 10px;
-    font-size: 18px;
+    font-family: var(--sched-font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--sched-text-primary);
+    min-width: 48px;
+    text-align: center;
+}
+
+/* ============================================
+   ALARM TOGGLE
+   ============================================ */
+.alarm-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sched-space-md) 0;
 }
 
 #alarm-toggle {
-    width: 20px;
-    height: 20px;
+    width: 52px;
+    height: 28px;
     cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--sched-surface-muted);
+    border-radius: var(--sched-radius-full);
+    position: relative;
+    transition: background-color var(--sched-transition-base);
+    border: none;
+    outline: none;
 }
 
+#alarm-toggle::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: transform var(--sched-transition-smooth);
+}
+
+#alarm-toggle:checked {
+    background: var(--sched-health);
+}
+
+#alarm-toggle:checked::before {
+    transform: translateX(24px);
+}
+
+#alarm-toggle:focus-visible {
+    box-shadow: 0 0 0 3px var(--sched-health-glow);
+}
+
+/* Fallback for non-switch styling */
+input[type="checkbox"]#alarm-toggle {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--sched-health);
+}
+
+/* ============================================
+   ADD SCHEDULE BUTTON
+   ============================================ */
 .add-schedule-btn {
-    background: #7DFFDF;
+    background: linear-gradient(135deg, var(--sched-accent) 0%, var(--sched-accent-soft) 100%);
+    color: white;
     border: none;
-    padding: 12px 20px;
-    font-size: 16px;
-    border-radius: 5px;
+    padding: var(--sched-space-md) var(--sched-space-xl);
+    font-family: var(--sched-font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--sched-radius-md);
     cursor: pointer;
-    width: 80%;
-    margin-top: 15px;
-    color:#3D2174;
+    width: calc(100% - var(--sched-space-2xl));
+    max-width: 320px;
+    margin: var(--sched-space-lg) auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sched-space-sm);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 4px 14px rgba(255, 107, 53, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: 
+        transform var(--sched-transition-fast),
+        box-shadow var(--sched-transition-base);
+    
+    animation: buttonFadeIn 0.4s var(--sched-transition-smooth) 0.4s forwards;
+    opacity: 0;
+}
+
+@keyframes buttonFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Shine effect */
+.add-schedule-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+    );
+    transition: left 0.5s ease;
+}
+
+.add-schedule-btn:hover::before {
+    left: 100%;
+}
+
+.add-schedule-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 8px 24px rgba(255, 107, 53, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.add-schedule-btn:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 
+        0 2px 8px rgba(255, 107, 53, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Plus icon */
+.add-schedule-btn::after {
+    content: '+';
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+/* ============================================
+   ADDITIONAL HELPERS
+   ============================================ */
+.section-divider {
+    height: 1px;
+    background: var(--sched-border);
+    margin: var(--sched-space-lg) 0;
+}
+
+.helper-text {
+    font-size: 0.8rem;
+    color: var(--sched-text-muted);
+    margin-top: var(--sched-space-xs);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.back-btn:focus-visible,
+.medicine-type button:focus-visible,
+.dosage-counter button:focus-visible,
+.add-schedule-btn:focus-visible,
+#alarm-toggle:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--sched-accent);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 400px) {
+    body {
+        padding: var(--sched-space-md);
+    }
+    
+    .container {
+        border-radius: var(--sched-radius-lg);
+    }
+    
+    header {
+        padding: var(--sched-space-md);
+        font-size: 1rem;
+    }
+    
+    .medicine-type {
+        padding: var(--sched-space-md);
+    }
+    
+    .medicine-type button {
+        padding: var(--sched-space-sm) var(--sched-space-md);
+        font-size: 0.85rem;
+    }
+    
+    .schedule-section, .schedule-box {
+        margin: var(--sched-space-md);
+        padding: var(--sched-space-md);
+    }
+    
+    .add-schedule-btn {
+        width: calc(100% - var(--sched-space-lg) * 2);
+    }
+    
+    .dosage-counter button {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --sched-surface: #0F0F14;
+        --sched-surface-elevated: #1A1A24;
+        --sched-surface-subtle: #252532;
+        --sched-surface-muted: #3D3D52;
+        
+        --sched-text-primary: #F8FAFC;
+        --sched-text-secondary: #94A3B8;
+        --sched-text-muted: #64748B;
+        
+        --sched-border: #3D3D52;
+    }
+    
+    body {
+        background: 
+            radial-gradient(ellipse at 30% 0%, rgba(16, 185, 129, 0.04) 0%, transparent 50%),
+            radial-gradient(ellipse at 70% 100%, rgba(255, 107, 53, 0.03) 0%, transparent 40%),
+            var(--sched-surface);
+    }
+    
+    .container {
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+    
+    .schedule-section, .schedule-box {
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+    
+    #alarm-toggle {
+        background: var(--sched-surface-muted);
+    }
+    
+    #alarm-toggle::before {
+        background: var(--sched-surface-subtle);
+    }
 }
