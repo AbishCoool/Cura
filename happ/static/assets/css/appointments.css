@@ -1,281 +1,874 @@
-/* General Styles */
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background-color: #ffffff;
-    color: #3D2174;
-    overflow-x: hidden;
+/* ============================================
+   REDESIGNED APPOINTMENTS PAGE STYLES
+   Preserves all functionality, upgrades aesthetics
+   ============================================ */
+
+/* Import distinctive fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700&display=swap');
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (Design Tokens)
+   ============================================ */
+:root {
+    /* Color Palette */
+    --color-surface: #FAFAFA;
+    --color-surface-elevated: #FFFFFF;
+    --color-surface-subtle: #F5F3F0;
+    --color-surface-card: #FFFFFF;
+    
+    --color-primary: #1A1A2E;
+    --color-primary-soft: #2D2D44;
+    
+    --color-accent: #FF6B35;
+    --color-accent-soft: #FF8C5A;
+    --color-accent-glow: rgba(255, 107, 53, 0.15);
+    
+    --color-success: #10B981;
+    --color-danger: #EF4444;
+    
+    --color-text-primary: #1A1A2E;
+    --color-text-secondary: #64748B;
+    --color-text-muted: #94A3B8;
+    
+    --color-border: #E2E8F0;
+    
+    /* Typography */
+    --font-display: 'Sora', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.16), 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-input-focus: 0 0 0 4px var(--color-accent-glow);
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* ============================================
+   GENERAL STYLES
+   ============================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-body);
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Subtle background texture */
+    background-image: 
+        radial-gradient(ellipse at 20% 0%, rgba(255, 107, 53, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(26, 26, 46, 0.02) 0%, transparent 50%);
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
 .container {
-    padding: 20px;
+    padding: var(--space-lg);
+    padding-bottom: calc(100px + var(--space-xl));
     max-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    
+    /* Page entrance animation */
+    animation: pageSlideIn 500ms var(--transition-smooth) forwards;
 }
 
-/* Header */
+@keyframes pageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
 .header {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 20px;
-    gap: 5px; /* Reduce gap to make the title move down */
+    margin-bottom: var(--space-xl);
+    gap: var(--space-md);
     position: relative;
     width: 100%;
-    padding-left: 10px; /* Adjust spacing */
+    max-width: 500px;
+    
+    animation: headerSlideDown 500ms var(--transition-smooth) forwards;
+    animation-delay: 100ms;
+    opacity: 0;
 }
 
+@keyframes headerSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   BACK BUTTON
+   ============================================ */
 .back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
     text-decoration: none;
-    font-size: 24px;
-    color: #3D2174;
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+    background: var(--color-surface-elevated);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius-md);
     cursor: pointer;
-    position: absolute;
-    left: 15px; /* Moves it further left */
-    top: 5px; /* Adjust vertical positioning */
+    position: relative;
+    left: 0;
+    top: 0;
+    transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
 }
 
+.back-button:hover {
+    background: var(--color-surface-subtle);
+    transform: translateX(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.back-button:active {
+    transform: scale(0.95);
+}
+
+/* ============================================
+   TITLE CARD
+   ============================================ */
 .title-card {
-    background-color: #7DFFDF;
-    border-radius: 15px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #FF8A5B 50%, #FFB088 100%);
+    border-radius: var(--radius-xl);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 15px;
-    width: calc(100% - 30px); /* Keeps spacing consistent */
-    margin-top: 40px; /* Moves the title down */
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: var(--space-lg) var(--space-xl);
+    width: 100%;
+    margin-top: var(--space-sm);
+    box-shadow: 
+        var(--shadow-lg),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    
+    /* Animated gradient */
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease-in-out infinite;
 }
 
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
 
-/* Appointments Section */
+.title-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 30%);
+    pointer-events: none;
+}
+
+.title-card h1,
+.title-card span {
+    font-family: var(--font-display);
+    color: white;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   APPOINTMENTS SECTION
+   ============================================ */
 .appointment-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: var(--space-md);
     width: 100%;
+    
+    /* Stagger animation for cards */
+    animation: cardFadeIn 500ms var(--transition-smooth) forwards;
+    animation-delay: 200ms;
+    opacity: 0;
 }
 
-/* Appointment Cards */
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   APPOINTMENT CARDS
+   ============================================ */
 .appointment-card {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #f9f9f9;
-    border-radius: 15px;
-    padding: 15px;
+    gap: var(--space-md);
+    background: var(--color-surface-card);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 
+        transform var(--transition-smooth),
+        box-shadow var(--transition-smooth),
+        border-color var(--transition-fast);
 }
 
+/* Accent bar on left */
+.appointment-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-accent-soft) 100%);
+    transform: scaleY(0);
+    transition: transform var(--transition-smooth);
+    border-radius: 0 4px 4px 0;
+}
+
+.appointment-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: rgba(255, 107, 53, 0.1);
+}
+
+.appointment-card:hover::before {
+    transform: scaleY(1);
+}
+
+.appointment-card:active {
+    transform: translateY(-2px) scale(0.99);
+}
+
+/* Add spacing between cards */
+.appointment-container + .appointment-container {
+    margin-top: var(--space-sm);
+}
+
+/* ============================================
+   APPOINTMENT DETAILS
+   ============================================ */
 .appointment-details {
-    flex: 1; /* Allows text to take remaining space */
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
 }
 
 .appointment-date {
-    font-size: 16px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
     font-weight: 600;
-    color: #3D2174;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+/* Optional: Date badge styling */
+.appointment-date::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    flex-shrink: 0;
 }
 
 .appointment-time {
-    font-size: 14px;
+    font-size: 0.95rem;
     font-weight: 500;
-    margin: 5px 0;
+    color: var(--color-text-secondary);
+    margin: var(--space-xs) 0;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-accent-glow);
+    border-radius: var(--radius-full);
+    width: fit-content;
 }
 
 .appointment-type {
-    font-size: 14px;
-    font-weight: 400;
-    color: #3D2174;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
 }
 
 .appointment-location {
-    font-size: 12px;
-    font-weight: 300;
-    color: #3D2174;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
 }
 
-/* Map Thumbnail */
+/* Location pin icon */
+.appointment-location::before {
+    content: '📍';
+    font-size: 0.75rem;
+}
+
+/* ============================================
+   MAP THUMBNAIL
+   ============================================ */
 .map-thumbnail {
-    width: 100px;  /* Reduced size */
-    height: 100px;
-    border-radius: 10px;
+    width: 88px;
+    height: 88px;
+    border-radius: var(--radius-md);
     overflow: hidden;
-    flex-shrink: 0; /* Ensures it does not shrink */
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--color-border);
+    transition: 
+        transform var(--transition-bounce),
+        box-shadow var(--transition-fast);
+}
+
+.appointment-card:hover .map-thumbnail {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
 }
 
 .map-thumbnail img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures proper fit without stretching */
-    border-radius: 10px;
+    object-fit: cover;
+    border-radius: calc(var(--radius-md) - 2px);
+    transition: transform var(--transition-smooth);
 }
 
-/* Floating Action Button */
+.appointment-card:hover .map-thumbnail img {
+    transform: scale(1.1);
+}
+
+/* ============================================
+   FLOATING ACTION BUTTON (Original .fab)
+   ============================================ */
 .fab {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    background-color: #7DFFDF;
-    color: #3D2174;
-    font-size: 24px;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-soft) 100%);
+    color: white;
+    font-size: 1.5rem;
     border: none;
     border-radius: 50%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 
+        0 8px 24px rgba(255, 107, 53, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: 
+        transform var(--transition-bounce),
+        box-shadow var(--transition-base);
+    
+    animation: fabFloat 4s ease-in-out infinite;
 }
 
-/* === STYLING FOR DYNAMIC FORMS AND LISTS === */
+@keyframes fabFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
 
-/* The + Button */
+.fab:hover {
+    transform: scale(1.1) translateY(-4px);
+    box-shadow: 
+        0 12px 32px rgba(255, 107, 53, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    animation-play-state: paused;
+}
+
+.fab:active {
+    transform: scale(0.95);
+}
+
+/* ============================================
+   ADD FAB (Modal Trigger)
+   ============================================ */
 .add-fab {
     position: fixed;
-    bottom: 80px; /* Adjust to be above the nav bar */
-    width: 60px;
-    height: 60px;
-    background-color: #7DFFDF;
-    color: #3D2174; /* Text color */
+    bottom: 100px;
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-soft) 100%);
+    color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 36px;
+    font-size: 2rem;
+    font-weight: 300;
     text-decoration: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 
+        0 8px 24px rgba(255, 107, 53, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     border: none;
     cursor: pointer;
     z-index: 1000;
+    transition: 
+        transform var(--transition-bounce),
+        box-shadow var(--transition-base);
+    
+    animation: fabFloat 4s ease-in-out infinite;
+}
+
+.add-fab:hover {
+    transform: scale(1.1) translateY(-4px);
+    box-shadow: 
+        0 12px 32px rgba(255, 107, 53, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    animation-play-state: paused;
+}
+
+.add-fab:active {
+    transform: scale(0.95);
 }
 
 .add-fab.left {
-    left: 25px;
+    left: var(--space-lg);
 }
 
 .add-fab.right {
-    right: 25px;
+    right: var(--space-lg);
 }
 
-/* The Modal (Popup Form) */
+/* ============================================
+   MODAL OVERLAY
+   ============================================ */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: none; /* Hidden by default */
+    background-color: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 2000;
+    padding: var(--space-lg);
+    
+    opacity: 0;
+    transition: opacity var(--transition-base);
 }
 
+.modal-overlay.active {
+    opacity: 1;
+}
+
+/* ============================================
+   MODAL CONTENT
+   ============================================ */
 .modal-content {
-    background-color: white;
-    padding: 25px;
-    border-radius: 10px;
-    width: 90%;
+    background-color: var(--color-surface-elevated);
+    padding: var(--space-xl);
+    border-radius: var(--radius-xl);
+    width: 100%;
     max-width: 400px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    transform: translateY(20px) scale(0.95);
+    transition: transform var(--transition-smooth);
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0) scale(1);
 }
 
 .modal-content h3 {
-    margin-top: 0;
-    color: #333;
+    font-family: var(--font-display);
+    margin: 0 0 var(--space-lg) 0;
+    color: var(--color-text-primary);
     text-align: center;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
-/* The Form Inputs inside the Modal */
+/* ============================================
+   MODAL FORM INPUTS
+   ============================================ */
 .modal-form-inputs {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin: 20px 0;
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
 }
 
 .modal-form-inputs input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box; /* Important */
+    padding: var(--space-md);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-family: var(--font-body);
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
 }
 
+.modal-form-inputs input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    background-color: var(--color-surface-elevated);
+    box-shadow: var(--shadow-input-focus);
+}
+
+.modal-form-inputs input::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* ============================================
+   MODAL BUTTONS
+   ============================================ */
 .modal-buttons {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
 }
 
 .modal-buttons button {
-    flex-grow: 1;
-    padding: 12px;
+    flex: 1;
+    padding: var(--space-md);
     border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: var(--font-body);
     cursor: pointer;
+    transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
 }
 
 .save-btn {
-    background-color: #28a745;
+    background: linear-gradient(135deg, var(--color-success) 0%, #34D399 100%);
     color: white;
+    box-shadow: 
+        0 4px 12px rgba(16, 185, 129, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(16, 185, 129, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.save-btn:active {
+    transform: translateY(0) scale(0.98);
 }
 
 .cancel-btn {
-    background-color: #dc3545;
-    color: white;
+    background: var(--color-surface-subtle);
+    color: var(--color-text-secondary);
+    border: 2px solid var(--color-border);
 }
 
-/* Message for when a list is empty */
+.cancel-btn:hover {
+    background: var(--color-surface);
+    border-color: var(--color-danger);
+    color: var(--color-danger);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.cancel-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* ============================================
+   EMPTY LIST MESSAGE
+   ============================================ */
 .empty-list-message {
     text-align: center;
-    color: #888;
-    margin-top: 50px;
-    font-size: 18px;
+    color: var(--color-text-muted);
+    margin: var(--space-2xl) var(--space-lg);
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
-/* Bottom Navigation */
+.empty-list-message::before {
+    content: '📅';
+    display: block;
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+    opacity: 0.6;
+}
+
+/* ============================================
+   BOTTOM NAVIGATION
+   ============================================ */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
-    background-color: #ffffff;
+    right: 0;
+    background: var(--color-surface-elevated);
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 10px 0;
-    border-top: 1px solid #ffffff;
-    z-index: 10;
+    padding: var(--space-sm) var(--space-md);
+    padding-bottom: calc(var(--space-sm) + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+    z-index: 50;
+    
+    /* Glassmorphism */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.85);
 }
 
 .bottom-nav a {
-    color: #3D2174;
-    text-decoration: none;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 45px;
-    width: 45px;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: 
+        color var(--transition-fast),
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    position: relative;
+    min-width: 60px;
+    min-height: 50px;
+}
+
+/* Active indicator */
+.bottom-nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 24px;
+    height: 3px;
+    background: var(--color-accent);
+    border-radius: var(--radius-full);
+    transition: transform var(--transition-smooth);
+}
+
+.bottom-nav a:hover,
+.bottom-nav a.active {
+    color: var(--color-accent);
+    background: var(--color-accent-glow);
+}
+
+.bottom-nav a.active::before {
+    transform: translateX(-50%) scaleX(1);
+}
+
+.bottom-nav a:active {
+    transform: scale(0.92);
 }
 
 .bottom-nav img {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
+    opacity: 0.7;
+    transition: 
+        opacity var(--transition-fast),
+        transform var(--transition-fast);
 }
 
-.bottom-nav a:hover {
-    opacity: 0.8;
+.bottom-nav a:hover img,
+.bottom-nav a.active img {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.bottom-nav span {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+*:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline-offset: 4px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 380px) {
+    .container {
+        padding: var(--space-md);
+    }
+    
+    .appointment-card {
+        padding: var(--space-md);
+    }
+    
+    .map-thumbnail {
+        width: 72px;
+        height: 72px;
+    }
+    
+    .title-card h1,
+    .title-card span {
+        font-size: 1.25rem;
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-surface: #0F0F14;
+        --color-surface-elevated: #1A1A24;
+        --color-surface-subtle: #252532;
+        --color-surface-card: #1A1A24;
+        
+        --color-text-primary: #F8FAFC;
+        --color-text-secondary: #94A3B8;
+        --color-text-muted: #64748B;
+        
+        --color-border: #2D3748;
+    }
+    
+    .bottom-nav {
+        background: rgba(26, 26, 36, 0.9);
+        border-top-color: rgba(255, 255, 255, 0.06);
+    }
+    
+    .appointment-card {
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+    
+    .modal-overlay {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    
+    .modal-content {
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+    
+    .map-thumbnail {
+        border-color: var(--color-border);
+    }
 }
