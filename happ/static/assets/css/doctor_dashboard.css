@@ -1,102 +1,602 @@
-/* □  GLOBAL  (reuse values from styles.css) */
-body{
-    margin:0;
-    padding:0;
-    font-family:'Poppins',sans-serif;
-    background:#fff;
-    overflow:hidden;
-    animation:fadeIn .6s ease-in-out;
-}
-@keyframes fadeIn{
-    from{opacity:0;transform:translateY(20px)}
-    to{opacity:1;transform:translateY(0)}
+/* Import distinctive fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700&display=swap');
+
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+    /* Color Palette */
+    --dash-surface: #FAFBFC;
+    --dash-surface-elevated: #FFFFFF;
+    --dash-surface-subtle: #F5F3F0;
+    
+    --dash-primary: #1A1A2E;
+    --dash-primary-soft: #2D2D44;
+    
+    --dash-accent: #FF6B35;
+    --dash-accent-soft: #FF8C5A;
+    --dash-accent-glow: rgba(255, 107, 53, 0.12);
+    
+    --dash-text-primary: #1A1A2E;
+    --dash-text-secondary: #64748B;
+    --dash-text-muted: #94A3B8;
+    
+    --dash-border: #E2E8F0;
+    
+    /* Typography */
+    --dash-font-display: 'Sora', sans-serif;
+    --dash-font-body: 'Outfit', sans-serif;
+    
+    /* Spacing */
+    --dash-space-xs: 4px;
+    --dash-space-sm: 8px;
+    --dash-space-md: 16px;
+    --dash-space-lg: 24px;
+    --dash-space-xl: 32px;
+    --dash-space-2xl: 48px;
+    
+    /* Border Radius */
+    --dash-radius-sm: 8px;
+    --dash-radius-md: 12px;
+    --dash-radius-lg: 16px;
+    --dash-radius-xl: 24px;
+    --dash-radius-full: 9999px;
+    
+    /* Shadows */
+    --dash-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --dash-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+    --dash-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+    --dash-shadow-xl: 0 24px 56px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.06);
+    
+    /* Transitions */
+    --dash-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --dash-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --dash-transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    --dash-transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.container{
-    padding:20px;
+/* ============================================
+   BASE / GLOBAL STYLES
+   ============================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-/* □  HEADER  */
-.header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:32px;
-}
-.header h1{
-    font-size:1.8rem;
-    color:#3D2174;
-}
-.header img{
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    object-fit:cover;
-}
-
-/* □  SECTION  */
-.section-title{
-    color:#3D2174;
-    margin-bottom:12px;
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--dash-font-body);
+    background: var(--dash-surface);
+    color: var(--dash-text-primary);
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Subtle gradient background */
+    background: 
+        radial-gradient(ellipse at 30% 0%, rgba(255, 107, 53, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(26, 26, 46, 0.02) 0%, transparent 50%),
+        var(--dash-surface);
+    background-attachment: fixed;
+    
+    animation: bodyFadeIn 0.6s var(--dash-transition-smooth) forwards;
 }
 
-/* □  PATIENT CARD  */
-.family-section{
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-}
-.family-card{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:18px 20px;
-    border-radius:12px;
-    background:#fff;
-    box-shadow:0 4px 14px rgba(0,0,0,.08);
-    text-decoration:none;
-    transition:transform .25s;
-}
-.family-card h3{
-    margin:0;
-    font-size:1rem;
-    color:#3D2174;
-}
-.family-card img{
-    width:48px;
-    height:48px;
-    border-radius:50%;
-    object-fit:cover;
-}
-.family-card:hover{transform:scale(1.03)}
-
-.empty-text{
-    color:#777;
-    font-style:italic;
-    margin-top:8px;
+@keyframes bodyFadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(16px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
 }
 
-/* □  BOTTOM NAV  */
-.bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    height:70px;
-    background:#fff;
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-    box-shadow:0 -4px 14px rgba(0,0,0,.08);
+/* ============================================
+   CONTAINER
+   ============================================ */
+.container {
+    padding: var(--dash-space-lg);
+    padding-bottom: calc(90px + var(--dash-space-xl)); /* Space for bottom nav */
+    max-width: 600px;
+    margin: 0 auto;
+    
+    animation: containerSlideIn 0.5s var(--dash-transition-smooth) 0.1s forwards;
+    opacity: 0;
 }
+
+@keyframes containerSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--dash-space-xl);
+    padding-bottom: var(--dash-space-lg);
+    border-bottom: 1px solid var(--dash-border);
+    
+    animation: headerFadeIn 0.5s var(--dash-transition-smooth) 0.2s forwards;
+    opacity: 0;
+}
+
+@keyframes headerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header h1 {
+    font-family: var(--dash-font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--dash-text-primary);
+    letter-spacing: -0.02em;
+    margin: 0;
+    position: relative;
+}
+
+/* Greeting subtext (optional - add via HTML) */
+.header .greeting {
+    font-size: 0.9rem;
+    color: var(--dash-text-secondary);
+    font-weight: 400;
+    margin-top: var(--dash-space-xs);
+}
+
+/* Profile image */
+.header img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--dash-surface-elevated);
+    box-shadow: 
+        var(--dash-shadow-md),
+        0 0 0 2px var(--dash-accent-glow);
+    transition: 
+        transform var(--dash-transition-bounce),
+        box-shadow var(--dash-transition-base);
+    cursor: pointer;
+}
+
+.header img:hover {
+    transform: scale(1.08);
+    box-shadow: 
+        var(--dash-shadow-lg),
+        0 0 0 3px var(--dash-accent-glow);
+}
+
+.header img:active {
+    transform: scale(0.98);
+}
+
+/* ============================================
+   SECTION TITLE
+   ============================================ */
+.section-title {
+    font-family: var(--dash-font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dash-text-primary);
+    margin-bottom: var(--dash-space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--dash-space-sm);
+    letter-spacing: -0.01em;
+}
+
+/* Accent dot before title */
+.section-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(180deg, var(--dash-accent) 0%, var(--dash-accent-soft) 100%);
+    border-radius: var(--dash-radius-full);
+    flex-shrink: 0;
+}
+
+/* ============================================
+   FAMILY SECTION
+   ============================================ */
+.family-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dash-space-md);
+    
+    animation: sectionFadeIn 0.5s var(--dash-transition-smooth) 0.3s forwards;
+    opacity: 0;
+}
+
+@keyframes sectionFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   FAMILY / PATIENT CARD
+   ============================================ */
+.family-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--dash-space-md);
+    padding: var(--dash-space-lg);
+    border-radius: var(--dash-radius-lg);
+    background: var(--dash-surface-elevated);
+    box-shadow: var(--dash-shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    
+    transition: 
+        transform var(--dash-transition-smooth),
+        box-shadow var(--dash-transition-smooth),
+        border-color var(--dash-transition-fast);
+}
+
+/* Accent bar on left */
+.family-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--dash-accent) 0%, var(--dash-accent-soft) 100%);
+    transform: scaleY(0);
+    transition: transform var(--dash-transition-smooth);
+    border-radius: 0 4px 4px 0;
+}
+
+/* Arrow indicator */
+.family-card::after {
+    content: '→';
+    position: absolute;
+    right: var(--dash-space-lg);
+    color: var(--dash-text-muted);
+    font-size: 1.2rem;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: 
+        opacity var(--dash-transition-fast),
+        transform var(--dash-transition-smooth);
+}
+
+.family-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--dash-shadow-xl);
+    border-color: rgba(255, 107, 53, 0.1);
+}
+
+.family-card:hover::before {
+    transform: scaleY(1);
+}
+
+.family-card:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.family-card:active {
+    transform: translateY(-2px) scale(0.99);
+}
+
+/* Card content wrapper */
+.family-card .card-info {
+    display: flex;
+    align-items: center;
+    gap: var(--dash-space-md);
+    flex: 1;
+    min-width: 0;
+}
+
+/* Card text */
+.family-card h3 {
+    margin: 0;
+    font-family: var(--dash-font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dash-text-primary);
+    letter-spacing: -0.01em;
+}
+
+/* Subtitle (optional - add via HTML) */
+.family-card .card-subtitle {
+    font-size: 0.85rem;
+    color: var(--dash-text-secondary);
+    margin-top: var(--dash-space-xs);
+}
+
+/* Profile image in card */
+.family-card img {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid var(--dash-border);
+    transition: 
+        transform var(--dash-transition-bounce),
+        border-color var(--dash-transition-fast);
+}
+
+.family-card:hover img {
+    transform: scale(1.08);
+    border-color: var(--dash-accent-glow);
+}
+
+/* Stagger animation for multiple cards */
+.family-section .family-card:nth-child(1) {
+    animation: cardSlideIn 0.4s var(--dash-transition-smooth) 0.35s forwards;
+    opacity: 0;
+}
+
+.family-section .family-card:nth-child(2) {
+    animation: cardSlideIn 0.4s var(--dash-transition-smooth) 0.45s forwards;
+    opacity: 0;
+}
+
+.family-section .family-card:nth-child(3) {
+    animation: cardSlideIn 0.4s var(--dash-transition-smooth) 0.55s forwards;
+    opacity: 0;
+}
+
+.family-section .family-card:nth-child(4) {
+    animation: cardSlideIn 0.4s var(--dash-transition-smooth) 0.65s forwards;
+    opacity: 0;
+}
+
+.family-section .family-card:nth-child(n+5) {
+    animation: cardSlideIn 0.4s var(--dash-transition-smooth) 0.75s forwards;
+    opacity: 0;
+}
+
+@keyframes cardSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-text {
+    text-align: center;
+    color: var(--dash-text-muted);
+    font-style: normal;
+    margin: var(--dash-space-2xl) var(--dash-space-lg);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.empty-text::before {
+    content: '👨‍👩‍👧‍👦';
+    display: block;
+    font-size: 2.5rem;
+    margin-bottom: var(--dash-space-md);
+    opacity: 0.6;
+    font-style: normal;
+}
+
+/* ============================================
+   BOTTOM NAVIGATION
+   ============================================ */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: auto;
+    background: var(--dash-surface-elevated);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: var(--dash-space-sm) var(--dash-space-md);
+    padding-bottom: calc(var(--dash-space-sm) + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    z-index: 100;
+    
+    /* Glassmorphism */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--dash-space-xs);
+    padding: var(--dash-space-sm) var(--dash-space-md);
+    text-decoration: none;
+    border-radius: var(--dash-radius-md);
+    position: relative;
+    min-width: 56px;
+    min-height: 48px;
+    transition: 
+        background-color var(--dash-transition-fast),
+        transform var(--dash-transition-fast);
+}
+
+/* Active indicator */
+.bottom-nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 24px;
+    height: 3px;
+    background: var(--dash-accent);
+    border-radius: var(--dash-radius-full);
+    transition: transform var(--dash-transition-smooth);
+}
+
+.bottom-nav a:hover,
+.bottom-nav a.active {
+    background: var(--dash-accent-glow);
+}
+
+.bottom-nav a.active::before {
+    transform: translateX(-50%) scaleX(1);
+}
+
+.bottom-nav a:active {
+    transform: scale(0.92);
+}
+
 .bottom-nav img {
-  width: 24px;
-  height: 24px;
-  opacity: 0.6;
-  transition: opacity 0.3s;
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+    transition: 
+        opacity var(--dash-transition-fast),
+        transform var(--dash-transition-fast);
 }
 
-.bottom-nav a:hover img {
-  opacity: 1;
+.bottom-nav a:hover img,
+.bottom-nav a.active img {
+    opacity: 1;
+    transform: scale(1.1);
 }
 
+/* Nav label (optional) */
+.bottom-nav span {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--dash-text-muted);
+    transition: color var(--dash-transition-fast);
+}
+
+.bottom-nav a:hover span,
+.bottom-nav a.active span {
+    color: var(--dash-accent);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.family-card:focus-visible,
+.bottom-nav a:focus-visible,
+.header img:focus-visible {
+    outline: 2px solid var(--dash-accent);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 400px) {
+    .container {
+        padding: var(--dash-space-md);
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .header img {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .family-card {
+        padding: var(--dash-space-md);
+    }
+    
+    .family-card img {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .family-card::after {
+        display: none;
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dash-surface: #0F0F14;
+        --dash-surface-elevated: #1A1A24;
+        --dash-surface-subtle: #252532;
+        
+        --dash-text-primary: #F8FAFC;
+        --dash-text-secondary: #94A3B8;
+        --dash-text-muted: #64748B;
+        
+        --dash-border: #3D3D52;
+    }
+    
+    body {
+        background: 
+            radial-gradient(ellipse at 30% 0%, rgba(255, 107, 53, 0.04) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 100%, rgba(26, 26, 46, 0.03) 0%, transparent 50%),
+            var(--dash-surface);
+    }
+    
+    .bottom-nav {
+        background: rgba(26, 26, 36, 0.92);
+        border-top-color: rgba(255, 255, 255, 0.06);
+    }
+    
+    .family-card {
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+    
+    .header {
+        border-bottom-color: var(--dash-border);
+    }
+}
