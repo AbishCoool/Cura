@@ -1,157 +1,621 @@
-body {
-    font-family: 'Poppins', sans-serif;
+/* Import distinctive fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap');
+
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+    /* Color Palette */
+    --settings-surface: #FAFBFC;
+    --settings-surface-elevated: #FFFFFF;
+    --settings-surface-subtle: #F5F3F0;
+    
+    --settings-primary: #1A1A2E;
+    --settings-primary-soft: #2D2D44;
+    
+    --settings-accent: #FF6B35;
+    --settings-accent-soft: #FF8C5A;
+    --settings-accent-glow: rgba(255, 107, 53, 0.15);
+    
+    --settings-purple: #8B5CF6;
+    --settings-purple-soft: #A78BFA;
+    --settings-purple-glow: rgba(139, 92, 246, 0.15);
+    
+    --settings-text-primary: #1A1A2E;
+    --settings-text-secondary: #64748B;
+    --settings-text-muted: #94A3B8;
+    
+    --settings-border: #E2E8F0;
+    
+    /* Typography */
+    --settings-font-display: 'Sora', sans-serif;
+    --settings-font-body: 'Outfit', sans-serif;
+    
+    /* Spacing */
+    --settings-space-xs: 4px;
+    --settings-space-sm: 8px;
+    --settings-space-md: 16px;
+    --settings-space-lg: 24px;
+    --settings-space-xl: 32px;
+    --settings-space-2xl: 48px;
+    
+    /* Border Radius */
+    --settings-radius-sm: 8px;
+    --settings-radius-md: 12px;
+    --settings-radius-lg: 16px;
+    --settings-radius-xl: 24px;
+    --settings-radius-full: 9999px;
+    
+    /* Shadows */
+    --settings-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --settings-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --settings-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+    --settings-shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+    
+    /* Transitions */
+    --settings-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --settings-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --settings-transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    --settings-transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #ffffff;
-    color: #3D2174;
-    overflow-y: auto;
 }
 
-.settings-page {
-    padding: 20px;
-    font-size: 1.5rem;
-}
-
-/* Header Section */
-.settings-page h2 {
-    font-size: 1.8rem; /* Increased from 18px */
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-/* Centered Profile Section */
-.profile-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 15px 0;
-}
-
-.profile-pic {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid #3D2174;
-    margin-bottom: 10px;
-}
-
-h1 {
-    font-size: 18px; /* Increased from 16px */
-    font-weight: 600;
-    margin: 0;
-}
-
-p {
-    font-size: 1.2rem; /* Increased from 11px */
-    color: #3D2174;
-    margin: 5px 0 0;
-}
-
-/* Settings Options Section */
-.settings-options {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.option {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px; /* Slightly increased padding */
-    background-color: transparent;
-    border-bottom: 1px solid #ffffff;
-    text-decoration: none;
-    color: #3D2174;
-    font-size: 1.2rem; /* Increased from 12px */
-}
-
-.left-section {
-    display: flex;
-    align-items: center;
-    gap: 12px; /* Increased spacing */
-}
-
-.option-icon {
-    width: 20px; /* Increased size */
-    height: 20px;
-}
-
-.arrow {
-    color: #3D2174;
-    font-size: 16px; /* Increased from 14px */
-}
-
-/* Bottom Navigation - No Changes */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #ffffff;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0;
-    border-top: 1px solid #ffffff;
-    z-index: 10;
-}
-
-.bottom-nav a {
-    color: #3D2174;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 45px;
-    width: 45px;
-}
-
-.bottom-nav img {
-    width: 20px;
-    height: 20px;
-}
-
-.bottom-nav a:hover {
-    opacity: 0.8;
-}
-
-/* Scrolling Fix */
 html, body {
     height: 100%;
     overflow-y: auto;
 }
 
-/* Responsive Design for Smaller Screens */
+body {
+    font-family: var(--settings-font-body);
+    margin: 0;
+    padding: 0;
+    background-color: var(--settings-surface);
+    color: var(--settings-text-primary);
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Subtle gradient background */
+    background: 
+        radial-gradient(ellipse at 30% 0%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 100%, rgba(255, 107, 53, 0.04) 0%, transparent 40%),
+        var(--settings-surface);
+    background-attachment: fixed;
+    
+    animation: bodyFadeIn 0.5s var(--settings-transition-smooth) forwards;
+}
+
+@keyframes bodyFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ============================================
+   SETTINGS PAGE
+   ============================================ */
+.settings-page {
+    padding: var(--settings-space-lg);
+    padding-bottom: 100px;
+    max-width: 480px;
+    margin: 0 auto;
+    
+    animation: pageSlideUp 0.5s var(--settings-transition-smooth) 0.1s forwards;
+    opacity: 0;
+}
+
+@keyframes pageSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.settings-page h2 {
+    font-family: var(--settings-font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--settings-text-primary);
+    margin-bottom: var(--settings-space-lg);
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: var(--settings-space-sm);
+}
+
+/* Settings gear icon */
+.settings-page h2::before {
+    content: '⚙️';
+    font-size: 1.5rem;
+}
+
+/* ============================================
+   PROFILE SECTION
+   ============================================ */
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--settings-space-xl) var(--settings-space-lg);
+    background: var(--settings-surface-elevated);
+    border-radius: var(--settings-radius-xl);
+    box-shadow: var(--settings-shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    margin-bottom: var(--settings-space-lg);
+    
+    animation: profileFadeIn 0.5s var(--settings-transition-smooth) 0.2s forwards;
+    opacity: 0;
+}
+
+@keyframes profileFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   PROFILE PICTURE
+   ============================================ */
+.profile-pic {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: none;
+    margin-bottom: var(--settings-space-md);
+    object-fit: cover;
+    
+    /* Gradient ring effect */
+    padding: 4px;
+    background: linear-gradient(135deg, var(--settings-purple) 0%, var(--settings-purple-soft) 100%);
+    box-shadow: 
+        0 8px 24px var(--settings-purple-glow),
+        0 0 0 4px rgba(139, 92, 246, 0.1);
+    transition: transform var(--settings-transition-bounce);
+}
+
+.profile-pic:hover {
+    transform: scale(1.05);
+}
+
+/* Make the actual image circular inside the gradient border */
+.profile-section .profile-pic {
+    background: linear-gradient(135deg, var(--settings-purple) 0%, var(--settings-purple-soft) 100%);
+}
+
+/* ============================================
+   PROFILE TEXT
+   ============================================ */
+h1 {
+    font-family: var(--settings-font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--settings-text-primary);
+    margin: 0 0 var(--settings-space-xs) 0;
+    letter-spacing: -0.01em;
+}
+
+p {
+    font-size: 0.95rem;
+    color: var(--settings-text-secondary);
+    margin: 0;
+}
+
+/* ============================================
+   SETTINGS OPTIONS CONTAINER
+   ============================================ */
+.settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--settings-space-sm);
+    background: var(--settings-surface-elevated);
+    border-radius: var(--settings-radius-xl);
+    padding: var(--settings-space-sm);
+    box-shadow: var(--settings-shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    
+    animation: optionsFadeIn 0.5s var(--settings-transition-smooth) 0.3s forwards;
+    opacity: 0;
+}
+
+@keyframes optionsFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   OPTION ROW
+   ============================================ */
+.option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--settings-space-md);
+    background: transparent;
+    border-radius: var(--settings-radius-lg);
+    text-decoration: none;
+    color: var(--settings-text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: 
+        background-color var(--settings-transition-fast),
+        transform var(--settings-transition-fast);
+}
+
+.option:hover {
+    background: var(--settings-surface-subtle);
+    transform: translateX(4px);
+}
+
+.option:active {
+    transform: scale(0.99);
+}
+
+/* Divider between options */
+.option:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: var(--settings-space-2xl);
+    right: var(--settings-space-md);
+    height: 1px;
+    background: var(--settings-border);
+}
+
+/* Stagger animation */
+.option:nth-child(1) { animation: optionSlideIn 0.3s var(--settings-transition-smooth) 0.35s forwards; opacity: 0; }
+.option:nth-child(2) { animation: optionSlideIn 0.3s var(--settings-transition-smooth) 0.4s forwards; opacity: 0; }
+.option:nth-child(3) { animation: optionSlideIn 0.3s var(--settings-transition-smooth) 0.45s forwards; opacity: 0; }
+.option:nth-child(4) { animation: optionSlideIn 0.3s var(--settings-transition-smooth) 0.5s forwards; opacity: 0; }
+.option:nth-child(5) { animation: optionSlideIn 0.3s var(--settings-transition-smooth) 0.55s forwards; opacity: 0; }
+.option:nth-child(n+6) { animation: optionSlideIn 0.3s var(--settings-transition-smooth) 0.6s forwards; opacity: 0; }
+
+@keyframes optionSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ============================================
+   LEFT SECTION (Icon + Label)
+   ============================================ */
+.left-section {
+    display: flex;
+    align-items: center;
+    gap: var(--settings-space-md);
+}
+
+/* ============================================
+   OPTION ICON
+   ============================================ */
+.option-icon {
+    width: 24px;
+    height: 24px;
+    opacity: 0.7;
+    transition: 
+        opacity var(--settings-transition-fast),
+        transform var(--settings-transition-fast);
+}
+
+.option:hover .option-icon {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Optional: Icon background wrapper */
+.icon-wrapper {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--settings-purple-glow);
+    border-radius: var(--settings-radius-md);
+}
+
+.icon-wrapper .option-icon {
+    opacity: 1;
+}
+
+/* ============================================
+   ARROW
+   ============================================ */
+.arrow {
+    color: var(--settings-text-muted);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: 
+        color var(--settings-transition-fast),
+        transform var(--settings-transition-fast);
+}
+
+.option:hover .arrow {
+    color: var(--settings-accent);
+    transform: translateX(4px);
+}
+
+/* ============================================
+   SETTINGS GROUPS (Optional)
+   ============================================ */
+.settings-group {
+    margin-bottom: var(--settings-space-lg);
+}
+
+.settings-group-title {
+    font-family: var(--settings-font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--settings-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--settings-space-sm) var(--settings-space-md);
+    margin-bottom: var(--settings-space-xs);
+}
+
+/* ============================================
+   TOGGLE SWITCH (Optional for toggleable options)
+   ============================================ */
+.toggle-switch {
+    width: 48px;
+    height: 28px;
+    background: var(--settings-border);
+    border-radius: var(--settings-radius-full);
+    position: relative;
+    cursor: pointer;
+    transition: background-color var(--settings-transition-base);
+}
+
+.toggle-switch::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: transform var(--settings-transition-smooth);
+}
+
+.toggle-switch.active {
+    background: var(--settings-accent);
+}
+
+.toggle-switch.active::before {
+    transform: translateX(20px);
+}
+
+/* ============================================
+   DANGER OPTIONS (e.g., Logout, Delete)
+   ============================================ */
+.option.danger {
+    color: #EF4444;
+}
+
+.option.danger .option-icon {
+    filter: grayscale(100%) brightness(0.5) sepia(100%) hue-rotate(-50deg) saturate(600%);
+}
+
+.option.danger:hover {
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.option.danger .arrow {
+    color: #EF4444;
+}
+
+/* ============================================
+   BOTTOM NAVIGATION
+   ============================================ */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--settings-surface-elevated);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: var(--settings-space-sm) var(--settings-space-md);
+    padding-bottom: calc(var(--settings-space-sm) + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+    z-index: 100;
+    
+    /* Glassmorphism */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--settings-space-xs);
+    padding: var(--settings-space-sm) var(--settings-space-md);
+    text-decoration: none;
+    border-radius: var(--settings-radius-md);
+    position: relative;
+    min-width: 56px;
+    min-height: 48px;
+    transition: 
+        background-color var(--settings-transition-fast),
+        transform var(--settings-transition-fast);
+}
+
+/* Active indicator */
+.bottom-nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 24px;
+    height: 3px;
+    background: var(--settings-accent);
+    border-radius: var(--settings-radius-full);
+    transition: transform var(--settings-transition-smooth);
+}
+
+.bottom-nav a:hover,
+.bottom-nav a.active {
+    background: var(--settings-accent-glow);
+}
+
+.bottom-nav a.active::before {
+    transform: translateX(-50%) scaleX(1);
+}
+
+.bottom-nav a:active {
+    transform: scale(0.92);
+}
+
+.bottom-nav img {
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+    transition: 
+        opacity var(--settings-transition-fast),
+        transform var(--settings-transition-fast);
+}
+
+.bottom-nav a:hover img,
+.bottom-nav a.active img {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.option:focus-visible,
+.toggle-switch:focus-visible,
+.bottom-nav a:focus-visible {
+    outline: 2px solid var(--settings-accent);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media (max-width: 768px) {
+    .settings-page {
+        padding: var(--settings-space-md);
+    }
+    
     .profile-pic {
-        width: 55px;
-        height: 55px;
+        width: 75px;
+        height: 75px;
     }
-
+    
     h1 {
-        font-size: 16px;
+        font-size: 1.1rem;
     }
-
+    
     .option {
-        padding: 8px;
-        font-size: 13px;
+        padding: var(--settings-space-sm) var(--settings-space-md);
+        font-size: 0.95rem;
     }
-
+    
     .option-icon {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
     }
-
+    
     .arrow {
-        font-size: 14px;
+        font-size: 0.9rem;
     }
-
+    
     .bottom-nav img {
-        width: 18px;
-        height: 18px;
+        width: 22px;
+        height: 22px;
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --settings-surface: #0F0F14;
+        --settings-surface-elevated: #1A1A24;
+        --settings-surface-subtle: #252532;
+        
+        --settings-text-primary: #F8FAFC;
+        --settings-text-secondary: #94A3B8;
+        --settings-text-muted: #64748B;
+        
+        --settings-border: #3D3D52;
+    }
+    
+    body {
+        background: 
+            radial-gradient(ellipse at 30% 0%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+            radial-gradient(ellipse at 70% 100%, rgba(255, 107, 53, 0.03) 0%, transparent 40%),
+            var(--settings-surface);
+    }
+    
+    .bottom-nav {
+        background: rgba(26, 26, 36, 0.92);
+        border-top-color: rgba(255, 255, 255, 0.06);
+    }
+    
+    .profile-section,
+    .settings-options {
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+    
+    .option:not(:last-child)::after {
+        background: var(--settings-border);
     }
 }
