@@ -1,3 +1,68 @@
+/* Import distinctive fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap');
+
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+    /* Color Palette */
+    --tour-surface: #FAFBFC;
+    --tour-surface-elevated: #FFFFFF;
+    --tour-surface-subtle: #F5F3F0;
+    
+    --tour-primary: #1A1A2E;
+    --tour-primary-soft: #2D2D44;
+    
+    --tour-accent: #FF6B35;
+    --tour-accent-soft: #FF8C5A;
+    --tour-accent-glow: rgba(255, 107, 53, 0.15);
+    
+    --tour-health: #10B981;
+    --tour-health-soft: #34D399;
+    --tour-health-glow: rgba(16, 185, 129, 0.12);
+    
+    --tour-text-primary: #1A1A2E;
+    --tour-text-secondary: #64748B;
+    --tour-text-muted: #94A3B8;
+    
+    --tour-border: #E2E8F0;
+    
+    /* Typography */
+    --tour-font-display: 'Sora', sans-serif;
+    --tour-font-body: 'Outfit', sans-serif;
+    
+    /* Spacing */
+    --tour-space-xs: 4px;
+    --tour-space-sm: 8px;
+    --tour-space-md: 16px;
+    --tour-space-lg: 24px;
+    --tour-space-xl: 32px;
+    --tour-space-2xl: 48px;
+    --tour-space-3xl: 64px;
+    
+    /* Border Radius */
+    --tour-radius-sm: 8px;
+    --tour-radius-md: 12px;
+    --tour-radius-lg: 16px;
+    --tour-radius-xl: 24px;
+    --tour-radius-full: 9999px;
+    
+    /* Shadows */
+    --tour-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --tour-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --tour-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+    --tour-shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+    
+    /* Transitions */
+    --tour-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --tour-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --tour-transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    --tour-transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
 * {
     margin: 0;
     padding: 0;
@@ -5,27 +70,52 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #ffffff;
+    font-family: var(--tour-font-body);
+    background-color: var(--tour-surface);
     text-align: center;
     overflow: hidden;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Beautiful gradient background */
+    background: 
+        radial-gradient(ellipse at 30% 20%, rgba(255, 107, 53, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(26, 26, 46, 0.02) 0%, transparent 70%),
+        var(--tour-surface);
+    background-attachment: fixed;
+    
+    animation: bodyFadeIn 0.6s var(--tour-transition-smooth) forwards;
 }
 
+@keyframes bodyFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ============================================
+   TOUR CONTAINER
+   ============================================ */
 .tour-container {
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     display: flex;
     align-items: center;
     position: relative;
 }
 
+/* ============================================
+   SLIDER WRAPPER
+   ============================================ */
 .slider-wrapper {
     width: 100vw;
     overflow: hidden;
@@ -33,120 +123,449 @@ body {
 
 .slides {
     display: flex;
-    transition: transform 0.4s ease-in-out;
+    transition: transform 0.5s var(--tour-transition-smooth);
 }
 
+/* ============================================
+   SLIDE
+   ============================================ */
 .slide {
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
+    padding: var(--tour-space-xl);
 }
 
+/* ============================================
+   CONTENT
+   ============================================ */
 .content {
     text-align: center;
-    max-width: 80%;
+    max-width: 400px;
+    padding: var(--tour-space-xl);
+    
+    animation: contentFadeIn 0.6s var(--tour-transition-smooth) forwards;
 }
 
+@keyframes contentFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   TOUR IMAGE
+   ============================================ */
 .tour-image {
-    width: 70%;
-    max-width: 250px;
-    margin-bottom: 15px;
+    width: 80%;
+    max-width: 280px;
+    margin-bottom: var(--tour-space-xl);
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1));
+    transition: transform var(--tour-transition-smooth);
+    
+    animation: imageFloat 4s ease-in-out infinite;
 }
 
+@keyframes imageFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.tour-image:hover {
+    animation-play-state: paused;
+    transform: scale(1.05);
+}
+
+/* ============================================
+   HEADINGS
+   ============================================ */
+h2 {
+    font-family: var(--tour-font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--tour-text-primary);
+    margin-bottom: var(--tour-space-md);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+/* Gradient text option */
+h2.gradient {
+    background: linear-gradient(135deg, var(--tour-accent) 0%, var(--tour-accent-soft) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ============================================
+   PARAGRAPH
+   ============================================ */
+p {
+    font-size: 1rem;
+    color: var(--tour-text-secondary);
+    padding: 0;
+    line-height: 1.6;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+/* ============================================
+   DOTS NAVIGATION
+   ============================================ */
 .dots {
     display: flex;
     justify-content: center;
+    gap: var(--tour-space-sm);
     position: absolute;
-    bottom: 50px;
+    bottom: 100px;
     width: 100%;
 }
 
 .dot {
-    width: 8px;
-    height: 8px;
-    margin: 0 5px;
-    background-color: #d3d3d3;
-    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    margin: 0;
+    background-color: var(--tour-border);
+    border-radius: var(--tour-radius-full);
     display: inline-block;
+    cursor: pointer;
+    transition: 
+        background-color var(--tour-transition-base),
+        transform var(--tour-transition-bounce),
+        width var(--tour-transition-base);
+}
+
+.dot:hover {
+    background-color: var(--tour-text-muted);
+    transform: scale(1.2);
 }
 
 .dot.active {
-    background-color: #00c4c4;
+    background: linear-gradient(135deg, var(--tour-accent) 0%, var(--tour-accent-soft) 100%);
+    width: 28px;
+    border-radius: var(--tour-radius-full);
 }
 
-/* Navigation Buttons */
-/* Navigation Buttons */
+/* ============================================
+   NAVIGATION BUTTONS
+   ============================================ */
 .nav-button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: none; /* Remove background */
-    color: #00c4c4; /* Set text (arrow) color to black */
-    border: none; /* Remove border */
-    font-size: 30px; /* Make arrow larger */
-    padding: 10px;
+    background: var(--tour-surface-elevated);
+    color: var(--tour-text-primary);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    font-size: 1.25rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
     cursor: pointer;
     z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--tour-shadow-md);
+    transition: 
+        transform var(--tour-transition-fast),
+        box-shadow var(--tour-transition-fast),
+        background-color var(--tour-transition-fast);
 }
 
 .nav-button:hover {
-    opacity: 0.7; /* Slight fade on hover */
+    background: var(--tour-accent);
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: var(--tour-shadow-lg);
+}
+
+.nav-button:active {
+    transform: translateY(-50%) scale(0.95);
 }
 
 .prev {
-    left: 15px;
+    left: var(--tour-space-lg);
 }
 
 .next {
-    right: 15px;
+    right: var(--tour-space-lg);
 }
 
-
-h2 {
-    font-size: 22px;
-    color: #00c4c4;
-    margin-bottom: 10px;
+/* Arrow styling */
+.prev::before {
+    content: '←';
 }
 
-p {
-    font-size: 14px;
-    color: #555;
-    padding: 0 20px;
+.next::after {
+    content: '→';
 }
 
+/* ============================================
+   SKIP TOUR LINK
+   ============================================ */
 .skip-tour {
-    font-size: 14px;
-    color: #00c4c4;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--tour-text-secondary);
     text-decoration: none;
     position: absolute;
-    bottom: 20px;
+    bottom: var(--tour-space-xl);
     left: 50%;
     transform: translateX(-50%);
+    padding: var(--tour-space-sm) var(--tour-space-lg);
+    border-radius: var(--tour-radius-full);
+    transition: 
+        color var(--tour-transition-fast),
+        background-color var(--tour-transition-fast);
 }
 
 .skip-tour:hover {
-    text-decoration: underline;
+    color: var(--tour-accent);
+    background: var(--tour-accent-glow);
+    text-decoration: none;
 }
 
-/* Mobile Optimization */
+/* ============================================
+   GET STARTED BUTTON (Final slide)
+   ============================================ */
+.get-started-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--tour-space-sm);
+    margin-top: var(--tour-space-xl);
+    padding: var(--tour-space-md) var(--tour-space-2xl);
+    background: linear-gradient(135deg, var(--tour-accent) 0%, var(--tour-accent-soft) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--tour-radius-full);
+    font-family: var(--tour-font-body);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 
+        0 8px 24px rgba(255, 107, 53, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: 
+        transform var(--tour-transition-fast),
+        box-shadow var(--tour-transition-base);
+}
+
+/* Shine effect */
+.get-started-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+    );
+    transition: left 0.5s ease;
+}
+
+.get-started-btn:hover::before {
+    left: 100%;
+}
+
+.get-started-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 12px 32px rgba(255, 107, 53, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.get-started-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+/* Arrow icon */
+.get-started-btn::after {
+    content: '→';
+    font-size: 1.2rem;
+    transition: transform var(--tour-transition-fast);
+}
+
+.get-started-btn:hover::after {
+    transform: translateX(4px);
+}
+
+/* ============================================
+   PROGRESS BAR (Alternative to dots)
+   ============================================ */
+.progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--tour-border);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--tour-accent) 0%, var(--tour-accent-soft) 100%);
+    border-radius: 0 var(--tour-radius-full) var(--tour-radius-full) 0;
+    transition: width var(--tour-transition-smooth);
+}
+
+/* ============================================
+   SLIDE INDICATORS (Number style)
+   ============================================ */
+.slide-indicator {
+    position: absolute;
+    top: var(--tour-space-xl);
+    right: var(--tour-space-xl);
+    font-family: var(--tour-font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--tour-text-muted);
+}
+
+.slide-indicator .current {
+    color: var(--tour-accent);
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.nav-button:focus-visible,
+.skip-tour:focus-visible,
+.get-started-btn:focus-visible,
+.dot:focus-visible {
+    outline: 2px solid var(--tour-accent);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media screen and (max-width: 768px) {
     .tour-image {
-        width: 80%;
+        width: 70%;
+        max-width: 220px;
     }
+    
     h2 {
-        font-size: 20px;
+        font-size: 1.5rem;
     }
+    
     p {
-        font-size: 14px;
+        font-size: 0.95rem;
+        padding: 0 var(--tour-space-md);
     }
+    
     .skip-tour {
-        font-size: 12px;
+        font-size: 0.85rem;
+        bottom: var(--tour-space-lg);
     }
+    
     .nav-button {
-        font-size: 18px;
-        padding: 8px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .prev {
+        left: var(--tour-space-md);
+    }
+    
+    .next {
+        right: var(--tour-space-md);
+    }
+    
+    .dots {
+        bottom: 80px;
+    }
+    
+    .get-started-btn {
+        padding: var(--tour-space-md) var(--tour-space-xl);
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .content {
+        padding: var(--tour-space-md);
+    }
+    
+    h2 {
+        font-size: 1.35rem;
+    }
+    
+    .tour-image {
+        max-width: 180px;
+        margin-bottom: var(--tour-space-lg);
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .slides {
+        transition: none;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --tour-surface: #0F0F14;
+        --tour-surface-elevated: #1A1A24;
+        --tour-surface-subtle: #252532;
+        
+        --tour-text-primary: #F8FAFC;
+        --tour-text-secondary: #94A3B8;
+        --tour-text-muted: #64748B;
+        
+        --tour-border: #3D3D52;
+    }
+    
+    body {
+        background: 
+            radial-gradient(ellipse at 30% 20%, rgba(255, 107, 53, 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 70% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 50%),
+            var(--tour-surface);
+    }
+    
+    .tour-image {
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+    }
+    
+    .nav-button {
+        background: var(--tour-surface-elevated);
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+    
+    .nav-button:hover {
+        background: var(--tour-accent);
     }
 }
