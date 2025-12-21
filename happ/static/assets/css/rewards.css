@@ -1,225 +1,646 @@
-/* General Styles */
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #ffffff;
+/* Import distinctive fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap');
+
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+    /* Color Palette */
+    --profile-surface: #FAFBFC;
+    --profile-surface-elevated: #FFFFFF;
+    --profile-surface-subtle: #F5F3F0;
+    
+    --profile-primary: #1A1A2E;
+    --profile-primary-soft: #2D2D44;
+    
+    --profile-accent: #FF6B35;
+    --profile-accent-soft: #FF8C5A;
+    --profile-accent-glow: rgba(255, 107, 53, 0.15);
+    
+    --profile-gold: #F59E0B;
+    --profile-gold-soft: #FBBF24;
+    --profile-gold-glow: rgba(245, 158, 11, 0.15);
+    
+    --profile-purple: #8B5CF6;
+    --profile-purple-soft: #A78BFA;
+    --profile-purple-glow: rgba(139, 92, 246, 0.15);
+    
+    --profile-text-primary: #1A1A2E;
+    --profile-text-secondary: #64748B;
+    --profile-text-muted: #94A3B8;
+    
+    --profile-border: #E2E8F0;
+    
+    /* Typography */
+    --profile-font-display: 'Sora', sans-serif;
+    --profile-font-body: 'Outfit', sans-serif;
+    
+    /* Spacing */
+    --profile-space-xs: 4px;
+    --profile-space-sm: 8px;
+    --profile-space-md: 16px;
+    --profile-space-lg: 24px;
+    --profile-space-xl: 32px;
+    --profile-space-2xl: 48px;
+    
+    /* Border Radius */
+    --profile-radius-sm: 8px;
+    --profile-radius-md: 12px;
+    --profile-radius-lg: 16px;
+    --profile-radius-xl: 24px;
+    --profile-radius-full: 9999px;
+    
+    /* Shadows */
+    --profile-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --profile-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --profile-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+    --profile-shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+    
+    /* Transitions */
+    --profile-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --profile-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --profile-transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    --profile-transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+* {
     margin: 0;
     padding: 0;
-    -webkit-text-size-adjust: 100%; /* Prevent auto zoom */
-    touch-action: manipulation;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    box-sizing: border-box;
 }
 
+body {
+    font-family: var(--profile-font-body);
+    background-color: var(--profile-surface);
+    margin: 0;
+    padding: 0;
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Beautiful gradient background */
+    background: 
+        radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.04) 0%, transparent 40%),
+        var(--profile-surface);
+    background-attachment: fixed;
+    
+    animation: bodyFadeIn 0.5s var(--profile-transition-smooth) forwards;
+}
+
+@keyframes bodyFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
 .container {
     width: 100%;
-    max-width: 320px; /* Ensures mobile aspect ratio */
-    margin: auto;
-    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: var(--profile-space-lg);
+    padding-bottom: 100px;
+    
+    animation: containerSlideUp 0.5s var(--profile-transition-smooth) 0.1s forwards;
+    opacity: 0;
 }
 
-/* Header */
+@keyframes containerSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 20px;
+    padding-bottom: var(--profile-space-lg);
     position: relative;
 }
 
 .header h1 {
+    font-family: var(--profile-font-display);
     font-size: 1.5rem;
-    color: #3D2174;
+    font-weight: 700;
+    color: var(--profile-text-primary);
     margin: 0;
+    letter-spacing: -0.02em;
 }
 
-
-/* Profile Section */
-.profile-section {
-    text-align: center;
-}
-
-.profile-image {
-    position: relative;
-    display: inline-block;
-    background-color: #E0D4F8; /* Purple background */
-    border-radius: 50%;
-    padding: 10px;
-}
-
-.profile-image img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: none;
-}
-
-.edit-icon {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    background-color: #ffffff;
-    border-radius: 50%;
-    padding: 5px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    cursor: pointer;
-}
-
-.profile-section h2 {
-    margin: 10px 0 5px;
-    color: #3D2174;
-    font-size: 1.3rem;
-    font-weight: 600;
-}
-
-.profile-section p {
-    color: #6D5BA4;
-    font-size: 1rem;
-}
-
-/* Claimables Section */
-.claimables-section {
-    margin-top: 20px;
-}
-
-.claimables-section h3 {
-    color: #3D2174;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-/* Voucher Styling */
-/* Adjusting XP Badge Position (Moving Slightly Higher) */
+/* ============================================
+   XP BADGE
+   ============================================ */
 .xp {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    background-color: #E0D4F8;
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #3D2174;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    position: absolute;
-    right: 12%; /* Keeps it aligned */
-    top: 5px; /* Moved slightly higher */
+    gap: var(--profile-space-xs);
+    background: linear-gradient(135deg, var(--profile-gold) 0%, var(--profile-gold-soft) 100%);
+    padding: var(--profile-space-sm) var(--profile-space-md);
+    border-radius: var(--profile-radius-full);
+    font-family: var(--profile-font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: white;
+    box-shadow: 
+        0 4px 12px var(--profile-gold-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    position: static;
     white-space: nowrap;
     z-index: 10;
+    transition: transform var(--profile-transition-bounce);
+    
+    animation: xpPulse 2s ease-in-out infinite;
 }
 
-/* Ensuring XP Badge Adjusts Properly for Small Screens */
-@media screen and (max-width: 320px) {
-    .xp {
-        right: 8%; /* Ensures XP remains visible */
-        top: -2px; /* Moves it even higher for small screens */
+@keyframes xpPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+}
+
+.xp:hover {
+    transform: scale(1.05);
+    animation-play-state: paused;
+}
+
+/* Lightning icon before XP */
+.xp::before {
+    content: '⚡';
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   PROFILE SECTION
+   ============================================ */
+.profile-section {
+    text-align: center;
+    padding: var(--profile-space-lg) 0;
+    
+    animation: profileFadeIn 0.5s var(--profile-transition-smooth) 0.2s forwards;
+    opacity: 0;
+}
+
+@keyframes profileFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
+/* ============================================
+   PROFILE IMAGE
+   ============================================ */
+.profile-image {
+    position: relative;
+    display: inline-block;
+    background: linear-gradient(135deg, var(--profile-purple) 0%, var(--profile-purple-soft) 100%);
+    border-radius: 50%;
+    padding: 5px;
+    box-shadow: 
+        0 8px 24px var(--profile-purple-glow),
+        0 0 0 4px rgba(139, 92, 246, 0.1);
+    transition: transform var(--profile-transition-bounce);
+}
 
-/* Adjusting Voucher Card Position */
+.profile-image:hover {
+    transform: scale(1.05);
+}
+
+.profile-image img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 4px solid white;
+    object-fit: cover;
+    display: block;
+}
+
+/* Edit icon */
+.edit-icon {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    background: var(--profile-surface-elevated);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 2px solid var(--profile-purple);
+    cursor: pointer;
+    box-shadow: var(--profile-shadow-md);
+    transition: 
+        transform var(--profile-transition-fast),
+        background-color var(--profile-transition-fast);
+}
+
+.edit-icon:hover {
+    background: var(--profile-purple-glow);
+    transform: scale(1.1);
+}
+
+/* ============================================
+   PROFILE TEXT
+   ============================================ */
+.profile-section h2 {
+    font-family: var(--profile-font-display);
+    margin: var(--profile-space-md) 0 var(--profile-space-xs);
+    color: var(--profile-text-primary);
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.profile-section p {
+    color: var(--profile-text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ============================================
+   CLAIMABLES SECTION
+   ============================================ */
+.claimables-section {
+    margin-top: var(--profile-space-xl);
+    
+    animation: claimablesFadeIn 0.5s var(--profile-transition-smooth) 0.3s forwards;
+    opacity: 0;
+}
+
+@keyframes claimablesFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.claimables-section h3 {
+    font-family: var(--profile-font-display);
+    color: var(--profile-text-primary);
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: var(--profile-space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--profile-space-sm);
+}
+
+/* Icon before section title */
+.claimables-section h3::before {
+    content: '🎁';
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   VOUCHER CARD
+   ============================================ */
 .voucher {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #ffffff;
-    border-radius: 16px;
-    padding: 15px;
-    margin: 10px auto 10px -2px; /* Centers properly */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
-    width: 88%; /* Maintains even spacing */
-    max-width: 300px;
-    box-sizing: border-box;
+    gap: var(--profile-space-md);
+    background: var(--profile-surface-elevated);
+    border-radius: var(--profile-radius-xl);
+    padding: var(--profile-space-lg);
+    margin-bottom: var(--profile-space-md);
+    box-shadow: var(--profile-shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    width: 100%;
     position: relative;
-    left: -5px; /* Moves the card slightly left */
+    overflow: hidden;
+    cursor: pointer;
+    transition: 
+        transform var(--profile-transition-smooth),
+        box-shadow var(--profile-transition-smooth);
 }
 
-/* Ensuring Perfect Responsiveness for 320px Screens */
-@media screen and (max-width: 320px) {
-    .voucher {
-        width: 92%; /* Prevents overflow on smaller screens */
-        left: -3px; /* Slightly moves it left */
+/* Decorative accent on left */
+.voucher::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--profile-accent) 0%, var(--profile-accent-soft) 100%);
+    transform: scaleY(0);
+    transition: transform var(--profile-transition-smooth);
+    border-radius: 0 4px 4px 0;
+}
+
+.voucher:hover {
+    transform: translateY(-4px) translateX(4px);
+    box-shadow: var(--profile-shadow-xl);
+}
+
+.voucher:hover::before {
+    transform: scaleY(1);
+}
+
+.voucher:active {
+    transform: translateY(-2px) scale(0.99);
+}
+
+/* Stagger animation */
+.voucher:nth-child(1) { animation: voucherSlideIn 0.4s var(--profile-transition-smooth) 0.4s forwards; opacity: 0; }
+.voucher:nth-child(2) { animation: voucherSlideIn 0.4s var(--profile-transition-smooth) 0.5s forwards; opacity: 0; }
+.voucher:nth-child(3) { animation: voucherSlideIn 0.4s var(--profile-transition-smooth) 0.6s forwards; opacity: 0; }
+.voucher:nth-child(n+4) { animation: voucherSlideIn 0.4s var(--profile-transition-smooth) 0.7s forwards; opacity: 0; }
+
+@keyframes voucherSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-16px);
     }
-    .xp {
-        right: 8%; /* Ensures XP remains visible */
+    to {
+        opacity: 1;
+        transform: translateX(0);
     }
 }
 
-
-/* Voucher Left: Text */
+/* ============================================
+   VOUCHER LEFT (Text)
+   ============================================ */
 .voucher-left {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Ensures vertical alignment */
+    justify-content: center;
+    gap: var(--profile-space-xs);
+    flex: 1;
+    min-width: 0;
 }
 
 .voucher-left h4 {
     margin: 0;
-    color: #3D2174;
-    font-size: 1.2rem;
-    font-weight: 100;
+    font-family: var(--profile-font-display);
+    color: var(--profile-text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
 .voucher-type {
-    margin: 5px 0 0;
-    color: #6D5BA4;
-    font-size: 0.9rem;
-    font-weight: 100;
+    margin: 0;
+    color: var(--profile-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 400;
 }
 
-/* QR Code and Price: Proper Alignment */
+/* ============================================
+   VOUCHER RIGHT (QR & Price)
+   ============================================ */
 .voucher-right {
     display: flex;
     align-items: center;
-    gap: 30px; /* Adjusted spacing */
+    gap: var(--profile-space-lg);
+    flex-shrink: 0;
 }
 
 .qr-image {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     object-fit: cover;
+    border-radius: var(--profile-radius-sm);
+    background: var(--profile-surface-subtle);
+    padding: 4px;
+    transition: transform var(--profile-transition-bounce);
+}
+
+.voucher:hover .qr-image {
+    transform: scale(1.1);
 }
 
 .voucher-price {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #000;
-    min-width: 40px; /* Ensures consistency */
+    font-family: var(--profile-font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--profile-accent);
+    min-width: 50px;
     text-align: right;
     display: flex;
-    align-items: center; /* Centers text */
+    align-items: center;
 }
 
-/* Bottom Navigation */
+/* Price badge style */
+.voucher-price.badge {
+    background: var(--profile-accent-glow);
+    padding: var(--profile-space-xs) var(--profile-space-sm);
+    border-radius: var(--profile-radius-full);
+}
+
+/* ============================================
+   BOTTOM NAVIGATION
+   ============================================ */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
-    max-width: 320px; /* Ensures it stays in aspect */
-    background-color: #ffffff;
+    right: 0;
+    background: var(--profile-surface-elevated);
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 10px 0;
-    border-top: 1px solid #ffffff;
-    z-index: 10;
+    padding: var(--profile-space-sm) var(--profile-space-md);
+    padding-bottom: calc(var(--profile-space-sm) + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+    z-index: 100;
+    max-width: 100%;
+    
+    /* Glassmorphism */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .bottom-nav a {
-    color: #3D2174;
-    text-decoration: none;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 45px;
-    width: 45px;
+    gap: var(--profile-space-xs);
+    padding: var(--profile-space-sm) var(--profile-space-md);
+    text-decoration: none;
+    border-radius: var(--profile-radius-md);
+    position: relative;
+    min-width: 56px;
+    min-height: 48px;
+    transition: 
+        background-color var(--profile-transition-fast),
+        transform var(--profile-transition-fast);
+}
+
+/* Active indicator */
+.bottom-nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 24px;
+    height: 3px;
+    background: var(--profile-accent);
+    border-radius: var(--profile-radius-full);
+    transition: transform var(--profile-transition-smooth);
+}
+
+.bottom-nav a:hover,
+.bottom-nav a.active {
+    background: var(--profile-accent-glow);
+}
+
+.bottom-nav a.active::before {
+    transform: translateX(-50%) scaleX(1);
+}
+
+.bottom-nav a:active {
+    transform: scale(0.92);
 }
 
 .bottom-nav img {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+    transition: 
+        opacity var(--profile-transition-fast),
+        transform var(--profile-transition-fast);
 }
 
-.bottom-nav a:hover {
-    opacity: 0.8;
+.bottom-nav a:hover img,
+.bottom-nav a.active img {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.profile-image:focus-visible,
+.edit-icon:focus-visible,
+.voucher:focus-visible,
+.bottom-nav a:focus-visible {
+    outline: 2px solid var(--profile-accent);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media screen and (max-width: 320px) {
+    .container {
+        padding: var(--profile-space-md);
+    }
+    
+    .header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .xp {
+        font-size: 0.8rem;
+        padding: var(--profile-space-xs) var(--profile-space-sm);
+    }
+    
+    .profile-image img {
+        width: 75px;
+        height: 75px;
+    }
+    
+    .voucher {
+        padding: var(--profile-space-md);
+    }
+    
+    .voucher-left h4 {
+        font-size: 1rem;
+    }
+    
+    .voucher-right {
+        gap: var(--profile-space-md);
+    }
+    
+    .qr-image {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .voucher-price {
+        font-size: 1.1rem;
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --profile-surface: #0F0F14;
+        --profile-surface-elevated: #1A1A24;
+        --profile-surface-subtle: #252532;
+        
+        --profile-text-primary: #F8FAFC;
+        --profile-text-secondary: #94A3B8;
+        --profile-text-muted: #64748B;
+        
+        --profile-border: #3D3D52;
+    }
+    
+    body {
+        background: 
+            radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.03) 0%, transparent 40%),
+            var(--profile-surface);
+    }
+    
+    .bottom-nav {
+        background: rgba(26, 26, 36, 0.92);
+        border-top-color: rgba(255, 255, 255, 0.06);
+    }
+    
+    .voucher {
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+    
+    .profile-image {
+        box-shadow: 
+            0 8px 24px rgba(139, 92, 246, 0.2),
+            0 0 0 4px rgba(139, 92, 246, 0.15);
+    }
 }
