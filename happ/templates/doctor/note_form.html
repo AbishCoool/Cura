@@ -4,145 +4,619 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Add Doctor Note</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
-    /* Prevent horizontal scroll and respect container width */
-    html, body { max-width:100%; overflow-x:hidden; }
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      --surface-input: #F8F9FB;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --info: #3B82F6;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      --shadow-input-focus: 0 0 0 4px var(--accent-glow);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
 
     body {
-      font-family:'Segoe UI', sans-serif;
-      background:#f7f9fc;
-      margin:0;
-      padding:1rem;
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: var(--space-lg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
     }
 
+    /* ============================================
+       PAGE WRAPPER
+       ============================================ */
     .wrap {
-      max-width:680px;
-      margin:0 auto;
-      padding: 0 .25rem; /* slight inner padding to avoid edge bleed */
+      max-width: 600px;
+      margin: 0 auto;
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
     }
 
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       BACK BUTTON
+       ============================================ */
     .back {
-      font-size:30px;
-      color:#3a2370;
-      text-decoration:none;
-      display:inline-block;
-      padding-left:5px;
-      transition:.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      background: var(--surface-elevated);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      transition: 
+        transform var(--transition-fast),
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+      
+      animation: slideDown 0.4s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
     }
-    .back:hover { transform:translateX(-4px); }
 
-    h1 { font-size:22px; color:#222; margin:.5rem 0 1rem; }
-    .meta { color:#666; font-size:14px; margin:.3rem 0 1rem; }
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
+    .back:hover {
+      background: var(--accent-glow);
+      transform: translateX(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .back:active {
+      transform: scale(0.95);
+    }
+
+    /* ============================================
+       PAGE HEADER
+       ============================================ */
+    .page-header {
+      margin: var(--space-lg) 0;
+      
+      animation: fadeIn 0.5s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    h1::before {
+      content: '📝';
+      font-size: 1.25rem;
+    }
+
+    .subject-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      margin-top: var(--space-sm);
+      padding: var(--space-xs) var(--space-md);
+      background: var(--purple-glow);
+      color: var(--purple);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+    }
+
+    .subject-badge::before {
+      content: '👤';
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-top: var(--space-sm);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .meta::before {
+      content: '🩺';
+    }
+
+    .doctor-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* ============================================
+       FORM CARD
+       ============================================ */
     form {
-      background:#fff;
-      border-radius:12px;
-      padding:1rem;
-      box-shadow:0 2px 8px rgba(0,0,0,.07);
-      /* keep all content inside the card */
-      overflow:hidden;
-      word-break:break-word;
-      overflow-wrap:anywhere;
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      
+      animation: formSlideUp 0.5s var(--transition-smooth) 0.3s forwards;
+      opacity: 0;
     }
 
+    @keyframes formSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       FORM ROWS
+       ============================================ */
     .row {
-      margin-bottom:.9rem;
-      /* safety for any long inline content */
-      overflow:hidden;
+      margin-bottom: var(--space-lg);
+      overflow: hidden;
+    }
+
+    .row:last-of-type {
+      margin-bottom: var(--space-xl);
     }
 
     label {
-      display:block;
-      font-weight:600;
-      margin-bottom:.35rem;
-      color:#333;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: var(--space-sm);
+      color: var(--text-primary);
     }
 
-    /* Universal sizing: inputs never exceed the card, even with long content */
+    /* Label icons */
+    .row:nth-child(1) label::before { content: '📌'; }
+    .row:nth-child(2) label::before { content: '💊'; }
+    .row:nth-child(3) label::before { content: '📏'; }
+    .row:nth-child(4) label::before { content: '📋'; }
+
+    /* ============================================
+       FORM INPUTS
+       ============================================ */
     input[type="text"],
     select,
     textarea {
-      width:100%;
-      max-width:100%;
-      box-sizing:border-box;
-      padding:.7rem .8rem;
-      border:1px solid #d7d7d7;
-      border-radius:8px;
-      font-size:15px;
-      background:#fff;
+      font-family: var(--font-body);
+      width: 100%;
+      max-width: 100%;
+      padding: var(--space-md);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: var(--surface-input);
+      transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
     }
 
-    /* Make the select behave well on small screens */
+    input[type="text"]:hover,
+    select:hover,
+    textarea:hover {
+      border-color: var(--text-muted);
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--surface-elevated);
+      box-shadow: var(--shadow-input-focus);
+      transform: translateY(-1px);
+    }
+
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* Select specific */
     select {
-      display:block;
-      /* While select text can't truly wrap, this ensures the box doesn't overflow */
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
+      display: block;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right var(--space-md) center;
+      padding-right: calc(var(--space-md) * 3);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
+    /* Textarea specific */
     textarea {
-      min-height:110px;
-      resize:vertical; /* allow vertical grow but not sideways */
+      min-height: 140px;
+      resize: vertical;
+      line-height: 1.6;
     }
 
-    button {
-      width:100%;
-      padding:.9rem;
-      background:#28a745;
-      color:white;
-      border:none;
-      border-radius:10px;
-      font-size:16px;
-      cursor:pointer;
+    /* ============================================
+       SUBMIT BUTTON
+       ============================================ */
+    button[type="submit"] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      padding: var(--space-md) var(--space-lg);
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--health) 0%, var(--health-soft) 100%);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      box-shadow: 
+        0 4px 16px rgba(16, 185, 129, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-base);
     }
-    button:hover { opacity:.95; }
 
-    /* Mobile polish */
+    /* Shine effect */
+    button[type="submit"]::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+      );
+      transition: left 0.5s ease;
+    }
+
+    button[type="submit"]:hover::before {
+      left: 100%;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 8px 24px rgba(16, 185, 129, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    button[type="submit"]:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+
+    /* Button icon */
+    button[type="submit"]::after {
+      content: '✓';
+      font-size: 1.2rem;
+    }
+
+    /* ============================================
+       FORM FIELD ANIMATIONS
+       ============================================ */
+    .row:nth-child(1) { animation: rowFadeIn 0.4s var(--transition-smooth) 0.35s forwards; opacity: 0; }
+    .row:nth-child(2) { animation: rowFadeIn 0.4s var(--transition-smooth) 0.4s forwards; opacity: 0; }
+    .row:nth-child(3) { animation: rowFadeIn 0.4s var(--transition-smooth) 0.45s forwards; opacity: 0; }
+    .row:nth-child(4) { animation: rowFadeIn 0.4s var(--transition-smooth) 0.5s forwards; opacity: 0; }
+    .row:nth-child(5) { animation: rowFadeIn 0.4s var(--transition-smooth) 0.55s forwards; opacity: 0; }
+
+    @keyframes rowFadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* ============================================
+       HELPER TEXT (Optional)
+       ============================================ */
+    .helper-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: var(--space-xs);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
     @media (max-width: 480px) {
-      h1 { font-size:20px; }
-      .meta { font-size:13px; }
-      label { font-size:14px; }
-      input[type="text"], select, textarea { font-size:14px; }
-      button { font-size:15px; }
+      body {
+        padding: var(--space-md);
+      }
+      
+      h1 {
+        font-size: 1.25rem;
+      }
+      
+      .meta {
+        font-size: 0.85rem;
+      }
+      
+      form {
+        padding: var(--space-lg);
+      }
+      
+      label {
+        font-size: 0.85rem;
+      }
+      
+      input[type="text"],
+      select,
+      textarea {
+        font-size: 0.95rem;
+        padding: var(--space-sm) var(--space-md);
+      }
+      
+      button[type="submit"] {
+        font-size: 1rem;
+        padding: var(--space-md);
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        --surface-input: #1F1F2E;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(16, 185, 129, 0.03) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      form {
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+      
+      .back {
+        border-color: rgba(255, 255, 255, 0.06);
+      }
+      
+      select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .back:focus-visible,
+    button[type="submit"]:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
-    <a href="{{ back_url }}" class="back">&#8592;</a>
-    <h1>Add Note – {{ subject_name }}</h1>
-    <div class="meta">Doctor: {{ doctor.doctor_full_name }}</div>
-
+    <!-- Back Button -->
+    <a href="{{ back_url }}" class="back">←</a>
+    
+    <!-- Page Header -->
+    <header class="page-header">
+      <h1>Add Doctor Note</h1>
+      <span class="subject-badge">{{ subject_name }}</span>
+      <div class="meta">
+        Doctor: <span class="doctor-name">{{ doctor.doctor_full_name }}</span>
+      </div>
+    </header>
+    
+    <!-- Note Form -->
     <form method="post">
       {% csrf_token %}
+      
       <div class="row">
         <label for="id_title">Title</label>
         {{ form.title }}
       </div>
+      
       <div class="row">
         <label for="id_medication_name">Medication</label>
         {{ form.medication_name }}
       </div>
+      
       <div class="row">
         <label for="id_dosage">Dosage</label>
         {{ form.dosage }}
       </div>
+      
       <div class="row">
         <label for="id_instructions">Instructions / Notes</label>
         {{ form.instructions }}
       </div>
+      
       <div class="row">
         <label for="id_related_entry">📎 Related Journal Entry (optional)</label>
         {{ form.related_entry }}
+        <span class="helper-text">Link this note to a specific journal entry</span>
       </div>
+      
       <button type="submit">Save Note</button>
     </form>
   </div>
+  
+  <script>
+    // Add styling classes to Django form fields
+    document.addEventListener('DOMContentLoaded', function() {
+      // Style all form inputs
+      const inputs = document.querySelectorAll('input[type="text"], select, textarea');
+      inputs.forEach(input => {
+        // Add any additional attributes or classes if needed
+        if (input.tagName === 'TEXTAREA') {
+          input.setAttribute('placeholder', 'Enter detailed instructions or notes...');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
