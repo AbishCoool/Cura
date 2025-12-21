@@ -1,365 +1,923 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>{{ user_obj.user.username }} & Family</title>
-    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
-    <style>
-        html,
-        body {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{{ user_obj.user.username }} & Family</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --info: #3B82F6;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --danger: #EF4444;
+      --danger-soft: #F87171;
+      --danger-glow: rgba(239, 68, 68, 0.1);
+      
+      --warning: #F59E0B;
+      --warning-glow: rgba(245, 158, 11, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      --shadow-input-focus: 0 0 0 4px var(--accent-glow);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #fff;
-            margin: 0;
-            padding: 20px;
-        }
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        h2{
-        color:#3a2370;
-        font-size:26px;
-        margin-bottom:30px;
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
 
-        /* NEW: keep title + badge perfectly aligned */
-        display:flex;
-        align-items:center;   /* vertical centering */
-        gap:12px;             /* space between title and badge */
-        flex-wrap:wrap;       /* let it wrap on very small screens */
-        }
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.05) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
+    }
 
+    /* ============================================
+       CONTAINER
+       ============================================ */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      padding-bottom: var(--space-2xl);
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
+    }
 
-        .card-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        .card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-            text-decoration: none;
-            color: #3a2370;
-        }
+    /* ============================================
+       BACK ARROW
+       ============================================ */
+    .back-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      background: var(--surface-elevated);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      transition: 
+        transform var(--transition-fast),
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+      
+      animation: slideDown 0.4s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
+    }
 
-        .card:hover {
-            background-color: #f0f8ff;
-        }
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        .card .label {
-            font-size: 18px;
-            font-weight: 600;
-        }
+    .back-arrow:hover {
+      background: var(--accent-glow);
+      transform: translateX(-4px);
+      box-shadow: var(--shadow-md);
+    }
 
-        .card img {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            border-radius: 8px;
-        }
+    .back-arrow:active {
+      transform: scale(0.95);
+    }
 
-        .empty-text {
-            color: #777;
-            font-style: italic;
-            margin-top: 10px;
-        }
+    /* ============================================
+       PAGE HEADER
+       ============================================ */
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin: var(--space-lg) 0;
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      
+      animation: fadeIn 0.5s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
 
-        @media (max-width: 600px) {
-            .card {
-                flex-direction: row;
-                padding: 14px 16px;
-            }
+    h2::before {
+      content: '👨‍👩‍👧‍👦';
+      font-size: 1.5rem;
+    }
 
-            .card .label {
-                font-size: 16px;
-            }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-            .card img {
-                width: 40px;
-                height: 40px;
-            }
-        }
+    .pill-id {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      padding: 0 var(--space-md);
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      line-height: 1;
+    }
 
-        .back-arrow {
-            font-size: 30px;
-            text-decoration: none;
-            color: #3a2370;
-            display: inline-block;
-            padding-left: 5px;
-            transition: transform 0.2s ease;
-        }
+    .pill-id::before {
+      content: '🏷️';
+      margin-right: var(--space-xs);
+      font-size: 0.8rem;
+    }
 
-        .back-arrow:hover {
-            transform: translateX(-4px);
-        }
+    /* ============================================
+       CARD LIST
+       ============================================ */
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
 
-        /* Add to your styles.css */
-        .add-appt-btn {
-            background-color: #3a2370;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
+    /* ============================================
+       CARDS
+       ============================================ */
+    .card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-lg) var(--space-xl);
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      text-decoration: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-smooth),
+        box-shadow var(--transition-smooth),
+        background-color var(--transition-fast);
+    }
 
-        .add-appt-btn:hover {
-            background-color: #5d4291;
-        }
+    /* Accent bar on left */
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--purple) 0%, var(--purple-soft) 100%);
+      transform: scaleY(0);
+      transition: transform var(--transition-smooth);
+      border-radius: 0 4px 4px 0;
+    }
 
-        /* Modal styles (already in appointments.html, but add to styles.css for consistency) */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
+    .card:hover {
+      transform: translateY(-4px) translateX(4px);
+      box-shadow: var(--shadow-lg);
+    }
 
-        .modal-content {
-            background-color: #fff;
-            padding: 24px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
+    .card:hover::before {
+      transform: scaleY(1);
+    }
 
-        .modal-content h3 {
-            margin-top: 0;
-            color: #3a2370;
-        }
+    .card:active {
+      transform: translateY(-2px) scale(0.99);
+    }
 
-        .modal-form-inputs {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
+    /* Arrow indicator */
+    .card::after {
+      content: '→';
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      transition: 
+        transform var(--transition-fast),
+        color var(--transition-fast);
+    }
 
-        .modal-form-inputs input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
+    .card:hover::after {
+      color: var(--accent);
+      transform: translateX(4px);
+    }
 
-        .modal-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
+    /* Stagger animation for cards */
+    .card:nth-child(1) { animation: cardSlideIn 0.4s var(--transition-smooth) 0.3s forwards; opacity: 0; }
+    .card:nth-child(2) { animation: cardSlideIn 0.4s var(--transition-smooth) 0.4s forwards; opacity: 0; }
+    .card:nth-child(3) { animation: cardSlideIn 0.4s var(--transition-smooth) 0.5s forwards; opacity: 0; }
+    .card:nth-child(4) { animation: cardSlideIn 0.4s var(--transition-smooth) 0.6s forwards; opacity: 0; }
+    .card:nth-child(n+5) { animation: cardSlideIn 0.4s var(--transition-smooth) 0.7s forwards; opacity: 0; }
 
-        .modal-buttons .cancel-btn,
-        .modal-buttons .save-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s ease;
-        }
+    @keyframes cardSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
 
-        .modal-buttons .cancel-btn {
-            background-color: #eee;
-            color: #555;
-        }
+    .card .label {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
 
-        .modal-buttons .save-btn {
-            background-color: #3a2370;
-            color: #fff;
-        }
-        .pill-id{
-        display:inline-flex;            /* center text inside the pill */
-        align-items:center;
-        justify-content:center;
-        height:26px;                    /* consistent pill height */
-        padding:0 10px;                 /* only horizontal padding */
-        line-height:1;                  /* remove baseline offset */
-        margin-left:0;                  /* gap on h2 handles spacing */
+    /* Main user icon */
+    .card:first-child .label::before {
+      content: '🩺';
+    }
 
-        font-size:12px; color:#666;
-        background:#f3f4f8;
-        border:1px solid #e5e6ee;
-        border-radius:9999px;
-        }
+    /* Family member icons */
+    .card:not(:first-child) .label::before {
+      content: '👤';
+    }
 
+    .card img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: var(--radius-md);
+    }
+
+    /* ============================================
+       EMPTY TEXT
+       ============================================ */
+    .empty-text {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-style: italic;
+      padding: var(--space-xl);
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      
+      animation: fadeIn 0.5s var(--transition-smooth) 0.4s forwards;
+      opacity: 0;
+    }
+
+    .empty-text::before {
+      content: '👨‍👩‍👧‍👦';
+      display: block;
+      font-size: 2rem;
+      margin-bottom: var(--space-sm);
+      opacity: 0.5;
+    }
+
+    /* ============================================
+       ALERTS SECTION
+       ============================================ */
+    .alerts-section {
+      margin-top: var(--space-2xl);
+    }
+
+    .alerts-section h2 {
+      color: var(--danger);
+    }
+
+    .alerts-section h2::before {
+      content: '🚨';
+    }
+
+    .alert-card {
+      background: linear-gradient(135deg, var(--danger-glow) 0%, var(--surface-elevated) 100%);
+      border-left: 4px solid var(--danger);
+      padding: var(--space-lg);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      margin-bottom: var(--space-md);
+      cursor: default;
+      
+      animation: alertPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes alertPulse {
+      0%, 100% { box-shadow: var(--shadow-md); }
+      50% { box-shadow: 0 4px 20px rgba(239, 68, 68, 0.2); }
+    }
+
+    .alert-card:hover {
+      transform: none;
+    }
+
+    .alert-card::before,
+    .alert-card::after {
+      display: none;
+    }
+
+    .alert-card .label {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--danger);
+      margin-bottom: var(--space-xs);
+    }
+
+    .alert-message {
+      font-size: 0.9rem;
+      color: #991B1B;
+      margin-top: var(--space-xs);
+      line-height: 1.4;
+    }
+
+    .alert-time {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: var(--space-sm);
+    }
+
+    .alert-time::before {
+      content: '🕒';
+    }
+
+    .no-alerts {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-lg);
+      background: var(--health-glow);
+      color: var(--health);
+      font-weight: 500;
+      border-radius: var(--radius-xl);
+      margin-top: var(--space-xl);
+      
+      animation: fadeIn 0.5s var(--transition-smooth) 0.5s forwards;
+      opacity: 0;
+    }
+
+    .no-alerts::before {
+      content: '✅';
+      font-size: 1.25rem;
+    }
+
+    /* ============================================
+       ADD APPOINTMENT BUTTON
+       ============================================ */
+    .add-appt-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      padding: var(--space-sm) var(--space-md);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-soft) 100%);
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.25);
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .add-appt-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.35);
+    }
+
+    .add-appt-btn:active {
+      transform: scale(0.98);
+    }
+
+    .add-appt-btn::before {
+      content: '📅';
+    }
+
+    /* ============================================
+       MODAL
+       ============================================ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 46, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: var(--space-lg);
+      
+      opacity: 0;
+      transition: opacity var(--transition-base);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: var(--surface-elevated);
+      width: 100%;
+      max-width: 440px;
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      
+      transform: translateY(20px) scale(0.95);
+      transition: transform var(--transition-smooth);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-content h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 var(--space-lg) 0;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .modal-content h3::before {
+      content: '📅';
+    }
+
+    .modal-form-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .modal-form-inputs input {
+      font-family: var(--font-body);
+      width: 100%;
+      padding: var(--space-md);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: var(--surface-subtle);
+      transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
+    }
+
+    .modal-form-inputs input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--surface-elevated);
+      box-shadow: var(--shadow-input-focus);
+    }
+
+    .modal-form-inputs input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-md);
+    }
+
+    .cancel-btn {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--surface-subtle);
+      color: var(--text-secondary);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: 
+        border-color var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .cancel-btn:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      transform: translateY(-2px);
+    }
+
+    .save-btn {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: var(--space-md) var(--space-lg);
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-soft) 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
+    }
+
+    .save-btn:active,
+    .cancel-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 600px) {
+      .container {
+        padding: var(--space-md);
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .card {
+        padding: var(--space-md) var(--space-lg);
+      }
+      
+      .card .label {
+        font-size: 1rem;
+      }
+      
+      .card img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
         
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.03) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .card,
+      .back-arrow {
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+      
+      .modal-overlay {
+        background: rgba(0, 0, 0, 0.7);
+      }
+      
+      .modal-content {
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+      
+      .alert-card {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, var(--surface-elevated) 100%);
+      }
+      
+      .alert-message {
+        color: var(--danger-soft);
+      }
+    }
 
-    </style>
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .back-arrow:focus-visible,
+    .card:focus-visible,
+    .add-appt-btn:focus-visible,
+    .save-btn:focus-visible,
+    .cancel-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <a href="{% url 'doctor_dashboard' %}" class="back-arrow">&#8592;</a>
-        <h2 >{{ user_obj.user.username }} & Family {% if user_obj.patient_code %}
+  <div class="container">
+    <!-- Back Button -->
+    <a href="{% url 'doctor_dashboard' %}" class="back-arrow">←</a>
+    
+    <!-- Page Header -->
+    <h2>
+      {{ user_obj.user.username }} & Family
+      {% if user_obj.patient_code %}
         <span class="pill-id">ID: {{ user_obj.patient_code }}</span>
-        {% endif %}</h2>
-        
-
-        <div class="card-list">
-            {% if user_obj %}
-            <div class="card" onclick="navigateToJournals(event, '{% url 'doctor_view_journals' user_obj.user.id %}')">
-                <span class="label">{{ user_obj.user.username }}</span>
-                <!-- <button class="add-appt-btn"
-                    onclick="openApptModal('{{ user_obj.user.id }}', '{{ user_obj.name }}', true)">Add
-                    Appointment</button> -->
-            </div>
-            {% endif %}
-
-            {% for member in family_members %}
-            <div class="card" onclick="navigateToJournals(event, '{% url 'doctor_view_family_journals' member.id %}')">
-                <span class="label">{{ member.name }}</span>
-                <!-- <button class="add-appt-btn" onclick="openApptModal('{{ member.id }}', '{{ member.name }}', false)">Add
-                    Appointment</button> -->
-            </div>
-            {% empty %}
-            <p class="empty-text">No family members added yet.</p>
-            {% endfor %}
+      {% endif %}
+    </h2>
+    
+    <!-- Family Cards -->
+    <div class="card-list">
+      <!-- Main User Card -->
+      {% if user_obj %}
+        <div class="card" onclick="navigateToJournals(event, '{% url 'doctor_view_journals' user_obj.user.id %}')">
+          <span class="label">{{ user_obj.user.username }}</span>
+          <!-- Uncomment to enable appointment button:
+          <button class="add-appt-btn" onclick="openApptModal('{{ user_obj.user.id }}', '{{ user_obj.name }}', true)">
+            Add Appointment
+          </button>
+          -->
         </div>
-    </div>
-
-    <div id="appointment-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <h3 id="modal-title">Schedule Appointment</h3>
-            <form id="appointment-form">
-                <div class="modal-form-inputs">
-                    <input type="text" id="appt-doctor-input" placeholder="Doctor's Name" required>
-                    <input type="text" id="appt-location-input" placeholder="Location" required>
-                    <input type="datetime-local" id="appt-datetime-input" required>
-                </div>
-                <div class="modal-buttons">
-                    <button type="button" class="cancel-btn" onclick="closeModal('appointment-modal')">Cancel</button>
-                    <button type="submit" class="save-btn">Save</button>
-                </div>
-            </form>
+      {% endif %}
+      
+      <!-- Family Member Cards -->
+      {% for member in family_members %}
+        <div class="card" onclick="navigateToJournals(event, '{% url 'doctor_view_family_journals' member.id %}')">
+          <span class="label">{{ member.name }}</span>
+          <!-- Uncomment to enable appointment button:
+          <button class="add-appt-btn" onclick="openApptModal('{{ member.id }}', '{{ member.name }}', false)">
+            Add Appointment
+          </button>
+          -->
         </div>
+      {% empty %}
+        <p class="empty-text">No family members added yet.</p>
+      {% endfor %}
     </div>
-
-
+    
     <!-- Alerts Section -->
     {% if alert_messages %}
-    <h2 style="margin-top: 40px;">Alerts Triggered</h2>
-    <div class="card-list">
-        {% for alert in alert_messages %}
-        <div class="card" style="background-color: #ffe6e6;">
-            <div>
+      <div class="alerts-section">
+        <h2>Alerts Triggered</h2>
+        <div class="card-list">
+          {% for alert in alert_messages %}
+            <div class="card alert-card">
+              <div>
                 <div class="label">{{ alert.member }}</div>
-                <div style="font-size: 14px; color: #a10000; margin-top: 4px;">
-                    {{ alert.message }}
-                </div>
-                <div style="font-size: 12px; color: #555;">
-                    🕒 {{ alert.timestamp|date:"d M Y, H:i" }}
-                </div>
+                <div class="alert-message">{{ alert.message }}</div>
+                <div class="alert-time">{{ alert.timestamp|date:"d M Y, H:i" }}</div>
+              </div>
             </div>
+          {% endfor %}
         </div>
-        {% endfor %}
-    </div>
+      </div>
     {% else %}
-    <p class="empty-text" style="margin-top: 30px;">✅ No critical alerts triggered recently.</p>
+      <p class="no-alerts">No critical alerts triggered recently.</p>
     {% endif %}
+  </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+  <!-- Appointment Modal -->
+  <div id="appointment-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 id="modal-title">Schedule Appointment</h3>
+      <form id="appointment-form">
+        <div class="modal-form-inputs">
+          <input type="text" id="appt-doctor-input" placeholder="Doctor's Name" required>
+          <input type="text" id="appt-location-input" placeholder="Location" required>
+          <input type="datetime-local" id="appt-datetime-input" required>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="cancel-btn" onclick="closeModal('appointment-modal')">Cancel</button>
+          <button type="submit" class="save-btn">Save Appointment</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-    <script src="{% static 'assets/firebase/firebase-config.js' %}"></script>
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+  <script src="{% static 'assets/firebase/firebase-config.js' %}"></script>
 
-    <script>
-        function navigateToJournals(event, url) {
-            // Check if the click originated from the button or a child of the button
-            if (event.target.closest('.add-appt-btn')) {
-                return; // Do nothing if the button was clicked
-            }
-            window.location.href = url;
-        }
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="{% static 'assets/firebase/firebase-config.js' %}"></script>
+  <script>
+    // Navigation function
+    function navigateToJournals(event, url) {
+      // Check if the click originated from the button
+      if (event.target.closest('.add-appt-btn')) {
+        return;
+      }
+      window.location.href = url;
+    }
 
-    <script>
+    // Modal state
     let selectedPatientId = null;
-    let selectedPatientIsMainUser = false; // Add this new variable
+    let selectedPatientIsMainUser = false;
 
     function openApptModal(id, name, isMainUser) {
-        selectedPatientId = id;
-        selectedPatientIsMainUser = isMainUser; // Set the new variable
-        document.getElementById('modal-title').innerText = `Schedule for ${name}`;
-        document.getElementById('appointment-modal').style.display = 'flex';
+      selectedPatientId = id;
+      selectedPatientIsMainUser = isMainUser;
+      document.getElementById('modal-title').innerText = `Schedule for ${name}`;
+      const modal = document.getElementById('appointment-modal');
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('active'), 10);
     }
 
     function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
+      const modal = document.getElementById(modalId);
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
         document.getElementById("appointment-form").reset();
+      }, 250);
     }
 
-    document.getElementById("appointment-form").addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        if (!selectedPatientId) {
-            alert("Error: No patient selected.");
-            return;
-        }
-
-        const dataToSave = {
-            doctorName: document.getElementById("appt-doctor-input").value,
-            location: document.getElementById("appt-location-input").value,
-            datetime: document.getElementById("appt-datetime-input").value,
-            createdAt: new Date(),
-            status: "pending"
-        };
-
-        const mainUserId = '{{ user_obj.user.id }}'; // Your Django user ID
-
-        // Corrected logic: Use the new flag instead of ID comparison
-        if (selectedPatientIsMainUser) {
-            // This appointment is for the main user
-            dataToSave.userId = String(mainUserId);
-            dataToSave.familyMemberId = null; // Set to null for the main user
-        } else {
-            // This appointment is for a family member
-            dataToSave.userId = String(mainUserId);
-            dataToSave.familyMemberId = String(selectedPatientId);
-        }
-
-        // Basic validation
-        if (!dataToSave.doctorName || !dataToSave.location || !dataToSave.datetime) {
-            alert("Please fill out all fields.");
-            return;
-        }
-
-        try {
-            const docRef = await window.db.collection("appointmentSchedules").add(dataToSave);
-            console.log("Appointment saved with ID:", docRef.id);
-            alert("Appointment saved successfully!");
-            closeModal('appointment-modal');
-        } catch (error) {
-            console.error("ERROR SAVING APPOINTMENT:", error);
-            alert("There was an error saving the appointment. Check the console for details.");
-        }
+    // Close modal on overlay click
+    document.getElementById('appointment-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal('appointment-modal');
+      }
     });
-</script>
 
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal('appointment-modal');
+      }
+    });
+
+    // Form submission
+    document.getElementById("appointment-form").addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!selectedPatientId) {
+        alert("Error: No patient selected.");
+        return;
+      }
+
+      const dataToSave = {
+        doctorName: document.getElementById("appt-doctor-input").value,
+        location: document.getElementById("appt-location-input").value,
+        datetime: document.getElementById("appt-datetime-input").value,
+        createdAt: new Date(),
+        status: "pending"
+      };
+
+      const mainUserId = '{{ user_obj.user.id }}';
+
+      if (selectedPatientIsMainUser) {
+        dataToSave.userId = String(mainUserId);
+        dataToSave.familyMemberId = null;
+      } else {
+        dataToSave.userId = String(mainUserId);
+        dataToSave.familyMemberId = String(selectedPatientId);
+      }
+
+      if (!dataToSave.doctorName || !dataToSave.location || !dataToSave.datetime) {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      try {
+        const docRef = await window.db.collection("appointmentSchedules").add(dataToSave);
+        console.log("Appointment saved with ID:", docRef.id);
+        alert("Appointment saved successfully!");
+        closeModal('appointment-modal');
+      } catch (error) {
+        console.error("ERROR SAVING APPOINTMENT:", error);
+        alert("There was an error saving the appointment. Check the console for details.");
+      }
+    });
+  </script>
 </body>
-
 </html>
