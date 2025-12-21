@@ -4,52 +4,548 @@
 <head>
   <meta charset="UTF-8" />
   <title>{% block title %}CURA Health Portal{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'assets/images/favicon.png' %}">
+  
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 2rem;
-      background-color: #f5f7fa;
+    /* ============================================
+       CSS CUSTOM PROPERTIES (Global Design System)
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      --surface-input: #F8F9FB;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --info: #3B82F6;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --danger: #EF4444;
+      --danger-soft: #F87171;
+      --danger-glow: rgba(239, 68, 68, 0.1);
+      
+      --warning: #F59E0B;
+      --warning-glow: rgba(245, 158, 11, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      --shadow-input-focus: 0 0 0 4px var(--accent-glow);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+
+    /* ============================================
+       BASE RESET
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      color: var(--text-primary);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.04) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
+    }
+
+    /* ============================================
+       HEADER
+       ============================================ */
     header {
-      background-color: #007bff;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-soft) 100%);
       color: white;
-      padding: 1rem;
+      padding: var(--space-lg) var(--space-xl);
       text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 
+        0 4px 24px rgba(139, 92, 246, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Decorative elements */
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -60%;
+      left: -5%;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    header h1,
+    header .header-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* Logo/Icon before title */
+    header h1::before,
+    header .header-title::before {
+      content: '💊';
       font-size: 1.5rem;
     }
-    main { margin-top: 2rem; }
+
+    /* ============================================
+       MAIN CONTENT
+       ============================================ */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-xl);
+      min-height: calc(100vh - 120px);
+      
+      animation: mainFadeIn 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes mainFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       GLOBAL MODAL STYLES
+       ============================================ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 46, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: var(--space-lg);
+      
+      opacity: 0;
+      transition: opacity var(--transition-base);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: var(--surface-elevated);
+      width: 100%;
+      max-width: 480px;
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      
+      transform: translateY(20px) scale(0.95);
+      transition: transform var(--transition-smooth);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-content h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 var(--space-lg) 0;
+    }
+
+    .modal-form-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .modal-form-inputs input,
+    .modal-form-inputs select,
+    .modal-form-inputs textarea {
+      font-family: var(--font-body);
+      width: 100%;
+      padding: var(--space-md);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: var(--surface-subtle);
+      transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
+    }
+
+    .modal-form-inputs input:focus,
+    .modal-form-inputs select:focus,
+    .modal-form-inputs textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--surface-elevated);
+      box-shadow: var(--shadow-input-focus);
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-md);
+    }
+
+    .cancel-btn,
+    .modal-buttons .cancel-btn {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--surface-subtle);
+      color: var(--text-secondary);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: 
+        border-color var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .cancel-btn:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      transform: translateY(-2px);
+    }
+
+    .save-btn,
+    .modal-buttons .save-btn {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: var(--space-md) var(--space-lg);
+      background: linear-gradient(135deg, var(--health) 0%, var(--health-soft) 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+    }
+
+    /* ============================================
+       UTILITY CLASSES
+       ============================================ */
+    .text-center { text-align: center; }
+    .text-muted { color: var(--text-muted); }
+    .mt-sm { margin-top: var(--space-sm); }
+    .mt-md { margin-top: var(--space-md); }
+    .mt-lg { margin-top: var(--space-lg); }
+    .mb-sm { margin-bottom: var(--space-sm); }
+    .mb-md { margin-bottom: var(--space-md); }
+    .mb-lg { margin-bottom: var(--space-lg); }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) {
+      header {
+        padding: var(--space-md) var(--space-lg);
+      }
+      
+      header h1 {
+        font-size: 1.25rem;
+      }
+      
+      main {
+        padding: var(--space-lg);
+      }
+    }
+
+    @media (max-width: 480px) {
+      main {
+        padding: var(--space-md);
+      }
+      
+      .modal-content {
+        padding: var(--space-lg);
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        --surface-input: #1F1F2E;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.03) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .modal-overlay {
+        background: rgba(0, 0, 0, 0.7);
+      }
+      
+      .modal-content {
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES (Accessibility)
+       ============================================ */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ============================================
+       SCROLLBAR STYLING
+       ============================================ */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--surface-subtle);
+      border-radius: var(--radius-full);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--text-muted);
+      border-radius: var(--radius-full);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-secondary);
+    }
+
+    /* ============================================
+       SELECTION STYLING
+       ============================================ */
+    ::selection {
+      background: var(--accent-glow);
+      color: var(--text-primary);
+    }
   </style>
+  
   {% block head_extra %}{% endblock %}
 </head>
 
 <body{% if request.user.is_authenticated %} data-user-id="{{ request.user.id }}"{% endif %}>
-  <header>CURA Health Dashboard</header>
-
+  
+  <!-- Header -->
+  <header>
+    <h1 class="header-title">CURA Health Dashboard</h1>
+  </header>
+  
+  <!-- Main Content -->
   <main>
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Global modal helpers (safe no-ops if not used) -->
+  <!-- Global Modal & Utility Scripts -->
   <script>
-    (function () {
-      window.openModal = function (modalId) {
-        try { const el = document.getElementById(modalId); if (el) el.style.display = 'flex'; }
-        catch (e) { console.error('openModal error:', e); }
-      };
-      window.closeModal = function (modalId) {
-        try { const el = document.getElementById(modalId); if (el) el.style.display = 'none'; }
-        catch (e) { console.error('closeModal error:', e); }
-      };
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-          const open = document.querySelector('.modal-overlay[style*="display: flex"]');
-          if (open) open.style.display = 'none';
+    (function() {
+      // Enhanced modal functions with animations
+      window.openModal = function(modalId) {
+        try {
+          const el = document.getElementById(modalId);
+          if (el) {
+            el.style.display = 'flex';
+            // Trigger reflow for animation
+            el.offsetHeight;
+            el.classList.add('active');
+            // Focus first input
+            const firstInput = el.querySelector('input, select, textarea');
+            if (firstInput) setTimeout(() => firstInput.focus(), 100);
+          }
+        } catch (e) {
+          console.error('openModal error:', e);
         }
+      };
+
+      window.closeModal = function(modalId) {
+        try {
+          const el = document.getElementById(modalId);
+          if (el) {
+            el.classList.remove('active');
+            setTimeout(() => {
+              el.style.display = 'none';
+            }, 250);
+          }
+        } catch (e) {
+          console.error('closeModal error:', e);
+        }
+      };
+
+      // Close modal on Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          const openModals = document.querySelectorAll('.modal-overlay.active, .modal-overlay[style*="display: flex"]');
+          openModals.forEach(modal => {
+            if (modal.id) {
+              closeModal(modal.id);
+            } else {
+              modal.classList.remove('active');
+              modal.style.display = 'none';
+            }
+          });
+        }
+      });
+
+      // Close modal on overlay click
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal-overlay')) {
+          if (e.target.id) {
+            closeModal(e.target.id);
+          } else {
+            e.target.classList.remove('active');
+            e.target.style.display = 'none';
+          }
+        }
+      });
+
+      // Page load animation
+      document.addEventListener('DOMContentLoaded', function() {
+        document.body.style.opacity = '1';
       });
     })();
   </script>
-
+  
   {% block scripts %}{% endblock %}
 </body>
 </html>
