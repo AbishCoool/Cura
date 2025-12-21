@@ -1,362 +1,857 @@
-/* General Styles */
-body {
-    font-family: 'Poppins', sans-serif;
+/* Import distinctive fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap');
+
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+    /* Color Palette */
+    --family-surface: #FAFBFC;
+    --family-surface-elevated: #FFFFFF;
+    --family-surface-subtle: #F5F3F0;
+    
+    --family-primary: #1A1A2E;
+    --family-primary-soft: #2D2D44;
+    
+    --family-accent: #FF6B35;
+    --family-accent-soft: #FF8C5A;
+    --family-accent-glow: rgba(255, 107, 53, 0.15);
+    
+    --family-health: #10B981;
+    --family-health-soft: #34D399;
+    --family-health-glow: rgba(16, 185, 129, 0.12);
+    
+    --family-purple: #8B5CF6;
+    --family-purple-soft: #A78BFA;
+    --family-purple-glow: rgba(139, 92, 246, 0.12);
+    
+    --family-danger: #EF4444;
+    --family-danger-soft: #F87171;
+    --family-danger-glow: rgba(239, 68, 68, 0.1);
+    
+    --family-text-primary: #1A1A2E;
+    --family-text-secondary: #64748B;
+    --family-text-muted: #94A3B8;
+    
+    --family-border: #E2E8F0;
+    --family-line: #E5E7EB;
+    
+    /* Card Variables (for template compatibility) */
+    --card: var(--family-surface-elevated);
+    --ink: var(--family-text-primary);
+    --line: var(--family-border);
+    --radius: 20px;
+    
+    /* Typography */
+    --family-font-display: 'Sora', sans-serif;
+    --family-font-body: 'Outfit', sans-serif;
+    
+    /* Spacing */
+    --family-space-xs: 4px;
+    --family-space-sm: 8px;
+    --family-space-md: 16px;
+    --family-space-lg: 24px;
+    --family-space-xl: 32px;
+    --family-space-2xl: 48px;
+    
+    /* Border Radius */
+    --family-radius-sm: 8px;
+    --family-radius-md: 12px;
+    --family-radius-lg: 16px;
+    --family-radius-xl: 24px;
+    --family-radius-full: 9999px;
+    
+    /* Shadows */
+    --family-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --family-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --family-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+    --family-shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+    --family-shadow-input-focus: 0 0 0 4px var(--family-accent-glow);
+    
+    /* Transitions */
+    --family-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --family-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --family-transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    --family-transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #ffffff;
-}
-*{
-    transition: all 1s;
+    /* Override the 1s transition that's too slow */
+    transition: all var(--family-transition-base);
 }
 
-/* Container */
+body {
+    font-family: var(--family-font-body);
+    margin: 0;
+    padding: 0;
+    background-color: var(--family-surface);
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Subtle gradient background */
+    background: 
+        radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.04) 0%, transparent 40%),
+        var(--family-surface);
+    background-attachment: fixed;
+    
+    animation: bodyFadeIn 0.5s var(--family-transition-smooth) forwards;
+}
+
+@keyframes bodyFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
 .container {
-    padding: 20px;
+    padding: var(--family-space-lg);
+    padding-bottom: 120px;
+    max-width: 600px;
+    margin: 0 auto;
+    
+    animation: containerSlideUp 0.5s var(--family-transition-smooth) 0.1s forwards;
+    opacity: 0;
 }
 
-/* Header Section */
+@keyframes containerSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--family-space-xl);
 }
 
 .header h1 {
-    font-size: 2rem;
-    color: #3D2174;
+    font-family: var(--family-font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--family-text-primary);
+    margin: 0;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: var(--family-space-sm);
+}
+
+/* Optional family icon */
+.header h1::before {
+    content: '👨‍👩‍👧‍👦';
+    font-size: 1.5rem;
 }
 
 .header img {
-    width: 50px;
-    height: 50px;
-    border-radius: 100%;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--family-surface-elevated);
+    box-shadow: var(--family-shadow-md);
+    transition: transform var(--family-transition-bounce);
 }
 
-/* Family Section */
+.header img:hover {
+    transform: scale(1.08);
+}
+
+/* ============================================
+   FAMILY SECTION
+   ============================================ */
 .family-section {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
-    margin-bottom: 80px; 
+    gap: var(--family-space-md);
+    margin-bottom: var(--family-space-2xl);
 }
 
+/* ============================================
+   FAMILY CARD
+   ============================================ */
 .family-card {
-    background: #ffffff;
+    background: var(--family-surface-elevated);
     text-decoration: none;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: var(--family-radius-xl);
+    box-shadow: var(--family-shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
+    padding: var(--family-space-lg);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 
+        transform var(--family-transition-smooth),
+        box-shadow var(--family-transition-smooth),
+        background-color var(--family-transition-base);
+}
+
+/* Accent bar on left */
+.family-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--family-purple) 0%, var(--family-purple-soft) 100%);
+    transform: scaleY(0);
+    transition: transform var(--family-transition-smooth);
+    border-radius: 0 4px 4px 0;
+}
+
+.family-card:hover {
+    transform: translateY(-4px) translateX(4px);
+    box-shadow: var(--family-shadow-xl);
+    background-color: var(--family-surface-elevated);
+}
+
+.family-card:hover::before {
+    transform: scaleY(1);
+}
+
+.family-card:active {
+    transform: translateY(-2px) scale(0.99);
 }
 
 .family-card h3 {
     margin: 0;
-    font-size: 18px;
-    color: #3D2174;
+    font-family: var(--family-font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--family-text-primary);
+    letter-spacing: -0.01em;
 }
 
 .family-card img {
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--family-purple-glow);
+    transition: transform var(--family-transition-bounce);
 }
 
-.family-card:hover {
-    transform: scale(1.02);
-    background-color:#7DFFD4;
-}
-/*Active icon color: #432c81*/
-/*Normal color: #a095c1*/
-
-/* Bottom Navigation - No Changes */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #ffffff;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0;
-    /* border-top: 1px solid #e0e0e0; */
-    z-index: 10;
+.family-card:hover img {
+    transform: scale(1.1);
 }
 
-.bottom-nav a {
-    color: #3D2174;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 45px;
-    width: 45px;
+/* Stagger animation */
+.family-card:nth-child(1) { animation: cardSlideIn 0.4s var(--family-transition-smooth) 0.2s forwards; opacity: 0; }
+.family-card:nth-child(2) { animation: cardSlideIn 0.4s var(--family-transition-smooth) 0.3s forwards; opacity: 0; }
+.family-card:nth-child(3) { animation: cardSlideIn 0.4s var(--family-transition-smooth) 0.4s forwards; opacity: 0; }
+.family-card:nth-child(n+4) { animation: cardSlideIn 0.4s var(--family-transition-smooth) 0.5s forwards; opacity: 0; }
+
+@keyframes cardSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-.bottom-nav img {
-    width: 20px;
-    height: 20px;
-}
-
-.bottom-nav a:hover {
-    opacity: 0.8;
-}
-/* === STYLING FOR DYNAMIC FORMS AND LISTS === */
-
-/* The + Floating Action Button (FAB) */
+/* ============================================
+   FLOATING ACTION BUTTON
+   ============================================ */
 .add-fab {
     position: fixed;
-    bottom: 80px; /* Adjust to be safely above the bottom nav bar */
-    width: 60px;
-    height: 60px;
-    background-color: #7DFFDF; /* A nice teal color */
-    color: #3D2174; /* Text color */
+    bottom: 100px;
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--family-accent) 0%, var(--family-accent-soft) 100%);
+    color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 36px;
-    font-weight: lighter;
+    font-size: 2rem;
+    font-weight: 300;
     text-decoration: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    box-shadow: 
+        0 8px 24px rgba(255, 107, 53, 0.35),
+        0 4px 12px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     border: none;
     cursor: pointer;
     z-index: 1000;
-    transition: transform 0.2s ease;
-}
-.add-fab:hover {
-    transform: scale(1.1);
-}
-.add-fab.left {
-    left: 20px;
-}
-.add-fab.right {
-    right: 20px;
+    transition: 
+        transform var(--family-transition-bounce),
+        box-shadow var(--family-transition-base);
+    
+    animation: fabFloat 4s ease-in-out infinite;
 }
 
-/* The Modal (Popup Form) Background */
+@keyframes fabFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+.add-fab:hover {
+    transform: scale(1.1) translateY(-4px);
+    box-shadow: 
+        0 12px 32px rgba(255, 107, 53, 0.45),
+        0 6px 16px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    animation-play-state: paused;
+}
+
+.add-fab:active {
+    transform: scale(0.95);
+}
+
+.add-fab.left {
+    left: var(--family-space-lg);
+}
+
+.add-fab.right {
+    right: var(--family-space-lg);
+}
+
+/* ============================================
+   MODAL OVERLAY
+   ============================================ */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: none; /* Hidden by default */
+    background-color: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 2000;
-    padding: 20px;
+    padding: var(--family-space-lg);
     box-sizing: border-box;
+    
+    opacity: 0;
+    transition: opacity var(--family-transition-base);
 }
 
-/* The Modal Content Box */
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* ============================================
+   MODAL CONTENT
+   ============================================ */
 .modal-content {
-    background-color: #fefefe;
-    padding: 25px;
-    border-radius: 15px;
+    background: var(--family-surface-elevated);
+    padding: var(--family-space-xl);
+    border-radius: var(--family-radius-xl);
     width: 100%;
-    max-width: 450px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    max-width: 420px;
+    box-shadow: var(--family-shadow-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    transform: translateY(20px) scale(0.95);
+    transition: transform var(--family-transition-smooth);
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0) scale(1);
 }
 
 .modal-content h3 {
-    margin-top: 0;
-    margin-bottom: 25px;
-    color: #333;
+    font-family: var(--family-font-display);
+    margin: 0 0 var(--family-space-lg) 0;
+    color: var(--family-text-primary);
     text-align: center;
-    font-size: 22px;
+    font-size: 1.25rem;
+    font-weight: 700;
 }
 
-/* The Form Inputs inside the Modal */
+/* ============================================
+   MODAL FORM INPUTS
+   ============================================ */
 .modal-form-inputs {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-bottom: 25px;
+    gap: var(--family-space-md);
+    margin-bottom: var(--family-space-lg);
 }
 
 .modal-form-inputs input {
+    font-family: var(--family-font-body);
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-    box-sizing: border-box; 
+    padding: var(--family-space-md);
+    border: 2px solid var(--family-border);
+    border-radius: var(--family-radius-md);
+    font-size: 1rem;
+    color: var(--family-text-primary);
+    background: var(--family-surface-subtle);
+    transition: 
+        border-color var(--family-transition-fast),
+        box-shadow var(--family-transition-fast),
+        background-color var(--family-transition-fast);
 }
 
-/* The Save/Cancel Buttons in the Modal */
+.modal-form-inputs input:focus {
+    outline: none;
+    border-color: var(--family-accent);
+    background: var(--family-surface-elevated);
+    box-shadow: var(--family-shadow-input-focus);
+}
+
+.modal-form-inputs input::placeholder {
+    color: var(--family-text-muted);
+}
+
+/* ============================================
+   MODAL BUTTONS
+   ============================================ */
 .modal-buttons {
     display: flex;
-    gap: 10px;
+    gap: var(--family-space-md);
 }
 
 .modal-buttons button {
-    flex-grow: 1;
-    padding: 12px;
+    flex: 1;
+    font-family: var(--family-font-body);
+    padding: var(--family-space-md);
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
+    border-radius: var(--family-radius-md);
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: 
+        transform var(--family-transition-fast),
+        box-shadow var(--family-transition-fast);
 }
 
 .save-btn {
-    background-color: #198754; /* Green */
+    background: linear-gradient(135deg, var(--family-health) 0%, var(--family-health-soft) 100%);
     color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
 }
-.save-btn:hover { background-color: #157347; }
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+}
 
 .cancel-btn {
-    background-color: #6c757d; /* Gray */
-    color: white;
+    background: var(--family-surface-subtle);
+    color: var(--family-text-secondary);
+    border: 2px solid var(--family-border);
 }
-.cancel-btn:hover { background-color: #5c636a; }
 
-/* Message for when a list is empty */
+.cancel-btn:hover {
+    border-color: var(--family-danger);
+    color: var(--family-danger);
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   EMPTY LIST MESSAGE
+   ============================================ */
 .empty-list-message {
     text-align: center;
-    color: #888;
-    margin: 60px 20px;
-    font-size: 18px;
-    line-height: 1.5;
+    color: var(--family-text-muted);
+    margin: var(--family-space-2xl) var(--family-space-lg);
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
-/* General list container */
+.empty-list-message::before {
+    content: '👨‍👩‍👧‍👦';
+    display: block;
+    font-size: 3rem;
+    margin-bottom: var(--family-space-md);
+    opacity: 0.6;
+}
+
+/* ============================================
+   DYNAMIC LIST CONTAINER
+   ============================================ */
 .dynamic-list-container {
     width: 100%;
-    padding-bottom: 80px; /* Add space at the bottom */
+    padding-bottom: 100px;
 }
 
-/* === FINAL STYLING FOR ENTIRE APP (MATCHING YOUR LATEST REQUESTS) === */
-
-/* --- Card Template Styles --- */
-:root {
-    --card: #FFFFFF;        /* Card background is white */
-    --ink: #3D2174;         /* CHANGED: Text color is now your specified purple */
-    --line: #E5E7EB;        /* CHANGED: Divider line is now a soft, professional grey */
-    --radius: 24px;         /* Card rounding */
-}
-
+/* ============================================
+   TEMPLATE CARD (Task/Reminder Cards)
+   ============================================ */
 .template-card {
     width: 100%;
-    max-width: 680px;
-    background: var(--card);
-    border-radius: var(--radius);
-    color: var(--ink);
+    max-width: 100%;
+    background: var(--family-surface-elevated);
+    border-radius: var(--family-radius-xl);
+    color: var(--family-text-primary);
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Softened the shadow */
-    margin-bottom: 20px;
+    box-shadow: var(--family-shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    margin-bottom: var(--family-space-md);
+    transition: 
+        transform var(--family-transition-smooth),
+        box-shadow var(--family-transition-smooth);
+}
+
+.template-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--family-shadow-lg);
 }
 
 .card-body {
-    padding: 28px 28px 32px;
+    padding: var(--family-space-lg);
 }
 
 .card-title {
-    margin: 0 0 10px;
-    font-weight: 600;
-    font-size: clamp(20px, 3.2vw, 28px);
-    line-height: 1.2;
-    color: var(--ink); /* Ensures title uses the new color */
+    font-family: var(--family-font-display);
+    margin: 0 0 var(--family-space-sm) 0;
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    color: var(--family-text-primary);
+    letter-spacing: -0.01em;
+    padding-right: 60px;
 }
 
 .card-details p {
-    margin: 4px 0;
-    font-size: 16px;
-    color: var(--ink); /* Ensures details use the new color */
-    opacity: 0.8; /* Makes details slightly lighter than the title */
+    margin: var(--family-space-xs) 0;
+    font-size: 0.9rem;
+    color: var(--family-text-secondary);
 }
 
+/* ============================================
+   CARD ACTIONS (Edit/Delete icons)
+   ============================================ */
 .card-actions {
     position: absolute;
-    inset: 18px 18px auto auto;
+    top: var(--family-space-md);
+    right: var(--family-space-md);
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: var(--family-space-sm);
 }
-.icon-btn {
-    width: 28px; height: 28px; display: grid; place-items: center;
-    border: none; background: transparent; cursor: pointer; padding: 0;
-}
-.icon { width: 24px; height: 24px; fill: var(--ink); }
-.icon-btn:active { transform:scale(.96); }
 
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border: none;
+    background: var(--family-surface-subtle);
+    border-radius: var(--family-radius-sm);
+    cursor: pointer;
+    padding: 0;
+    transition: 
+        background-color var(--family-transition-fast),
+        transform var(--family-transition-fast);
+}
+
+.icon-btn:hover {
+    background: var(--family-accent-glow);
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    fill: var(--family-text-secondary);
+    transition: fill var(--family-transition-fast);
+}
+
+.icon-btn:hover .icon {
+    fill: var(--family-accent);
+}
+
+/* ============================================
+   CARD FOOTER (Done/Skip buttons)
+   ============================================ */
 .card-footer {
-    border-top: 2px solid var(--line); /* CHANGED: Using the new line color */
+    border-top: 1px solid var(--family-border);
     display: flex;
     width: 100%;
 }
+
 .footer-btn {
     flex: 1;
-    padding: 18px 16px;
+    padding: var(--family-space-md);
     background: transparent;
-    border: 0;
-    font-size: clamp(16px, 2.6vw, 22px);
-    text-transform: capitalize;
+    border: none;
+    font-family: var(--family-font-body);
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: 
+        background-color var(--family-transition-fast),
+        color var(--family-transition-fast);
 }
-.footer-btn + .footer-btn { border-left: 2px solid var(--line); } /* CHANGED: Using the new line color */
-.footer-btn.done { background-color: rgba(25, 135, 84, 0.1); color: #198754; }
-.footer-btn.skip { background-color: rgba(220, 53, 69, 0.1); color: #dc3545; }
-.footer-btn:hover { filter: brightness(0.95); }
 
-/* --- General App Styles (Modal, FAB, etc.) --- */
-.add-fab {
-    position: fixed; bottom: 80px; width: 60px; height: 60px; background-color: #0d6efd;
-    color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 36px; font-weight: lighter; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-    border: none; cursor: pointer; z-index: 1000;
+.footer-btn + .footer-btn {
+    border-left: 1px solid var(--family-border);
 }
-.add-fab.left { left: 20px; }
-.add-fab.right { right: 20px; }
-.modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6);
-    display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; box-sizing: border-box;
-}
-.modal-content {
-    background-color: #fefefe; padding: 25px; border-radius: 15px; width: 100%; max-width: 450px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-.modal-content h3 { margin: 0 0 25px; color: #333; text-align: center; font-size: 22px; }
-.modal-form-inputs { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
-.modal-form-inputs input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-.modal-buttons { display: flex; gap: 10px; }
-.modal-buttons button { flex-grow: 1; padding: 12px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
-.save-btn { background-color: #198754; color: white; }
-.cancel-btn { background-color: #6c757d; color: white; }
-.empty-list-message { text-align: center; color: var(--ink); opacity: 0.7; margin: 60px 20px; font-size: 18px; line-height: 1.5; }
-.dynamic-list-container { width: 100%; padding-bottom: 80px; }
-.done-card { filter: saturate(0.2) opacity(0.6); }
-.done-card .card-title, .done-card .card-details p { text-decoration: line-through; }
-/* ADD THIS TO THE END OF STYLES.CSS */
 
-/* Style for cards marked as 'Skipped' */
-.skipped-card {
-    background-color: rgba(220, 53, 69, 0.1); /* Light red background */
-    border-left: 5px solid #dc3545; /* Red left border */
+.footer-btn.done {
+    color: var(--family-health);
 }
-/* ADD THIS TO THE END OF STYLES.CSS */
 
-/* ADD THIS TO THE END OF STYLES.CSS */
+.footer-btn.done:hover {
+    background: var(--family-health-glow);
+}
 
-/* Style for cards marked as 'Done' */
+.footer-btn.skip {
+    color: var(--family-danger);
+}
+
+.footer-btn.skip:hover {
+    background: var(--family-danger-glow);
+}
+
+/* ============================================
+   DONE CARD STATE
+   ============================================ */
 .done-card {
-    filter: saturate(0.2) opacity(0.6); /* Makes it look faded */
-    background-color: rgba(25, 135, 84, 0.05); /* Very light green background */
+    opacity: 0.6;
+    background: var(--family-health-glow);
 }
 
-/* Adds a line-through to the title when done */
-.done-card .card-title, .done-card .card-details p {
+.done-card .card-title,
+.done-card .card-details p {
     text-decoration: line-through;
+    color: var(--family-text-muted);
+}
+
+/* ============================================
+   SKIPPED CARD STATE
+   ============================================ */
+.skipped-card {
+    background: var(--family-danger-glow);
+    border-left: 4px solid var(--family-danger);
+}
+
+.skipped-card .card-title {
+    color: var(--family-danger);
+}
+
+/* ============================================
+   BOTTOM NAVIGATION
+   ============================================ */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--family-surface-elevated);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: var(--family-space-sm) var(--family-space-md);
+    padding-bottom: calc(var(--family-space-sm) + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+    z-index: 100;
+    
+    /* Glassmorphism */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--family-space-xs);
+    padding: var(--family-space-sm) var(--family-space-md);
+    text-decoration: none;
+    border-radius: var(--family-radius-md);
+    position: relative;
+    min-width: 56px;
+    min-height: 48px;
+    transition: 
+        background-color var(--family-transition-fast),
+        transform var(--family-transition-fast);
+}
+
+/* Active indicator */
+.bottom-nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 24px;
+    height: 3px;
+    background: var(--family-accent);
+    border-radius: var(--family-radius-full);
+    transition: transform var(--family-transition-smooth);
+}
+
+.bottom-nav a:hover,
+.bottom-nav a.active {
+    background: var(--family-accent-glow);
+}
+
+.bottom-nav a.active::before {
+    transform: translateX(-50%) scaleX(1);
+}
+
+.bottom-nav a:active {
+    transform: scale(0.92);
+}
+
+.bottom-nav img {
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+    transition: 
+        opacity var(--family-transition-fast),
+        transform var(--family-transition-fast);
+}
+
+.bottom-nav a:hover img,
+.bottom-nav a.active img {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.family-card:focus-visible,
+.add-fab:focus-visible,
+.save-btn:focus-visible,
+.cancel-btn:focus-visible,
+.icon-btn:focus-visible,
+.footer-btn:focus-visible,
+.bottom-nav a:focus-visible {
+    outline: 2px solid var(--family-accent);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 400px) {
+    .container {
+        padding: var(--family-space-md);
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .header img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .family-card {
+        padding: var(--family-space-md);
+    }
+    
+    .family-card h3 {
+        font-size: 1rem;
+    }
+    
+    .family-card img {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .add-fab {
+        width: 56px;
+        height: 56px;
+        font-size: 1.75rem;
+    }
+    
+    .modal-content {
+        padding: var(--family-space-lg);
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --family-surface: #0F0F14;
+        --family-surface-elevated: #1A1A24;
+        --family-surface-subtle: #252532;
+        
+        --family-text-primary: #F8FAFC;
+        --family-text-secondary: #94A3B8;
+        --family-text-muted: #64748B;
+        
+        --family-border: #3D3D52;
+        --family-line: #3D3D52;
+        
+        --card: var(--family-surface-elevated);
+        --ink: var(--family-text-primary);
+        --line: var(--family-border);
+    }
+    
+    body {
+        background: 
+            radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.03) 0%, transparent 40%),
+            var(--family-surface);
+    }
+    
+    .bottom-nav {
+        background: rgba(26, 26, 36, 0.92);
+        border-top-color: rgba(255, 255, 255, 0.06);
+    }
+    
+    .family-card,
+    .template-card {
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+    
+    .modal-overlay {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    
+    .modal-content {
+        border-color: rgba(255, 255, 255, 0.08);
+    }
 }
