@@ -2,139 +2,865 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'assets/css/addprofile.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Add Profile</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      --surface-input: #F8F9FB;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --danger: #EF4444;
+      --danger-soft: #F87171;
+      --danger-glow: rgba(239, 68, 68, 0.1);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      --shadow-input-focus: 0 0 0 4px var(--accent-glow);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.05) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
+    }
+
+    /* ============================================
+       FORM CONTAINER
+       ============================================ */
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      padding-bottom: var(--space-2xl);
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       PAGE TITLE
+       ============================================ */
+    h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      text-align: center;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      
+      animation: titleFadeIn 0.5s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
+    }
+
+    @keyframes titleFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1::before {
+      content: '👤';
+      font-size: 1.75rem;
+    }
+
+    /* Decorative underline */
+    h1::after {
+      content: '';
+      display: block;
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 100%);
+      border-radius: var(--radius-full);
+    }
+
+    h1 {
+      position: relative;
+    }
+
+    /* ============================================
+       FORM CONTENT
+       ============================================ */
+    .form-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    /* ============================================
+       SECTION
+       ============================================ */
+    .section {
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      position: relative;
+      overflow: hidden;
+      
+      animation: sectionSlideIn 0.5s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes sectionSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Section accent bar */
+    .section::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--purple) 0%, var(--purple-soft) 100%);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .section h2 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .section h2::before {
+      content: '📋';
+    }
+
+    /* Family member section styling */
+    .section.family-member {
+      border: 2px dashed var(--border);
+      background: linear-gradient(135deg, var(--surface-elevated) 0%, var(--surface-subtle) 100%);
+    }
+
+    .section.family-member::before {
+      background: linear-gradient(180deg, var(--health) 0%, var(--health-soft) 100%);
+    }
+
+    .section.family-member h2::before {
+      content: '👨‍👩‍👧';
+    }
+
+    /* ============================================
+       LABELS
+       ============================================ */
+    label {
+      display: block;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: var(--space-sm);
+      margin-top: var(--space-md);
+    }
+
+    label:first-of-type {
+      margin-top: 0;
+    }
+
+    /* ============================================
+       INPUTS
+       ============================================ */
+    input[type="text"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="email"],
+    input[type="date"],
+    select {
+      font-family: var(--font-body);
+      width: 100%;
+      padding: var(--space-md);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: var(--surface-input);
+      transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    input::placeholder {
+      color: var(--text-muted);
+    }
+
+    input:hover,
+    select:hover {
+      border-color: var(--text-muted);
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--surface-elevated);
+      box-shadow: var(--shadow-input-focus);
+      transform: translateY(-1px);
+    }
+
+    /* Select styling */
+    select {
+      appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right var(--space-md) center;
+      padding-right: calc(var(--space-md) * 3);
+    }
+
+    /* File input styling */
+    input[type="file"] {
+      font-family: var(--font-body);
+      width: 100%;
+      padding: var(--space-md);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      background: var(--surface-subtle);
+      cursor: pointer;
+      transition: 
+        border-color var(--transition-fast),
+        background-color var(--transition-fast);
+    }
+
+    input[type="file"]:hover {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    input[type="file"]::file-selector-button {
+      font-family: var(--font-body);
+      font-weight: 600;
+      padding: var(--space-sm) var(--space-md);
+      margin-right: var(--space-md);
+      border: none;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-soft) 100%);
+      color: white;
+      cursor: pointer;
+      transition: transform var(--transition-fast);
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      transform: scale(1.02);
+    }
+
+    /* Patient code special styling */
+    #patient_code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      letter-spacing: 0.15em;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    /* ============================================
+       BUTTON GROUP
+       ============================================ */
+    .button-group {
+      display: flex;
+      gap: var(--space-md);
+      margin-top: var(--space-md);
+    }
+
+    /* ============================================
+       BUTTONS
+       ============================================ */
+    .add-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      padding: var(--space-md) var(--space-lg);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: 
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .add-button.green {
+      color: var(--health);
+      background: var(--health-glow);
+      border-color: var(--health);
+    }
+
+    .add-button.green:hover {
+      background: var(--health);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .add-button.green::before {
+      content: '➕';
+    }
+
+    /* Nav/Submit Button */
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      padding: var(--space-md) var(--space-lg);
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-base);
+    }
+
+    .nav-button.next {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+      box-shadow: 
+        0 4px 16px rgba(255, 107, 53, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* Shine effect */
+    .nav-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+      );
+      transition: left 0.5s ease;
+    }
+
+    .nav-button:hover::before {
+      left: 100%;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 8px 24px rgba(255, 107, 53, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .nav-button:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+
+    .nav-button.next::after {
+      content: '→';
+      font-size: 1.2rem;
+      transition: transform var(--transition-fast);
+    }
+
+    .nav-button:hover::after {
+      transform: translateX(4px);
+    }
+
+    /* Remove family member button */
+    .remove-family-member {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      padding: var(--space-md);
+      margin-top: var(--space-lg);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--danger);
+      background: var(--danger-glow);
+      border: 2px solid var(--danger);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: 
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .remove-family-member::before {
+      content: '🗑️';
+    }
+
+    .remove-family-member:hover {
+      background: var(--danger);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* ============================================
+       PROGRESS INDICATOR (Optional)
+       ============================================ */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--border);
+      z-index: 100;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 100%);
+      border-radius: 0 var(--radius-full) var(--radius-full) 0;
+      width: 50%;
+      transition: width var(--transition-smooth);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 480px) {
+      .form-container {
+        padding: var(--space-md);
+      }
+      
+      h1 {
+        font-size: 1.75rem;
+      }
+      
+      .section {
+        padding: var(--space-lg);
+      }
+      
+      .section h2 {
+        font-size: 1.1rem;
+      }
+      
+      input,
+      select {
+        font-size: 16px; /* Prevents iOS zoom */
+      }
+      
+      .nav-button {
+        font-size: 1rem;
+        padding: var(--space-md);
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        --surface-input: #1F1F2E;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.03) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .section {
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+      
+      select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .add-button:focus-visible,
+    .nav-button:focus-visible,
+    .remove-family-member:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ============================================
+       VALIDATION STATES
+       ============================================ */
+    input:invalid:not(:placeholder-shown) {
+      border-color: var(--danger);
+    }
+
+    input:valid:not(:placeholder-shown) {
+      border-color: var(--health);
+    }
+
+    /* ============================================
+       FAMILY MEMBER ANIMATION
+       ============================================ */
+    .family-member {
+      animation: familyMemberEnter 0.4s var(--transition-smooth) forwards;
+    }
+
+    @keyframes familyMemberEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="form-container">
-        <h1>Add Profile</h1>
+  <!-- Optional Progress Bar -->
+  <div class="progress-bar">
+    <div class="progress-bar-fill"></div>
+  </div>
 
-        <form class="form-content" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
+  <div class="form-container">
+    <h1>Add Profile</h1>
 
-            <!-- Primary User Information Section -->
-            <div class="section">
-                <h2>Primary User Information</h2>
-                <label>Name</label>
-                <input type="text" name="name" placeholder="Enter name" required>
+    <form class="form-content" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
 
-                <label>Age</label>
-                <input type="number" name="age" placeholder="Enter age" required>
+      <!-- Primary User Information Section -->
+      <div class="section">
+        <h2>Primary User Information</h2>
+        
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
 
-                <label>Gender</label>
-                <select name="gender" required>
-                    <option value="" disabled selected>Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                </select>
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" placeholder="Enter your age" min="1" max="120" required>
 
-                <label>Date of Birth</label>
-                <input type="date" name="dob" required>
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender" required>
+          <option value="" disabled selected>Select gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
 
-                <label>Phone Number</label>
-                <input type="tel" name="phone" placeholder="Enter phone number" required>
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" name="dob" required>
 
-                <label>Email Address</label>
-                <input type="email" name="email" placeholder="Enter email" required>
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
 
-                <label>Primary Location</label>
-                <input type="text" name="location" placeholder="Enter location" required>
-                <label for="patient_code">8-digit Patient Code</label>
-                <input
-                type="text"
-                id="patient_code"
-                name="patient_code"
-                inputmode="numeric"
-                pattern="\d{8}"
-                maxlength="8"
-                placeholder="Enter your unique 8-digit code"
-                autocomplete="off"
-                />
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Enter email address" required>
 
-                <label>Emergency Contact</label>
-                <input type="text" name="emergency" placeholder="Enter emergency contact" required>
+        <label for="location">Primary Location</label>
+        <input type="text" id="location" name="location" placeholder="Enter your location" required>
 
-                <label>Profile Photo</label>
-                <input type="file" name="photo" accept="image/*">
-            </div>
+        <label for="patient_code">8-digit Patient Code</label>
+        <input
+          type="text"
+          id="patient_code"
+          name="patient_code"
+          inputmode="numeric"
+          pattern="\d{8}"
+          maxlength="8"
+          placeholder="Enter your unique 8-digit code"
+          autocomplete="off"
+        >
 
-            <!-- Family Members Section Container -->
-            <div id="family-section-container"></div>
+        <label for="emergency">Emergency Contact</label>
+        <input type="text" id="emergency" name="emergency" placeholder="Enter emergency contact" required>
 
-            <!-- Hidden Template for Family Member Section -->
-            <template id="family-template">
-                <div class="section family-member">
-                    <h2>Family Member</h2>
+        <label for="photo">Profile Photo</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
+      </div>
 
-                    <label>Name</label>
-                    <input type="text" name="family_name[]" placeholder="Enter name" required>
+      <!-- Family Members Section Container -->
+      <div id="family-section-container"></div>
 
-                    <label>Relationship</label>
-                    <input type="text" name="relationship[]" placeholder="Enter relationship" required>
+      <!-- Hidden Template for Family Member Section -->
+      <template id="family-template">
+        <div class="section family-member">
+          <h2>Family Member</h2>
 
-                    <label>Age</label>
-                    <input type="number" name="family_age[]" placeholder="Enter age" required>
+          <label>Name</label>
+          <input type="text" name="family_name[]" placeholder="Enter family member's name" required>
 
-                    <label>Gender</label>
-                    <select name="family_gender[]" required>
-                        <option value="" disabled selected>Select gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select>
+          <label>Relationship</label>
+          <input type="text" name="relationship[]" placeholder="e.g., Spouse, Child, Parent" required>
 
-                    <label>Location</label>
-                    <input type="text" name="family_location[]" placeholder="Enter location" required>
+          <label>Age</label>
+          <input type="number" name="family_age[]" placeholder="Enter age" min="1" max="120" required>
 
-                    <label>Profile Photo</label>
-                    <input type="file" name="family_photo[]" accept="image/*">
+          <label>Gender</label>
+          <select name="family_gender[]" required>
+            <option value="" disabled selected>Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
 
-                    <button type="button" class="remove-family-member">Remove</button>
-                </div>
-            </template>
+          <label>Location</label>
+          <input type="text" name="family_location[]" placeholder="Enter location" required>
 
-            <!-- Move Add Family Member Button Below the Family Section -->
-            <div class="button-group">
-                <button type="button" id="add-family-member" class="add-button green">Add Family Member</button>
-            </div>
+          <label>Profile Photo</label>
+          <input type="file" name="family_photo[]" accept="image/*">
 
-            <!-- Submit Button -->
-            <div class="button-group">
-                <button type="submit" class="nav-button next">Next</button>
-            </div>
-        </form>
-    </div>
+          <button type="button" class="remove-family-member">Remove Family Member</button>
+        </div>
+      </template>
 
-    <script>
-        document.getElementById('add-family-member').addEventListener('click', function () {
-            var template = document.getElementById('family-template').content.cloneNode(true);
-            
-            // Ensure inputs are blank
-            template.querySelectorAll("input, select").forEach(field => {
-                field.value = "";
-            });
+      <!-- Add Family Member Button -->
+      <div class="button-group">
+        <button type="button" id="add-family-member" class="add-button green">Add Family Member</button>
+      </div>
 
-            // Add remove functionality
-            template.querySelector(".remove-family-member").addEventListener("click", function () {
-                this.closest(".family-member").remove();
-            });
+      <!-- Submit Button -->
+      <div class="button-group">
+        <button type="submit" class="nav-button next">Continue to Next Step</button>
+      </div>
+    </form>
+  </div>
 
-            document.getElementById('family-section-container').appendChild(template);
-        });
+  <!-- Chatbot Include -->
+  {% include 'chatbot.html' %}
 
-        // Prevent submission if required fields are empty
-        document.querySelector("form").addEventListener("submit", function (event) {
-            let invalidFields = document.querySelectorAll(":invalid");
-            if (invalidFields.length > 0) {
-                event.preventDefault();
-                invalidFields[0].focus();
-            }
-        });
-    </script>
-    {% include 'chatbot.html' %}
+  <script>
+    // Add Family Member functionality
+    document.getElementById('add-family-member').addEventListener('click', function() {
+      const template = document.getElementById('family-template').content.cloneNode(true);
+      
+      // Ensure inputs are blank
+      template.querySelectorAll("input, select").forEach(field => {
+        field.value = "";
+      });
+
+      // Add remove functionality with animation
+      template.querySelector(".remove-family-member").addEventListener("click", function() {
+        const section = this.closest(".family-member");
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(-10px) scale(0.95)';
+        section.style.transition = 'all 0.3s ease';
+        setTimeout(() => section.remove(), 300);
+      });
+
+      document.getElementById('family-section-container').appendChild(template);
+      
+      // Scroll to new section
+      setTimeout(() => {
+        const sections = document.querySelectorAll('.family-member');
+        const lastSection = sections[sections.length - 1];
+        if (lastSection) {
+          lastSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    });
+
+    // Form validation
+    document.querySelector("form").addEventListener("submit", function(event) {
+      const invalidFields = document.querySelectorAll(":invalid");
+      if (invalidFields.length > 0) {
+        event.preventDefault();
+        invalidFields[0].focus();
+        
+        // Highlight invalid field
+        invalidFields[0].style.animation = 'shake 0.5s ease';
+        setTimeout(() => {
+          invalidFields[0].style.animation = '';
+        }, 500);
+      }
+    });
+
+    // Update progress bar based on form completion (optional)
+    function updateProgress() {
+      const form = document.querySelector('form');
+      const inputs = form.querySelectorAll('input[required], select[required]');
+      let filledCount = 0;
+      
+      inputs.forEach(input => {
+        if (input.value.trim() !== '' && input.value !== null) {
+          filledCount++;
+        }
+      });
+      
+      const progress = (filledCount / inputs.length) * 100;
+      document.querySelector('.progress-bar-fill').style.width = progress + '%';
+    }
+
+    // Listen for input changes
+    document.querySelectorAll('input, select').forEach(input => {
+      input.addEventListener('input', updateProgress);
+      input.addEventListener('change', updateProgress);
+    });
+
+    // Initial progress update
+    updateProgress();
+
+    // Add shake animation for validation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-8px); }
+        50% { transform: translateX(8px); }
+        75% { transform: translateX(-8px); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
 </body>
 </html>
