@@ -5,169 +5,634 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Journal Entry</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
-    * { box-sizing: border-box; }
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --teal: #14B8A6;
+      --teal-soft: #2DD4BF;
+      --teal-glow: rgba(20, 184, 166, 0.12);
+      
+      --info: #3B82F6;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --warning: #F59E0B;
+      --warning-glow: rgba(245, 158, 11, 0.12);
+      
+      --danger: #EF4444;
+      --danger-glow: rgba(239, 68, 68, 0.1);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-    html, body {
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f1f4f8;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(20, 184, 166, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
     }
 
     a {
       text-decoration: none;
-      color: #2b6777;
-      font-weight: bold;
-      margin: 20px;
-      display: inline-block;
     }
 
-    .card {
-      background: #fff;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    /* ============================================
+       CONTAINER
+       ============================================ */
+    .container {
       max-width: 700px;
-      margin: 20px auto;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      padding-bottom: var(--space-2xl);
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
     }
 
-    .card h2 {
-      margin-top: 0;
-      color: #2b6777;
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       BACK BUTTON
+       ============================================ */
+    .back-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
       font-size: 1.5rem;
+      color: var(--text-primary);
+      background: var(--surface-elevated);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      margin-bottom: var(--space-lg);
+      transition: 
+        transform var(--transition-fast),
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+      
+      animation: slideDown 0.4s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
     }
 
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .back-arrow:hover {
+      background: var(--teal-glow);
+      transform: translateX(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .back-arrow:active {
+      transform: scale(0.95);
+    }
+
+    /* ============================================
+       MAIN CARD
+       ============================================ */
+    .card {
+      background: var(--surface-elevated);
+      padding: var(--space-xl);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      position: relative;
+      overflow: hidden;
+      
+      animation: cardEnter 0.5s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes cardEnter {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Decorative top gradient */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--teal) 0%, var(--purple) 100%);
+    }
+
+    /* ============================================
+       CARD HEADER
+       ============================================ */
+    .card h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .card h2::before {
+      content: '📔';
+      font-size: 1.25rem;
+    }
+
+    .timestamp {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      display: block;
+      margin-top: var(--space-xs);
+    }
+
+    /* ============================================
+       ENTRIES GRID
+       ============================================ */
+    .entries-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    /* ============================================
+       ENTRY ITEM
+       ============================================ */
     .entry {
-      margin: 10px 0;
-      font-size: 1rem;
-      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      padding: var(--space-md);
+      background: var(--surface-subtle);
+      border-radius: var(--radius-lg);
+      transition: 
+        transform var(--transition-smooth),
+        box-shadow var(--transition-smooth);
+    }
+
+    .entry:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
     }
 
     .entry strong {
-      color: #444;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
     }
 
+    .entry-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Entry icons */
+    .entry[data-type="pain"] strong::before { content: '😣'; }
+    .entry[data-type="energy"] strong::before { content: '⚡'; }
+    .entry[data-type="breath"] strong::before { content: '🌬️'; }
+    .entry[data-type="chest"] strong::before { content: '💔'; }
+    .entry[data-type="activity"] strong::before { content: '🏃'; }
+    .entry[data-type="stress"] strong::before { content: '😰'; }
+    .entry[data-type="swelling"] strong::before { content: '🦶'; }
+    .entry[data-type="emergency"] strong::before { content: '🚨'; }
+
+    /* Full width for note */
+    .entry.full-width {
+      grid-column: span 2;
+    }
+
+    .entry[data-type="note"] {
+      background: linear-gradient(135deg, var(--teal-glow) 0%, var(--surface-subtle) 100%);
+    }
+
+    .entry[data-type="note"] strong::before { content: '📝'; }
+
+    .entry[data-type="note"] .entry-value {
+      font-weight: 400;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    /* ============================================
+       GRAPH CONTAINER
+       ============================================ */
     .graph-container {
-      text-align: center;
-      margin-top: 30px;
+      margin-top: var(--space-xl);
+      padding-top: var(--space-xl);
+      border-top: 1px solid var(--border);
     }
 
     .graph-container h3 {
-      margin-bottom: 16px;
-      color: #2b6777;
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
     }
 
-    .graph-container img {
+    .graph-container h3::before {
+      content: '📊';
+    }
+
+    .graph-wrapper {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+    }
+
+    .graph-wrapper img {
       width: 100%;
-      max-width: 500px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      display: block;
       cursor: pointer;
-      transition: 0.3s ease;
+      transition: 
+        transform var(--transition-smooth),
+        opacity var(--transition-fast);
     }
 
-    .graph-container img:hover {
-      opacity: 0.8;
+    .graph-wrapper:hover img {
+      transform: scale(1.02);
+      opacity: 0.9;
     }
 
-    /* Modal Styling */
+    /* Zoom hint overlay */
+    .graph-wrapper::after {
+      content: '🔍 Click to enlarge';
+      position: absolute;
+      bottom: var(--space-md);
+      right: var(--space-md);
+      padding: var(--space-xs) var(--space-sm);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+      pointer-events: none;
+    }
+
+    .graph-wrapper:hover::after {
+      opacity: 1;
+    }
+
+    /* ============================================
+       MODAL
+       ============================================ */
     .modal {
       display: none;
       position: fixed;
       z-index: 1000;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.85);
+      background-color: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .modal-content {
       display: block;
       margin: 60px auto;
-      max-width: 90%;
-      max-height: 80vh;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.3);
+      max-width: 95%;
+      max-height: 85vh;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+      animation: modalZoomIn 0.3s var(--transition-smooth);
+    }
+
+    @keyframes modalZoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     .close {
-      position: absolute;
-      top: 20px;
-      right: 35px;
-      color: #fff;
-      font-size: 32px;
+      position: fixed;
+      top: var(--space-lg);
+      right: var(--space-xl);
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 24px;
       font-weight: bold;
       cursor: pointer;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
     }
 
+    .close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(90deg);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
     @media (max-width: 600px) {
+      .container {
+        padding: var(--space-md);
+      }
+      
       .card {
-        margin: 12px;
-        padding: 16px;
+        padding: var(--space-lg);
       }
-
+      
       .card h2 {
-        font-size: 1.3rem;
+        font-size: 1.25rem;
       }
-
-      .entry {
-        font-size: 0.95rem;
+      
+      .entries-grid {
+        grid-template-columns: 1fr;
       }
-
-      a {
-        margin-left: 12px;
-        font-size: 0.95rem;
+      
+      .entry.full-width {
+        grid-column: span 1;
+      }
+      
+      .back-arrow {
+        width: 44px;
+        height: 44px;
+        font-size: 1.25rem;
       }
     }
 
-     .back-arrow {
-            font-size: 30px;
-            text-decoration: none;
-            color: #3a2370;
-            display: inline-block;
-            padding: 20px;
-            margin-bottom: -10px;
-            transition: transform 0.2s ease;
-        }
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      html, body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(20, 184, 166, 0.05) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.04) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .card,
+      .back-arrow {
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+    }
 
-        .back-arrow:hover {
-            transform: translateX(-4px);
-        }
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .back-arrow:focus-visible,
+    .graph-wrapper img:focus-visible,
+    .close:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 2px;
+    }
   </style>
 </head>
+
 <body>
+  <div class="container">
+    
+    <!-- Back Button -->
+    <span class="back-arrow" onclick="window.history.back()" role="button" tabindex="0" aria-label="Go back">←</span>
+    
+    <!-- Main Card -->
+    <div class="card">
+      
+      <!-- Header -->
+      <h2>
+        Journal Entry
+        <span class="timestamp">{{ entry.timestamp|date:"M d, Y – H:i" }}</span>
+      </h2>
+      
+      <!-- Entries Grid -->
+      <div class="entries-grid">
+        
+        <div class="entry" data-type="pain">
+          <strong>Pain Level</strong>
+          <span class="entry-value">{{ entry.pain_level }}</span>
+        </div>
+        
+        <div class="entry" data-type="energy">
+          <strong>Energy Level</strong>
+          <span class="entry-value">{{ entry.energy_level }}</span>
+        </div>
+        
+        <div class="entry" data-type="breath">
+          <strong>Breath</strong>
+          <span class="entry-value">{{ entry.breath }}</span>
+        </div>
+        
+        <div class="entry" data-type="chest">
+          <strong>Chest Pain</strong>
+          <span class="entry-value">{{ entry.chest_pain }}</span>
+        </div>
+        
+        <div class="entry" data-type="activity">
+          <strong>Physical Activity</strong>
+          <span class="entry-value">{{ entry.physical_activity }}</span>
+        </div>
+        
+        <div class="entry" data-type="stress">
+          <strong>Stress Level</strong>
+          <span class="entry-value">{{ entry.stress_level }}</span>
+        </div>
+        
+        <div class="entry" data-type="swelling">
+          <strong>Swelling</strong>
+          <span class="entry-value">{{ entry.swelling }}</span>
+        </div>
+        
+        <div class="entry" data-type="emergency">
+          <strong>Emergency</strong>
+          <span class="entry-value">{{ entry.emergency }}</span>
+        </div>
+        
+        <div class="entry full-width" data-type="note">
+          <strong>Note</strong>
+          <span class="entry-value">{{ entry.extra_note|default:"No additional notes" }}</span>
+        </div>
+        
+      </div>
+      
+      <!-- Graph (if available) -->
+      {% if graph_path %}
+      <div class="graph-container">
+        <h3>Health Report Summary</h3>
+        <div class="graph-wrapper">
+          <img id="graphImg" src="{{ graph_path }}" alt="Health Graph" tabindex="0">
+        </div>
+      </div>
 
-   <span class="back-arrow" onclick="window.history.back()">&#8592;</span>
-
-  <div class="card">
-    <h2>Journal Entry ({{ entry.timestamp|date:"M d, Y – H:i" }})</h2>
-
-    <div class="entry"><strong>Pain Level:</strong> {{ entry.pain_level }}</div>
-    <div class="entry"><strong>Energy Level:</strong> {{ entry.energy_level }}</div>
-    <div class="entry"><strong>Breath:</strong> {{ entry.breath }}</div>
-    <div class="entry"><strong>Chest Pain:</strong> {{ entry.chest_pain }}</div>
-    <div class="entry"><strong>Physical Activity:</strong> {{ entry.physical_activity }}</div>
-    <div class="entry"><strong>Stress Level:</strong> {{ entry.stress_level }}</div>
-    <div class="entry"><strong>Swelling:</strong> {{ entry.swelling }}</div>
-    <div class="entry"><strong>Emergency:</strong> {{ entry.emergency }}</div>
-    <div class="entry"><strong>Note:</strong> {{ entry.extra_note }}</div>
-
-    {% if graph_path %}
-    <div class="graph-container">
-      <h3>Health Report Summary</h3>
-      <img id="graphImg" src="{{ graph_path }}" alt="Health Graph">
+      <!-- Modal -->
+      <div id="graphModal" class="modal">
+        <span class="close" id="modalClose" role="button" tabindex="0" aria-label="Close">&times;</span>
+        <img class="modal-content" id="modalImage" alt="Health Graph Enlarged">
+      </div>
+      {% endif %}
+      
     </div>
-
-    <!-- Modal -->
-    <div id="graphModal" class="modal">
-      <span class="close" id="modalClose">&times;</span>
-      <img class="modal-content" id="modalImage">
-    </div>
-    {% endif %}
+    
   </div>
 
+  <!-- Scripts -->
   <script>
     const graphImg = document.getElementById("graphImg");
     const modal = document.getElementById("graphModal");
@@ -175,21 +640,50 @@
     const closeBtn = document.getElementById("modalClose");
 
     if (graphImg && modal && modalImg && closeBtn) {
+      // Open modal on click
       graphImg.onclick = function() {
         modal.style.display = "block";
         modalImg.src = this.src;
+        document.body.style.overflow = 'hidden';
       }
 
-      closeBtn.onclick = function() {
+      // Open modal on Enter key
+      graphImg.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          modal.style.display = "block";
+          modalImg.src = this.src;
+          document.body.style.overflow = 'hidden';
+        }
+      });
+
+      // Close modal
+      function closeModal() {
         modal.style.display = "none";
+        document.body.style.overflow = '';
       }
+
+      closeBtn.onclick = closeModal;
+
+      closeBtn.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') closeModal();
+      });
 
       window.onclick = function(e) {
-        if (e.target === modal) {
-          modal.style.display = "none";
-        }
+        if (e.target === modal) closeModal();
       }
+
+      // Close on Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+          closeModal();
+        }
+      });
     }
+
+    // Back button keyboard support
+    document.querySelector('.back-arrow').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') window.history.back();
+    });
   </script>
 
 </body>
