@@ -2,90 +2,920 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>My Rewards</title>
-    <link rel="stylesheet" href="{% static 'assets/css/rewards.css' %}">
-    <script defer src="{% static 'assets/js/scripts.js' %}"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>My Rewards</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --gold: #F59E0B;
+      --gold-soft: #FBBF24;
+      --gold-glow: rgba(245, 158, 11, 0.15);
+      
+      --info: #3B82F6;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --danger: #EF4444;
+      --danger-glow: rgba(239, 68, 68, 0.1);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding-bottom: 100px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 30% 0%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 100%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ============================================
+       CONTAINER
+       ============================================ */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       HEADER
+       ============================================ */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-xl);
+      
+      animation: headerSlide 0.5s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
+    }
+
+    @keyframes headerSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header h1 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .header h1::before {
+      content: '🏆';
+      font-size: 1.25rem;
+    }
+
+    /* XP Badge */
+    .xp {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-sm) var(--space-md);
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-radius: var(--radius-full);
+      box-shadow: 
+        0 4px 16px rgba(245, 158, 11, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .xp::before {
+      content: '⚡';
+      font-size: 0.85rem;
+    }
+
+    /* ============================================
+       MESSAGES
+       ============================================ */
+    .messages {
+      margin-bottom: var(--space-lg);
+    }
+
+    .alert {
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      animation: alertSlide 0.4s var(--transition-smooth);
+    }
+
+    @keyframes alertSlide {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .alert.success {
+      background: var(--health-glow);
+      color: var(--health);
+      border-left: 4px solid var(--health);
+    }
+
+    .alert.success::before {
+      content: '🎉';
+    }
+
+    .alert.error,
+    .alert.danger {
+      background: var(--danger-glow);
+      color: var(--danger);
+      border-left: 4px solid var(--danger);
+    }
+
+    .alert.error::before,
+    .alert.danger::before {
+      content: '⚠️';
+    }
+
+    .alert.info {
+      background: var(--info-glow);
+      color: var(--info);
+      border-left: 4px solid var(--info);
+    }
+
+    .alert.info::before {
+      content: 'ℹ️';
+    }
+
+    /* ============================================
+       PROFILE SECTION
+       ============================================ */
+    .profile-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: var(--space-xl);
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+      border-radius: var(--radius-xl);
+      margin-bottom: var(--space-xl);
+      box-shadow: 
+        0 8px 32px rgba(245, 158, 11, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      
+      animation: profileEnter 0.5s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes profileEnter {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Decorative sparkles */
+    .profile-section::before {
+      content: '✨';
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-lg);
+      font-size: 1.5rem;
+      animation: sparkle 2s ease-in-out infinite;
+    }
+
+    .profile-section::after {
+      content: '✨';
+      position: absolute;
+      bottom: var(--space-lg);
+      left: var(--space-md);
+      font-size: 1rem;
+      animation: sparkle 2s ease-in-out 0.5s infinite;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .profile-image {
+      position: relative;
+      margin-bottom: var(--space-md);
+    }
+
+    .profile-image img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.4);
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      transition: transform var(--transition-bounce);
+    }
+
+    .profile-image img:hover {
+      transform: scale(1.05);
+    }
+
+    .edit-icon {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 32px;
+      height: 32px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform var(--transition-fast);
+    }
+
+    .edit-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .profile-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: var(--space-xs);
+    }
+
+    .profile-section > p {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: var(--space-md);
+    }
+
+    /* Claim Button */
+    .claim-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-lg);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--gold);
+      background: white;
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .claim-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .claim-btn:active {
+      transform: scale(0.98);
+    }
+
+    .claim-btn::before {
+      content: '🎁';
+    }
+
+    /* Already claimed message */
+    .claimed-message {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-full);
+      color: white;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    /* ============================================
+       CLAIMABLES SECTION
+       ============================================ */
+    .claimables-section {
+      animation: sectionEnter 0.5s var(--transition-smooth) 0.3s forwards;
+      opacity: 0;
+    }
+
+    @keyframes sectionEnter {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .claimables-section h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .claimables-section h3::before {
+      content: '🎁';
+    }
+
+    /* ============================================
+       VOUCHER CARD
+       ============================================ */
+    .voucher {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg);
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      margin-bottom: var(--space-md);
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-smooth),
+        box-shadow var(--transition-smooth);
+    }
+
+    .voucher:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Left accent bar */
+    .voucher::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* Unlocked state */
+    .voucher.unlocked::before {
+      background: linear-gradient(180deg, var(--gold) 0%, var(--gold-soft) 100%);
+    }
+
+    .voucher.unlocked {
+      background: linear-gradient(135deg, var(--gold-glow) 0%, var(--surface-elevated) 100%);
+    }
+
+    /* Locked state */
+    .voucher.locked {
+      opacity: 0.7;
+    }
+
+    .voucher.locked::before {
+      background: var(--border);
+    }
+
+    /* Stagger animation */
+    .voucher:nth-child(2) { animation: voucherSlideIn 0.4s var(--transition-smooth) 0.35s forwards; opacity: 0; }
+    .voucher:nth-child(3) { animation: voucherSlideIn 0.4s var(--transition-smooth) 0.4s forwards; opacity: 0; }
+    .voucher:nth-child(4) { animation: voucherSlideIn 0.4s var(--transition-smooth) 0.45s forwards; opacity: 0; }
+    .voucher:nth-child(5) { animation: voucherSlideIn 0.4s var(--transition-smooth) 0.5s forwards; opacity: 0; }
+    .voucher:nth-child(6) { animation: voucherSlideIn 0.4s var(--transition-smooth) 0.55s forwards; opacity: 0; }
+
+    @keyframes voucherSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* ============================================
+       VOUCHER LEFT
+       ============================================ */
+    .voucher-left h4 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .voucher-type {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .voucher-type::before {
+      content: '💳';
+      font-size: 0.8rem;
+    }
+
+    /* ============================================
+       VOUCHER RIGHT
+       ============================================ */
+    .voucher-right {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .voucher-price {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .voucher.unlocked .voucher-price {
+      color: var(--health);
+    }
+
+    .claim-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-sm) var(--space-md);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+      border-radius: var(--radius-full);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .claim-link:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+    }
+
+    .claim-link:active {
+      transform: scale(0.98);
+    }
+
+    /* Fallback claim button */
+    .voucher button[type="button"] {
+      padding: var(--space-sm) var(--space-md);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-soft) 100%);
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .voucher button[type="button"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Progress indicator for locked */
+    .progress-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .progress-indicator::before {
+      content: '🔒';
+      font-size: 0.9rem;
+    }
+
+    /* ============================================
+       EMPTY STATE
+       ============================================ */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-2xl);
+      color: var(--text-muted);
+    }
+
+    .empty-state::before {
+      content: '🎁';
+      display: block;
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+      opacity: 0.5;
+    }
+
+    /* ============================================
+       BOTTOM NAVIGATION
+       ============================================ */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface-elevated);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: var(--space-sm) var(--space-md);
+      padding-bottom: calc(var(--space-sm) + env(safe-area-inset-bottom, 0px));
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+      z-index: 50;
+      
+      /* Glassmorphism */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      padding: var(--space-sm) var(--space-md);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      position: relative;
+      min-width: 56px;
+      min-height: 48px;
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    /* Active indicator */
+    .bottom-nav a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 24px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: var(--radius-full);
+      transition: transform var(--transition-smooth);
+    }
+
+    .bottom-nav a:first-child::before {
+      transform: translateX(-50%) scaleX(1);
+    }
+
+    .bottom-nav a:hover,
+    .bottom-nav a:first-child {
+      background: var(--accent-glow);
+    }
+
+    .bottom-nav a:active {
+      transform: scale(0.92);
+    }
+
+    .bottom-nav img {
+      width: 24px;
+      height: 24px;
+      opacity: 0.5;
+      transition: 
+        opacity var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .bottom-nav a:hover img,
+    .bottom-nav a:first-child img {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 480px) {
+      .container {
+        padding: var(--space-md);
+      }
+      
+      .header h1 {
+        font-size: 1.25rem;
+      }
+      
+      .profile-section {
+        padding: var(--space-lg);
+      }
+      
+      .profile-image img {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .profile-section h2 {
+        font-size: 1.25rem;
+      }
+      
+      .voucher {
+        padding: var(--space-md);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+      }
+      
+      .voucher-right {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 30% 0%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+          radial-gradient(ellipse at 70% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .voucher {
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+      
+      .bottom-nav {
+        background: rgba(26, 26, 36, 0.92);
+        border-top-color: rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .claim-btn:focus-visible,
+    .claim-link:focus-visible,
+    .bottom-nav a:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>My Rewards</h1>
-            <!-- dynamic total XP -->
-            <div class="xp">XP {{ total_points|default:0 }}</div>
-        </header>
-
-        <!-- show any alerts (e.g., “+50 points added”, “rewards unlocked”) -->
-        {% if messages %}
-          <div class="messages">
-            {% for message in messages %}
-              <div id="msg" class="alert {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
-            {% endfor %}
+  <div class="container">
+    
+    <!-- Header -->
+    <header class="header">
+      <h1>My Rewards</h1>
+      <div class="xp">XP {{ total_points|default:0 }}</div>
+    </header>
+    
+    <!-- Messages -->
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div id="msg" class="alert {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    
+    <!-- Profile Section -->
+    <div class="profile-section">
+      <div class="profile-image">
+        <img src="{% static 'assets/images/father.png' %}" alt="Profile Picture">
+        <div class="edit-icon">✏️</div>
+      </div>
+      <h2>{{ profile.name|default:request.user.username }}</h2>
+      <p>{{ profile.email|default:request.user.email }}</p>
+      
+      {% if not today_checked_in %}
+        <form action="{% url 'rewards_checkin' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="claim-btn">Claim today's +50</button>
+        </form>
+      {% else %}
+        <div class="claimed-message">✅ Today's +50 claimed</div>
+      {% endif %}
+    </div>
+    
+    <!-- Claimables Section -->
+    <div class="claimables-section">
+      <h3>Claimables</h3>
+      
+      {% for tier in tiers %}
+        <div class="voucher {% if tier.unlocked %}unlocked{% else %}locked{% endif %}">
+          <div class="voucher-left">
+            <h4>🎁 {{ tier.title }}</h4>
+            <p class="voucher-type">{{ tier.points }} pts • Gift Card</p>
           </div>
-        {% endif %}
-
-        <div class="profile-section">
-            <div class="profile-image">
-                <img src="{% static 'assets/images/father.png' %}" alt="Profile Picture">
-                <div class="edit-icon">✏️</div>
-            </div>
-            <!-- dynamic name & email; falls back to user -->
-            <h2>{{ profile.name|default:request.user.username }}</h2>
-            <p>{{ profile.email|default:request.user.email }}</p>
-
-            <!-- claim today’s +50 if not already checked in -->
-            {% if not today_checked_in %}
-              <form action="{% url 'rewards_checkin' %}" method="post" style="margin-top:10px;">
-                {% csrf_token %}
-                <button type="submit" class="claim-btn">Claim today’s +50</button>
-              </form>
+          <div class="voucher-right">
+            {% if tier.unlocked %}
+              {% if tier.claimed %}
+                <span class="voucher-price">✅ Claimed</span>
+              {% else %}
+                {% if tier.id %}
+                  <a class="claim-link" href="{% url 'claim_reward' tier.id %}">🎁 Claim</a>
+                {% else %}
+                  <button type="button">Claim</button>
+                  <span class="voucher-price">🎉</span>
+                {% endif %}
+              {% endif %}
             {% else %}
-              <p style="margin-top:10px;">✅ Today's +50 claimed</p>
+              <span class="progress-indicator">{{ tier.remaining }} pts to go</span>
             {% endif %}
+          </div>
         </div>
-
-        <div class="claimables-section">
-            <h3>Claimables</h3>
-
-            <!-- render tiers from view context as gift cards (no QR) -->
-            {% for tier in tiers %}
-              <div class="voucher {% if tier.unlocked %}unlocked{% else %}locked{% endif %}">
-                <div class="voucher-left">
-                  <h4>🎁 {{ tier.title }}</h4>
-                  <p class="voucher-type">{{ tier.points }} pts • Gift Card</p>
-                </div>
-                <div class="voucher-right">
-                  {% if tier.unlocked %}
-                    {% if tier.claimed %}
-                      <span class="voucher-price">✅ Claimed</span>
-                    {% else %}
-                      {% if tier.id %}
-                        <a class="claim-link" href="{% url 'claim_reward' tier.id %}">Claim gift</a>
-                      {% else %}
-                        <button type="button" style="width:50px; background-color:black; color:white; border-radius: 20px;">Claim</button>
-                        <span class="voucher-price">🎉</span>
-                      {% endif %}
-                    {% endif %}
-                  {% else %}
-                    <span class="voucher-price">{{ tier.remaining }} to go</span>
-                  {% endif %}
-                </div>
-              </div>
-            {% empty %}
-              <p>No rewards configured yet.</p>
-            {% endfor %}
+      {% empty %}
+        <div class="empty-state">
+          <p>No rewards configured yet.</p>
         </div>
+      {% endfor %}
+      
     </div>
+    
+  </div>
 
-    <div class="bottom-nav">
-        <a href="{% url 'famil' %}"><img src="{% static 'assets/images/navbar/modules-active.png' %}"></a>
-        <a href="{% url 'leaderboard' %}"><img src="{% static 'assets/images/navbar/graph.png' %}"></a>
-        <a href="{% url 'notifications' %}"><img src="{% static 'assets/images/navbar/bell.png' %}"></a>
-        <a href="{% url 'settings' %}"><img src="{% static 'assets/images/navbar/settings.png' %}"></a>
-    </div>
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="{% url 'famil' %}">
+      <img src="{% static 'assets/images/navbar/modules-active.png' %}" alt="Home">
+    </a>
+    <a href="{% url 'leaderboard' %}">
+      <img src="{% static 'assets/images/navbar/graph.png' %}" alt="Leaderboard">
+    </a>
+    <a href="{% url 'notifications' %}">
+      <img src="{% static 'assets/images/navbar/bell.png' %}" alt="Notifications">
+    </a>
+    <a href="{% url 'settings' %}">
+      <img src="{% static 'assets/images/navbar/settings.png' %}" alt="Settings">
+    </a>
+  </nav>
 
-    <script src="{% static 'assets/js/scripts.js' %}"></script>
-    {% include 'chatbot.html' %}
+  <!-- Chatbot -->
+  {% include 'chatbot.html' %}
+  
+  <!-- Scripts -->
+  <script defer src="{% static 'assets/js/scripts.js' %}"></script>
 </body>
 </html>
