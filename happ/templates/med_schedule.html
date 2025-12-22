@@ -2,94 +2,935 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fix Medication Schedule</title>
-    <link rel="stylesheet" href="{% static 'assets/css/med_schedule.css' %}">
-    <script defer src="{% static 'assets/js/scripts.js' %}"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Fix Medication Schedule</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      --surface-input: #F8F9FB;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --info: #3B82F6;
+      --info-soft: #60A5FA;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --warning: #F59E0B;
+      --warning-glow: rgba(245, 158, 11, 0.12);
+      
+      --teal: #14B8A6;
+      --teal-glow: rgba(20, 184, 166, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-input-focus: 0 0 0 4px var(--accent-glow);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding-bottom: var(--space-2xl);
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(255, 107, 53, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
+    }
+
+    /* ============================================
+       CONTAINER
+       ============================================ */
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       HEADER
+       ============================================ */
+    header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+      
+      animation: headerSlide 0.5s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
+    }
+
+    @keyframes headerSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--surface-elevated);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      flex-shrink: 0;
+      transition: 
+        transform var(--transition-fast),
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .back-btn:hover {
+      background: var(--accent-glow);
+      transform: translateX(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .back-btn:active {
+      transform: scale(0.95);
+    }
+
+    header h1 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    header h1::before {
+      content: '⏰';
+      font-size: 1.1rem;
+    }
+
+    /* ============================================
+       MEDICINE TYPE TABS
+       ============================================ */
+    .medicine-type {
+      display: flex;
+      gap: var(--space-sm);
+      padding: var(--space-sm);
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--space-xl);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      
+      animation: fadeIn 0.5s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .medicine-type::-webkit-scrollbar {
+      display: none;
+    }
+
+    .medicine-type button {
+      flex: 1;
+      min-width: max-content;
+      padding: var(--space-sm) var(--space-md);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .medicine-type button:hover {
+      background: var(--surface-subtle);
+      color: var(--text-primary);
+    }
+
+    .medicine-type button.active {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+    }
+
+    .medicine-type button:active {
+      transform: scale(0.96);
+    }
+
+    /* ============================================
+       SCHEDULE SECTION
+       ============================================ */
+    .schedule-section {
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .schedule-section label {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-sm);
+    }
+
+    /* Stagger animations */
+    .schedule-section:nth-of-type(1) { animation: sectionSlide 0.4s var(--transition-smooth) 0.25s forwards; opacity: 0; }
+    .schedule-section:nth-of-type(2) { animation: sectionSlide 0.4s var(--transition-smooth) 0.3s forwards; opacity: 0; }
+    .schedule-section:nth-of-type(3) { animation: sectionSlide 0.4s var(--transition-smooth) 0.35s forwards; opacity: 0; }
+
+    @keyframes sectionSlide {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       SELECT INPUTS
+       ============================================ */
+    select {
+      width: 100%;
+      padding: var(--space-md);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: var(--surface-input);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right var(--space-md) center;
+      padding-right: var(--space-2xl);
+      transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    select:hover {
+      border-color: var(--text-muted);
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: var(--shadow-input-focus);
+    }
+
+    /* ============================================
+       DOSAGE COUNTER
+       ============================================ */
+    .dosage-counter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-lg);
+      padding: var(--space-md);
+      background: var(--surface-input);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+
+    .dosage-counter button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 
+        transform var(--transition-bounce),
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .dosage-counter button#decrease {
+      background: var(--surface-subtle);
+      color: var(--text-secondary);
+    }
+
+    .dosage-counter button#decrease:hover {
+      background: var(--border);
+      transform: scale(1.1);
+    }
+
+    .dosage-counter button#increase {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+    }
+
+    .dosage-counter button#increase:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(255, 107, 53, 0.35);
+    }
+
+    .dosage-counter button:active {
+      transform: scale(0.95);
+    }
+
+    #dosage-amount {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      min-width: 60px;
+      text-align: center;
+    }
+
+    /* ============================================
+       TIME PICKER
+       ============================================ */
+    input[type="time"] {
+      width: 100%;
+      padding: var(--space-md);
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      background: var(--surface-input);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    input[type="time"]:hover {
+      border-color: var(--text-muted);
+    }
+
+    input[type="time"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: var(--shadow-input-focus);
+    }
+
+    /* ============================================
+       SCHEDULE BOX (Settings Grid)
+       ============================================ */
+    .schedule-boxes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+      
+      animation: fadeIn 0.5s var(--transition-smooth) 0.4s forwards;
+      opacity: 0;
+    }
+
+    .schedule-box {
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      padding: var(--space-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      transition: 
+        transform var(--transition-smooth),
+        box-shadow var(--transition-smooth);
+    }
+
+    .schedule-box:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .schedule-box label {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-sm);
+    }
+
+    .schedule-box select {
+      padding: var(--space-sm) var(--space-md);
+      font-size: 0.9rem;
+    }
+
+    /* Full width for alarm and snooze */
+    .schedule-box.full-width {
+      grid-column: span 2;
+    }
+
+    /* ============================================
+       TOGGLE SWITCH (for Alarm)
+       ============================================ */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .toggle-label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 56px;
+      height: 32px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--border);
+      border-radius: var(--radius-full);
+      transition: background-color var(--transition-fast);
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 24px;
+      width: 24px;
+      left: 4px;
+      bottom: 4px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      transition: transform var(--transition-smooth);
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: linear-gradient(135deg, var(--health) 0%, var(--health-soft) 100%);
+    }
+
+    .toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(24px);
+    }
+
+    .toggle-switch input:focus + .toggle-slider {
+      box-shadow: 0 0 0 4px var(--health-glow);
+    }
+
+    /* ============================================
+       ADD SCHEDULE BUTTON
+       ============================================ */
+    .add-schedule-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      padding: var(--space-md) var(--space-lg);
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--health) 0%, var(--health-soft) 100%);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      box-shadow: 
+        0 4px 16px rgba(16, 185, 129, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-base);
+      
+      animation: buttonEnter 0.5s var(--transition-smooth) 0.5s forwards;
+      opacity: 0;
+    }
+
+    @keyframes buttonEnter {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Shine effect */
+    .add-schedule-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+      );
+      transition: left 0.5s ease;
+    }
+
+    .add-schedule-btn:hover::before {
+      left: 100%;
+    }
+
+    .add-schedule-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 8px 24px rgba(16, 185, 129, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .add-schedule-btn:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+
+    .add-schedule-btn::after {
+      content: '✓';
+      font-size: 1.1rem;
+    }
+
+    /* ============================================
+       MEDICINE LIST (Added Schedules)
+       ============================================ */
+    .medicine-list {
+      max-width: 500px;
+      margin: var(--space-lg) auto 0;
+      padding: 0 var(--space-lg);
+    }
+
+    .medicine-list:empty {
+      display: none;
+    }
+
+    .medicine-list-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .medicine-list-title::before {
+      content: '📋';
+    }
+
+    .medicine-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--surface-elevated);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-sm);
+      box-shadow: var(--shadow-sm);
+      border-left: 4px solid var(--health);
+      animation: itemSlideIn 0.3s var(--transition-smooth);
+    }
+
+    @keyframes itemSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .medicine-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .medicine-item-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .medicine-item-time {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .medicine-item-delete {
+      background: var(--accent-glow);
+      color: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: var(--space-sm);
+      cursor: pointer;
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .medicine-item-delete:hover {
+      background: var(--accent);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 480px) {
+      .container {
+        padding: var(--space-md);
+      }
+      
+      header h1 {
+        font-size: 1.1rem;
+      }
+      
+      .medicine-type {
+        gap: var(--space-xs);
+        padding: var(--space-xs);
+      }
+      
+      .medicine-type button {
+        padding: var(--space-sm);
+        font-size: 0.8rem;
+      }
+      
+      .schedule-boxes {
+        grid-template-columns: 1fr;
+      }
+      
+      .schedule-box.full-width {
+        grid-column: span 1;
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        --surface-input: #1F1F2E;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.04) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .back-btn:focus-visible,
+    .medicine-type button:focus-visible,
+    .add-schedule-btn:focus-visible,
+    select:focus-visible,
+    input:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <button class="back-btn">&#8592;</button>
-            <h1>Fix Medications Schedule</h1>
-        </header>
-
-        <div class="medicine-type">
-            <button class="active">Tablet</button>
-            <button>Capsule</button>
-            <button>Drops</button>
-            <button>Injection</button>
-        </div>
-
-        <div class="schedule-section">
-            <label>Reminder Times</label>
-            <select id="reminder-times">
-                <option value="once">Once</option>
-                <option value="twice">Twice</option>
-                <option value="thrice">Thrice</option>
-            </select>
-        </div>
-
-        <div class="schedule-section">
-            <label>Dosage (per day)</label>
-            <div class="dosage-counter">
-                <button id="decrease">-</button>
-                <span id="dosage-amount">1</span>
-                <button id="increase">+</button>
-            </div>
-        </div>
-
-        <div class="schedule-section">
-            <label>Time</label>
-            <input type="time" id="time-picker">
-        </div>
-
-        <div class="schedule-box">
-            <label>Start</label>
-            <select id="start-date">
-                <option>Today</option>
-                <option>Tomorrow</option>
-            </select>
-        </div>
-
-        <div class="schedule-box">
-            <label>Days</label>
-            <select id="days">
-                <option>Every Day</option>
-                <option>Alternate Days</option>
-                <option>Weekdays Only</option>
-            </select>
-        </div>
-
-        <div class="schedule-box">
-            <label>Duration</label>
-            <select id="duration">
-                <option>1 Week</option>
-                <option>2 Weeks</option>
-                <option>1 Month</option>
-            </select>
-        </div>
-
-        <div class="schedule-box">
-            <label>Alarm</label>
-            <input type="checkbox" id="alarm-toggle">
-        </div>
-
-        <div class="schedule-box">
-            <label>Snooze</label>
-            <select id="snooze">
-                <option>2 min</option>
-                <option>5 min</option>
-                <option>10 min</option>
-            </select>
-        </div>
-
-        <button class="add-schedule-btn" id="add-schedule-btn">Add Schedule</button>
+  <div class="container">
+    
+    <!-- Header -->
+    <header>
+      <button class="back-btn" onclick="history.back()">←</button>
+      <h1>Fix Medications Schedule</h1>
+    </header>
+    
+    <!-- Medicine Type Tabs -->
+    <div class="medicine-type">
+      <button class="active">💊 Tablet</button>
+      <button>💉 Capsule</button>
+      <button>💧 Drops</button>
+      <button>🩹 Injection</button>
     </div>
+    
+    <!-- Reminder Times -->
+    <div class="schedule-section">
+      <label>⏰ Reminder Times</label>
+      <select id="reminder-times">
+        <option value="once">Once a day</option>
+        <option value="twice">Twice a day</option>
+        <option value="thrice">Three times a day</option>
+      </select>
+    </div>
+    
+    <!-- Dosage Counter -->
+    <div class="schedule-section">
+      <label>💊 Dosage (per intake)</label>
+      <div class="dosage-counter">
+        <button id="decrease" type="button">−</button>
+        <span id="dosage-amount">1</span>
+        <button id="increase" type="button">+</button>
+      </div>
+    </div>
+    
+    <!-- Time Picker -->
+    <div class="schedule-section">
+      <label>🕐 Time</label>
+      <input type="time" id="time-picker" value="09:00">
+    </div>
+    
+    <!-- Schedule Settings Grid -->
+    <div class="schedule-boxes">
+      <div class="schedule-box">
+        <label>📅 Start</label>
+        <select id="start-date">
+          <option>Today</option>
+          <option>Tomorrow</option>
+          <option>Pick a date...</option>
+        </select>
+      </div>
+      
+      <div class="schedule-box">
+        <label>🔄 Days</label>
+        <select id="days">
+          <option>Every Day</option>
+          <option>Alternate Days</option>
+          <option>Weekdays Only</option>
+          <option>Weekends Only</option>
+        </select>
+      </div>
+      
+      <div class="schedule-box">
+        <label>⏳ Duration</label>
+        <select id="duration">
+          <option>1 Week</option>
+          <option>2 Weeks</option>
+          <option>1 Month</option>
+          <option>3 Months</option>
+          <option>Ongoing</option>
+        </select>
+      </div>
+      
+      <div class="schedule-box">
+        <label>😴 Snooze</label>
+        <select id="snooze">
+          <option>2 min</option>
+          <option>5 min</option>
+          <option>10 min</option>
+          <option>15 min</option>
+        </select>
+      </div>
+      
+      <div class="schedule-box full-width">
+        <div class="toggle-container">
+          <span class="toggle-label">🔔 Enable Alarm</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="alarm-toggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Add Schedule Button -->
+    <button class="add-schedule-btn" id="add-schedule-btn">Add Schedule</button>
+    
+  </div>
 
-    <div class="medicine-list" id="medicineList"></div>
-    {% include 'chatbot.html' %}
+  <!-- Medicine List (dynamically populated) -->
+  <div class="medicine-list" id="medicineList"></div>
 
+  <!-- Chatbot -->
+  {% include 'chatbot.html' %}
+  
+  <!-- Scripts -->
+  <script>
+    // Medicine Type Tab Switching
+    document.querySelectorAll('.medicine-type button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelector('.medicine-type button.active').classList.remove('active');
+        this.classList.add('active');
+      });
+    });
+
+    // Dosage Counter
+    const dosageAmount = document.getElementById('dosage-amount');
+    const decreaseBtn = document.getElementById('decrease');
+    const increaseBtn = document.getElementById('increase');
+
+    decreaseBtn.addEventListener('click', () => {
+      const current = parseInt(dosageAmount.textContent);
+      if (current > 1) {
+        dosageAmount.textContent = current - 1;
+      }
+    });
+
+    increaseBtn.addEventListener('click', () => {
+      const current = parseInt(dosageAmount.textContent);
+      if (current < 10) {
+        dosageAmount.textContent = current + 1;
+      }
+    });
+  </script>
+  
+  <script defer src="{% static 'assets/js/scripts.js' %}"></script>
 </body>
 </html>
