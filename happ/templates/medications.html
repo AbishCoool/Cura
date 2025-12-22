@@ -6,16 +6,793 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Medications</title>
 
-  <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
-  <link rel="stylesheet" href="{% static 'assets/css/medications.css' %}">
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Firebase v8 SDKs (must come BEFORE your firebase-config.js) -->
+  <!-- Firebase v8 SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
 
-  <!-- Your Firebase init + messaging/token code -->
+  <!-- Your Firebase init -->
   <script src="{% static 'assets/firebase/firebase-config.js' %}"></script>
+
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --info: #3B82F6;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --warning: #F59E0B;
+      --warning-glow: rgba(245, 158, 11, 0.12);
+      
+      --danger: #EF4444;
+      --danger-glow: rgba(239, 68, 68, 0.1);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding-bottom: 100px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(255, 107, 53, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
+    }
+
+    /* ============================================
+       CONTAINER
+       ============================================ */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       HEADER
+       ============================================ */
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    /* ============================================
+       BACK BUTTON
+       ============================================ */
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      background: var(--surface-elevated);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      transition: 
+        transform var(--transition-fast),
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+      
+      animation: slideDown 0.4s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .back-button:hover {
+      background: var(--accent-glow);
+      transform: translateX(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .back-button:active {
+      transform: scale(0.95);
+    }
+
+    /* ============================================
+       TITLE CARD
+       ============================================ */
+    .title-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-xl);
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+      border-radius: var(--radius-xl);
+      box-shadow: 
+        0 8px 32px rgba(255, 107, 53, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      
+      animation: titleCardEnter 0.5s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes titleCardEnter {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Decorative circles */
+    .title-card::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -10%;
+      width: 150px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .title-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40%;
+      left: -5%;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+    }
+
+    .title-card h1 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.02em;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .title-card h1::before {
+      content: '💊';
+      font-size: 1.25rem;
+    }
+
+    .title-card img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* ============================================
+       MEDICATION LIST CONTAINER
+       ============================================ */
+    .dynamic-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    /* ============================================
+       MEDICATION CARD
+       ============================================ */
+    .template-card {
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      padding: var(--space-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-smooth),
+        box-shadow var(--transition-smooth);
+      
+      animation: cardSlideIn 0.4s var(--transition-smooth) forwards;
+    }
+
+    @keyframes cardSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .template-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Left accent bar */
+    .template-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--accent) 0%, var(--accent-soft) 100%);
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* Done state */
+    .template-card.done-card {
+      background: linear-gradient(135deg, var(--health-glow) 0%, var(--surface-elevated) 100%);
+    }
+
+    .template-card.done-card::before {
+      background: linear-gradient(180deg, var(--health) 0%, var(--health-soft) 100%);
+    }
+
+    .template-card.done-card::after {
+      content: '✓';
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-md);
+      width: 28px;
+      height: 28px;
+      background: var(--health);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .template-card.done-card .card-title {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    /* Skipped state */
+    .template-card.skipped-card {
+      background: linear-gradient(135deg, var(--danger-glow) 0%, var(--surface-elevated) 100%);
+      opacity: 0.8;
+    }
+
+    .template-card.skipped-card::before {
+      background: linear-gradient(180deg, var(--danger) 0%, #F87171 100%);
+    }
+
+    .template-card.skipped-card::after {
+      content: '✗';
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-md);
+      width: 28px;
+      height: 28px;
+      background: var(--danger);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .template-card.skipped-card .card-title {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    /* ============================================
+       CARD ACTIONS (Delete/Edit)
+       ============================================ */
+    .card-actions {
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-md);
+      display: flex;
+      gap: var(--space-xs);
+      z-index: 2;
+    }
+
+    .template-card.done-card .card-actions,
+    .template-card.skipped-card .card-actions {
+      right: calc(var(--space-md) + 36px);
+    }
+
+    .icon-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--surface-subtle);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .icon-btn:hover {
+      background: var(--border);
+      transform: scale(1.1);
+    }
+
+    .icon-btn[aria-label="delete"]:hover {
+      background: var(--danger-glow);
+    }
+
+    .icon-btn[aria-label="delete"]:hover .icon {
+      fill: var(--danger);
+    }
+
+    .icon-btn[aria-label="edit"]:hover {
+      background: var(--info-glow);
+    }
+
+    .icon-btn[aria-label="edit"]:hover .icon {
+      fill: var(--info);
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      fill: var(--text-muted);
+      transition: fill var(--transition-fast);
+    }
+
+    /* ============================================
+       CARD BODY
+       ============================================ */
+    .card-body {
+      padding-right: 80px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .card-title::before {
+      content: '💊';
+      font-size: 1rem;
+    }
+
+    .card-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-sm);
+    }
+
+    .card-details p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .card-details p strong {
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.8rem;
+    }
+
+    /* Detail icons */
+    .card-details p:nth-child(1)::before { content: '🕐'; font-size: 0.85rem; }
+    .card-details p:nth-child(2)::before { content: '💉'; font-size: 0.85rem; }
+    .card-details p:nth-child(3)::before { content: '📅'; font-size: 0.85rem; }
+    .card-details p:nth-child(4)::before { content: '📦'; font-size: 0.85rem; }
+
+    /* ============================================
+       CARD FOOTER
+       ============================================ */
+    .card-footer {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-lg);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-btn {
+      flex: 1;
+      padding: var(--space-sm) var(--space-md);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .footer-btn.done {
+      background: var(--health-glow);
+      color: var(--health);
+    }
+
+    .footer-btn.done:hover {
+      background: var(--health);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .footer-btn.skip {
+      background: var(--danger-glow);
+      color: var(--danger);
+    }
+
+    .footer-btn.skip:hover {
+      background: var(--danger);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .footer-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* ============================================
+       EMPTY STATE
+       ============================================ */
+    .empty-list-message {
+      text-align: center;
+      padding: var(--space-2xl);
+      color: var(--text-muted);
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .empty-list-message::before {
+      content: '💊';
+      display: block;
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+      opacity: 0.5;
+    }
+
+    .empty-list-message p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    /* ============================================
+       LOADING STATE
+       ============================================ */
+    .loading-state {
+      text-align: center;
+      padding: var(--space-2xl);
+      color: var(--text-muted);
+    }
+
+    .loading-state::before {
+      content: '⏳';
+      display: block;
+      font-size: 2rem;
+      margin-bottom: var(--space-md);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.95); }
+    }
+
+    /* ============================================
+       ADD FAB (Hidden for patients)
+       ============================================ */
+    .add-fab {
+      display: none;
+    }
+
+    /* ============================================
+       MODAL (Hidden)
+       ============================================ */
+    .modal-overlay {
+      display: none;
+    }
+
+    /* ============================================
+       BOTTOM NAVIGATION
+       ============================================ */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface-elevated);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: var(--space-sm) var(--space-md);
+      padding-bottom: calc(var(--space-sm) + env(safe-area-inset-bottom, 0px));
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+      z-index: 50;
+      
+      /* Glassmorphism */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      padding: var(--space-sm) var(--space-md);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      position: relative;
+      min-width: 56px;
+      min-height: 48px;
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    /* Active indicator */
+    .bottom-nav a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 24px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: var(--radius-full);
+      transition: transform var(--transition-smooth);
+    }
+
+    .bottom-nav a:first-child::before {
+      transform: translateX(-50%) scaleX(1);
+    }
+
+    .bottom-nav a:hover,
+    .bottom-nav a:first-child {
+      background: var(--accent-glow);
+    }
+
+    .bottom-nav a:active {
+      transform: scale(0.92);
+    }
+
+    .bottom-nav img {
+      width: 24px;
+      height: 24px;
+      opacity: 0.5;
+      transition: 
+        opacity var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .bottom-nav a:hover img,
+    .bottom-nav a:first-child img {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 480px) {
+      .container {
+        padding: var(--space-md);
+      }
+      
+      .title-card {
+        padding: var(--space-lg);
+      }
+      
+      .title-card h1 {
+        font-size: 1.25rem;
+      }
+      
+      .title-card img {
+        width: 48px;
+        height: 48px;
+      }
+      
+      .card-details {
+        grid-template-columns: 1fr;
+      }
+      
+      .card-body {
+        padding-right: 60px;
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.04) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .template-card,
+      .back-button {
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+      
+      .bottom-nav {
+        background: rgba(26, 26, 36, 0.92);
+        border-top-color: rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .back-button:focus-visible,
+    .icon-btn:focus-visible,
+    .footer-btn:focus-visible,
+    .bottom-nav a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
 
 <body
@@ -25,65 +802,81 @@
 >
 
   <div class="container">
+    
+    <!-- Header -->
     <header>
-      <div><a href="#" id="js-back" class="back-button" aria-label="Back">&#8592;</a></div>
+      <div>
+        <a href="#" id="js-back" class="back-button" aria-label="Back">←</a>
+      </div>
       <div class="title-card">
         <h1>Medications</h1>
-        <img src="{% static 'assets/images/medi.png' %}" alt="Profile pic">
+        <img src="{% static 'assets/images/medi.png' %}" alt="Medications">
       </div>
     </header>
 
-    <div id="medication-list-container" class="dynamic-list-container"></div>
+    <!-- Medication List (dynamically populated) -->
+    <div id="medication-list-container" class="dynamic-list-container">
+      <div class="loading-state">Loading medications...</div>
+    </div>
+    
   </div>
 
-  <!-- Hide patient self-add UI -->
+  <!-- Hidden patient self-add UI -->
   <button class="add-fab left" style="display:none" onclick="openModal('medication-modal')">+</button>
   <div id="medication-modal" class="modal-overlay" style="display:none"></div>
 
-  <div class="bottom-nav">
-    <a href="{% url 'famil' %}"><img src="{% static 'assets/images/navbar/modules-active.png' %}" /></a>
-    <a href="{% url 'leaderboard' %}"><img src="{% static 'assets/images/navbar/graph.png' %}" /></a>
-    <a href="{% url 'notifications' %}"><img src="{% static 'assets/images/navbar/bell.png' %}" /></a>
-    <a href="{% url 'settings' %}"><img src="{% static 'assets/images/navbar/settings.png' %}" /></a>
-  </div>
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="{% url 'famil' %}">
+      <img src="{% static 'assets/images/navbar/modules-active.png' %}" alt="Home" />
+    </a>
+    <a href="{% url 'leaderboard' %}">
+      <img src="{% static 'assets/images/navbar/graph.png' %}" alt="Leaderboard" />
+    </a>
+    <a href="{% url 'notifications' %}">
+      <img src="{% static 'assets/images/navbar/bell.png' %}" alt="Notifications" />
+    </a>
+    <a href="{% url 'settings' %}">
+      <img src="{% static 'assets/images/navbar/settings.png' %}" alt="Settings" />
+    </a>
+  </nav>
 
+  <!-- Chatbot -->
   {% include 'chatbot.html' %}
+
+  <!-- Back Button Logic -->
   <script>
   (function () {
-    // Make back arrow behave like "go to previously visited page"
     var backEl = document.getElementById('js-back');
     if (!backEl) return;
 
     backEl.addEventListener('click', function (e) {
       e.preventDefault();
-      var fallback = "{% url 'home' %}"; // always fallback to /home/
+      var fallback = "{% url 'home' %}";
 
       var ref = document.referrer || "";
       try {
         var refUrl = new URL(ref);
-        // Only go back if the referrer is same-origin (prevents bouncing to other sites)
         if (ref && refUrl.origin === window.location.origin) {
           history.back();
         } else {
           window.location.href = fallback;
         }
       } catch (err) {
-        // If referrer is not a valid URL, just go to fallback
         window.location.href = fallback;
       }
     });
   })();
-</script>
+  </script>
 
+  <!-- Medications Filtering (Live Updates) -->
   <script>
   (function () {
-    // Wait until firebase-config and its DOMContentLoaded handler have fired
     window.addEventListener('load', initMedsFiltering);
 
     async function initMedsFiltering() {
-      // Read IDs from our data attributes (set by the Django view from ?user & ?member)
       var mainUserId     = document.body.dataset.mainUserId || "";
-      var familyMemberId = document.body.dataset.familyMemberId || ""; // empty means main user
+      var familyMemberId = document.body.dataset.familyMemberId || "";
 
       var container = document.getElementById("medication-list-container");
       if (!container) return;
@@ -93,13 +886,10 @@
         return;
       }
 
-      // Build the exact same filter pattern you used for Appointments:
-      // userId == main, familyMemberId == (null for main user, or member id for family)
       var ref = window.db.collection("medicationSchedules")
         .where("userId", "==", String(mainUserId))
         .where("familyMemberId", "==", (familyMemberId ? String(familyMemberId) : null));
 
-      // Live updates (like other pages)
       try {
         ref.orderBy("time").onSnapshot(function (snap) {
           if (snap.empty) {
@@ -107,27 +897,27 @@
             return;
           }
           container.innerHTML = "";
+          var index = 0;
           snap.forEach(function (doc) {
-            var s = doc.data();
-            container.innerHTML += renderMedicationCard(doc.id, s);
+            var card = renderMedicationCard(doc.id, doc.data(), index);
+            container.innerHTML += card;
+            index++;
           });
         }, function (err) {
           console.warn("Ordered meds query failed; fallback:", err && err.message);
-          // Fallback without orderBy (still filtered correctly)
           ref.onSnapshot(function (snap) {
             if (snap.empty) {
               container.innerHTML = '<div class="empty-list-message"><p>No medications found.</p></div>';
               return;
             }
-            // Manual sort by time (string compare is fine for HH:MM)
             var items = [];
             snap.forEach(function (d) { items.push({ id: d.id, ...d.data() }); });
             items.sort(function (a, b) {
               return String(a.time || "").localeCompare(String(b.time || ""));
             });
             container.innerHTML = "";
-            items.forEach(function (s) {
-              container.innerHTML += renderMedicationCard(s.id, s);
+            items.forEach(function (s, i) {
+              container.innerHTML += renderMedicationCard(s.id, s, i);
             });
           });
         });
@@ -137,10 +927,11 @@
       }
     }
 
-    function renderMedicationCard(docId, s) {
+    function renderMedicationCard(docId, s, index) {
       var stateClass = s.status === "Done" ? "done-card" : (s.status === "Skipped" ? "skipped-card" : "");
+      var delay = 0.3 + (index * 0.05);
       return `
-        <div class="template-card ${stateClass}">
+        <div class="template-card ${stateClass}" style="animation-delay: ${delay}s">
           <div class="card-actions">
             <button class="icon-btn" aria-label="delete" onclick="deleteReminder('medication', '${docId}')">
               <svg class="icon" viewBox="0 0 24 24"><path d="M6 7h12v13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7zm3-5h6l1 2h4v2H2V4h4l1-2zM9 9h2v9H9V9zm4 0h2v9h-2V9z"/></svg>
@@ -150,17 +941,17 @@
             </button>
           </div>
           <div class="card-body">
-            <h2 class="card-title">${escapeHtml(s.name || "")}</h2>
+            <h2 class="card-title">${escapeHtml(s.name || "Medication")}</h2>
             <div class="card-details">
-              <p><strong>Time:</strong> ${escapeHtml(s.time || "")}</p>
-              <p><strong>Dosage:</strong> ${escapeHtml(s.dosage || "")}</p>
-              <p><strong>Program:</strong> ${escapeHtml(s.program || "")}</p>
-              <p><strong>Qty:</strong> ${escapeHtml(s.quantity || "")}</p>
+              <p><strong>Time:</strong> ${escapeHtml(s.time || "—")}</p>
+              <p><strong>Dosage:</strong> ${escapeHtml(s.dosage || "—")}</p>
+              <p><strong>Program:</strong> ${escapeHtml(s.program || "—")}</p>
+              <p><strong>Qty:</strong> ${escapeHtml(s.quantity || "—")}</p>
             </div>
           </div>
           <div class="card-footer">
-            <button class="footer-btn done" onclick="recordAction('medication', '${docId}', 'Done')">Done</button>
-            <button class="footer-btn skip" onclick="recordAction('medication', '${docId}', 'Skipped')">Skip</button>
+            <button class="footer-btn done" onclick="recordAction('medication', '${docId}', 'Done')">✓ Done</button>
+            <button class="footer-btn skip" onclick="recordAction('medication', '${docId}', 'Skipped')">✗ Skip</button>
           </div>
         </div>`;
     }
@@ -170,16 +961,20 @@
         return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
       });
     }
-  })();
-</script>
 
+    // Make functions globally available
+    window.renderMedicationCard = renderMedicationCard;
+    window.escapeHtml = escapeHtml;
+  })();
+  </script>
+
+  <!-- Fallback Non-Live Load -->
   <script>
   document.addEventListener("DOMContentLoaded", function() {
     var medContainer = document.getElementById("medication-list-container");
 
-    // Prefer IDs provided by the server (from ?user & ?member)
     var mainUserId     = document.body.dataset.mainUserId || document.body.dataset.userId || "";
-    var familyMemberId = document.body.dataset.familyMemberId || null; // null means main user
+    var familyMemberId = document.body.dataset.familyMemberId || null;
 
     if (!mainUserId) {
       medContainer.innerHTML = '<div class="empty-list-message"><p>Error: user not found.</p></div>';
@@ -203,40 +998,17 @@
       }
     })();
 
-    function renderMedicationCard(docId, s) {
-      return `
-        <div class="template-card ${s.status === "Done" ? "done-card" : (s.status === "Skipped" ? "skipped-card" : "")}">
-          <div class="card-actions">
-            <button class="icon-btn" aria-label="delete" onclick="deleteReminder('medication', '${docId}')">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M6 7h12v13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7zm3-5h6l1 2h4v2H2V4h4l1-2zM9 9h2v9H9V9zm4 0h2v9h-2V9z"/></svg>
-            </button>
-            <button class="icon-btn" aria-label="edit" onclick="openEditModal('medication', '${docId}')">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-            </button>
-          </div>
-          <div class="card-body">
-            <h2 class="card-title">${s.name || ""}</h2>
-            <div class="card-details">
-              <p><strong>Time:</strong> ${s.time || ""}</p>
-              <p><strong>Dosage:</strong> ${s.dosage || ""}</p>
-              <p><strong>Program:</strong> ${s.program || ""}</p>
-              <p><strong>Qty:</strong> ${s.quantity || ""}</p>
-            </div>
-          </div>
-          <div class="card-footer">
-            <button class="footer-btn done" onclick="recordAction('medication', '${docId}', 'Done')">Done</button>
-            <button class="footer-btn skip" onclick="recordAction('medication', '${docId}', 'Skipped')">Skip</button>
-          </div>
-        </div>`;
-    }
-
     function renderSnap(snap) {
       if (snap.empty) {
         medContainer.innerHTML = '<div class="empty-list-message"><p>No medications found.</p></div>';
         return;
       }
       medContainer.innerHTML = "";
-      snap.forEach(d => medContainer.innerHTML += renderMedicationCard(d.id, d.data()));
+      var index = 0;
+      snap.forEach(d => {
+        medContainer.innerHTML += window.renderMedicationCard(d.id, d.data(), index);
+        index++;
+      });
     }
 
     function renderArray(arr) {
@@ -245,10 +1017,10 @@
         return;
       }
       medContainer.innerHTML = "";
-      arr.forEach(s => medContainer.innerHTML += renderMedicationCard(s.id, s));
+      arr.forEach((s, i) => medContainer.innerHTML += window.renderMedicationCard(s.id, s, i));
     }
   });
-</script>
+  </script>
 
 </body>
 </html>
