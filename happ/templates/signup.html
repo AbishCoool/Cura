@@ -2,69 +2,762 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup Page</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'assets/css/signup.css' %}">
-    <script defer src="{% static 'assets/js/scripts.js' %}"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Sign Up</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      --surface-input: #F8F9FB;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --info: #3B82F6;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --danger: #EF4444;
+      --danger-glow: rgba(239, 68, 68, 0.1);
+      
+      --warning: #F59E0B;
+      --warning-glow: rgba(245, 158, 11, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      --shadow-input-focus: 0 0 0 4px var(--health-glow);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding: var(--space-lg);
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.08) 0%, transparent 40%),
+        linear-gradient(135deg, #F0FFF4 0%, #FAFBFC 50%, #FFF5F0 100%);
+      background-attachment: fixed;
+    }
+
+    /* Animated background shapes */
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    body::before {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+      top: -100px;
+      left: -100px;
+    }
+
+    body::after {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255, 107, 53, 0.06) 0%, transparent 70%);
+      bottom: -50px;
+      right: -50px;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 30px) scale(1.02); }
+    }
+
+    /* ============================================
+       SIGNUP PAGE CONTAINER
+       ============================================ */
+    .signup-page {
+      width: 100%;
+      max-width: 460px;
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      
+      animation: cardEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes cardEnter {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Decorative top bar */
+    .signup-page::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--health) 0%, var(--accent) 100%);
+      border-radius: var(--radius-full);
+    }
+
+    /* ============================================
+       HEADING
+       ============================================ */
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+    }
+
+    h2::before {
+      content: '👋';
+      font-size: 1.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: var(--space-xl);
+    }
+
+    /* ============================================
+       MESSAGES (Django)
+       ============================================ */
+    .messages {
+      list-style: none;
+      margin-bottom: var(--space-lg);
+      padding: 0;
+      text-align: left;
+    }
+
+    .messages li {
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      animation: messageSlide 0.4s var(--transition-smooth);
+    }
+
+    @keyframes messageSlide {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .messages li.error,
+    .messages li.danger {
+      background: var(--danger-glow);
+      color: var(--danger);
+      border-left: 4px solid var(--danger);
+    }
+
+    .messages li.error::before,
+    .messages li.danger::before {
+      content: '⚠️';
+    }
+
+    .messages li.success {
+      background: var(--health-glow);
+      color: var(--health);
+      border-left: 4px solid var(--health);
+    }
+
+    .messages li.success::before {
+      content: '✓';
+    }
+
+    .messages li.warning {
+      background: var(--warning-glow);
+      color: #B45309;
+      border-left: 4px solid var(--warning);
+    }
+
+    .messages li.warning::before {
+      content: '⚡';
+    }
+
+    .messages li.info {
+      background: var(--info-glow);
+      color: var(--info);
+      border-left: 4px solid var(--info);
+    }
+
+    .messages li.info::before {
+      content: 'ℹ️';
+    }
+
+    /* ============================================
+       SIGNUP FORM
+       ============================================ */
+    .signup-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      text-align: left;
+    }
+
+    /* ============================================
+       FORM GROUP
+       ============================================ */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    /* ============================================
+       INPUT FIELDS
+       ============================================ */
+    .input-field {
+      font-family: var(--font-body);
+      width: 100%;
+      padding: var(--space-md) var(--space-lg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: var(--surface-input);
+      transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .input-field:hover {
+      border-color: var(--text-muted);
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--health);
+      background: var(--surface-elevated);
+      box-shadow: var(--shadow-input-focus);
+      transform: translateY(-1px);
+    }
+
+    .input-field::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ============================================
+       PASSWORD CONTAINER
+       ============================================ */
+    .password-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper .input-field {
+      padding-right: 50px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: var(--space-md);
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      padding: var(--space-sm);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color var(--transition-fast);
+    }
+
+    .toggle-password:hover {
+      background: var(--surface-subtle);
+    }
+
+    .toggle-password img {
+      width: 20px;
+      height: 20px;
+      opacity: 0.6;
+      transition: opacity var(--transition-fast);
+    }
+
+    .toggle-password:hover img {
+      opacity: 1;
+    }
+
+    /* ============================================
+       PATIENT CODE INPUT
+       ============================================ */
+    .patient-code-group {
+      margin-top: var(--space-sm);
+    }
+
+    .patient-code-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-xs);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .patient-code-group label::before {
+      content: '🔐';
+      font-size: 0.9rem;
+    }
+
+    .patient-code-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: var(--space-xs);
+    }
+
+    /* Code input special styling */
+    #patient_code {
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      letter-spacing: 0.25em;
+      text-align: center;
+    }
+
+    /* ============================================
+       SIGNUP BUTTON
+       ============================================ */
+    .signup-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      padding: var(--space-md) var(--space-lg);
+      margin-top: var(--space-sm);
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--health) 0%, var(--health-soft) 100%);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      box-shadow: 
+        0 4px 16px rgba(16, 185, 129, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-base);
+    }
+
+    /* Shine effect */
+    .signup-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+      );
+      transition: left 0.5s ease;
+    }
+
+    .signup-button:hover::before {
+      left: 100%;
+    }
+
+    .signup-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 8px 24px rgba(16, 185, 129, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .signup-button:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+
+    .signup-button::after {
+      content: '→';
+      font-size: 1.2rem;
+      transition: transform var(--transition-fast);
+    }
+
+    .signup-button:hover::after {
+      transform: translateX(4px);
+    }
+
+    /* ============================================
+       LOGIN TEXT
+       ============================================ */
+    .login-text {
+      margin-top: var(--space-xl);
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .login-text a {
+      color: var(--health);
+      font-weight: 600;
+      text-decoration: none;
+      position: relative;
+      transition: color var(--transition-fast);
+    }
+
+    .login-text a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--health);
+      transition: width var(--transition-base);
+    }
+
+    .login-text a:hover {
+      color: var(--health-soft);
+    }
+
+    .login-text a:hover::after {
+      width: 100%;
+    }
+
+    /* ============================================
+       HELPER TEXT
+       ============================================ */
+    .helper-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .helper-text::before {
+      content: 'ℹ️';
+      font-size: 0.75rem;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 520px) {
+      body {
+        padding: var(--space-md);
+        align-items: flex-start;
+        padding-top: var(--space-xl);
+      }
+      
+      .signup-page {
+        padding: var(--space-xl);
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .input-field {
+        font-size: 16px; /* Prevents iOS zoom */
+        padding: var(--space-md);
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        --surface-input: #1F1F2E;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.04) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .signup-page {
+        border-color: rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .signup-button:focus-visible,
+    .login-text a:focus-visible {
+      outline: 2px solid var(--health);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="signup-page">
-        <h2>Hi There,</h2>
-
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li class="{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        <form class="signup-form" id="signupForm" method="POST">
-            {% csrf_token %}
-            <input type="text" name="username" placeholder="Username" class="input-field" required>
-            <input type="email" name="email" placeholder="Email" class="input-field" required>
-            <div class="password-container">
-                <input type="password" name="password" id="loginPassword" placeholder="Password" class="input-field" required autocomplete="current-password">
-                <span class="toggle-password" onclick="togglePassword('loginPassword')">
-                    <img id="eyeIcon" src="{% static 'assets/images/eye.png' %}" alt="toggle-password" style="width: 20px; cursor: pointer;">
-                </span>
-                <input type="text" name="unique_id" placeholder="Enter Unique ID shared with your doctor" required class="input-field">
-            </div>
-            <label for="patient_code">8-digit Patient Code</label>
-            <input
-            type="text"
-            id="patient_code"
-            name="patient_code"
-            inputmode="numeric"
-            pattern="\d{8}"
-            maxlength="8"
-            placeholder="Enter your unique 8-digit code"
-            autocomplete="off"
-            class="input-field"
-            />
-
-            <button type="submit" class="signup-button">Sign Up</button>
-        </form>
-
-        <p class="login-text">Already have an account? <a href="{% url 'login' %}">Login</a></p>
-    </div>
-    <script>
-        function togglePassword(fieldId) {
-            let passwordField = document.getElementById(fieldId);
-            let eyeIcon = document.getElementById("eyeIcon");
+  <div class="signup-page">
     
-            if (passwordField) {
-                if (passwordField.type === "password") {
-                    passwordField.type = "text";
-                    eyeIcon.src = "{% static 'assets/images/visible.png' %}"; // Change to open eye icon
-                } else {
-                    passwordField.type = "password";
-                    eyeIcon.src = "{% static 'assets/images/eye.png' %}"; // Change to closed eye icon
-                }
-            }
+    <!-- Heading -->
+    <h2>Hi There,</h2>
+    <p class="subtitle">Create your account to get started</p>
+    
+    <!-- Django Messages -->
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    
+    <!-- Signup Form -->
+    <form class="signup-form" id="signupForm" method="POST">
+      {% csrf_token %}
+      
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">👤 Username</label>
+        <input type="text" 
+               id="username"
+               name="username" 
+               placeholder="Choose a username" 
+               class="input-field" 
+               required>
+      </div>
+      
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">📧 Email</label>
+        <input type="email" 
+               id="email"
+               name="email" 
+               placeholder="your@email.com" 
+               class="input-field" 
+               required>
+      </div>
+      
+      <!-- Password -->
+      <div class="form-group">
+        <label for="loginPassword">🔒 Password</label>
+        <div class="password-wrapper">
+          <input type="password" 
+                 name="password" 
+                 id="loginPassword" 
+                 placeholder="Create a strong password" 
+                 class="input-field" 
+                 required 
+                 autocomplete="new-password">
+          <span class="toggle-password" onclick="togglePassword('loginPassword')">
+            <img id="eyeIcon" src="{% static 'assets/images/eye.png' %}" alt="Toggle password visibility">
+          </span>
+        </div>
+      </div>
+      
+      <!-- Unique ID -->
+      <div class="form-group">
+        <label for="unique_id">🏷️ Unique ID</label>
+        <input type="text" 
+               id="unique_id"
+               name="unique_id" 
+               placeholder="ID shared by your doctor" 
+               class="input-field" 
+               required>
+        <span class="helper-text">Your doctor will provide this ID</span>
+      </div>
+      
+      <!-- Patient Code -->
+      <div class="form-group patient-code-group">
+        <label for="patient_code">8-digit Patient Code</label>
+        <input type="text" 
+               id="patient_code"
+               name="patient_code" 
+               inputmode="numeric"
+               pattern="\d{8}"
+               maxlength="8"
+               placeholder="• • • • • • • •"
+               autocomplete="off"
+               class="input-field">
+        <span class="patient-code-hint">Enter your unique 8-digit verification code</span>
+      </div>
+      
+      <!-- Submit Button -->
+      <button type="submit" class="signup-button">Create Account</button>
+    </form>
+    
+    <!-- Login Link -->
+    <p class="login-text">
+      Already have an account? <a href="{% url 'login' %}">Login</a>
+    </p>
+    
+  </div>
+
+  <!-- Password Toggle Script -->
+  <script>
+    function togglePassword(fieldId) {
+      const passwordField = document.getElementById(fieldId);
+      const eyeIcon = document.getElementById("eyeIcon");
+
+      if (passwordField) {
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+          eyeIcon.src = "{% static 'assets/images/visible.png' %}";
+          eyeIcon.style.opacity = '1';
+        } else {
+          passwordField.type = "password";
+          eyeIcon.src = "{% static 'assets/images/eye.png' %}";
+          eyeIcon.style.opacity = '0.6';
         }
-    </script>
+      }
+    }
+
+    // Patient code input - numbers only
+    document.getElementById('patient_code').addEventListener('input', function(e) {
+      this.value = this.value.replace(/\D/g, '').slice(0, 8);
+    });
+  </script>
+  
+  <script defer src="{% static 'assets/js/scripts.js' %}"></script>
 </body>
 </html>
