@@ -2,65 +2,764 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onboarding Tour</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'assets/css/tour.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Welcome to HealthApp</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --info: #3B82F6;
+      --info-soft: #60A5FA;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      --space-3xl: 64px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 30% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+        linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+    }
+
+    /* ============================================
+       TOUR CONTAINER
+       ============================================ */
+    .tour-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ============================================
+       SLIDER WRAPPER
+       ============================================ */
+    .slider-wrapper {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slides {
+      display: flex;
+      height: 100%;
+      transition: transform 0.6s var(--transition-smooth);
+      will-change: transform;
+    }
+
+    /* ============================================
+       INDIVIDUAL SLIDE
+       ============================================ */
+    .slide {
+      min-width: 100vw;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-xl);
+      padding-bottom: 120px;
+    }
+
+    .content {
+      text-align: center;
+      max-width: 400px;
+      
+      animation: contentFadeIn 0.8s var(--transition-smooth) forwards;
+    }
+
+    @keyframes contentFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       TOUR IMAGE
+       ============================================ */
+    .tour-image-wrapper {
+      position: relative;
+      margin-bottom: var(--space-2xl);
+    }
+
+    .tour-image {
+      width: 280px;
+      height: 280px;
+      object-fit: contain;
+      border-radius: var(--radius-xl);
+      position: relative;
+      z-index: 1;
+      animation: imageFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes imageFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    /* Decorative background circle */
+    .image-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .slide:nth-child(1) .image-bg {
+      background: linear-gradient(135deg, var(--accent-glow) 0%, rgba(255, 107, 53, 0.05) 100%);
+    }
+
+    .slide:nth-child(2) .image-bg {
+      background: linear-gradient(135deg, var(--purple-glow) 0%, rgba(139, 92, 246, 0.05) 100%);
+    }
+
+    /* ============================================
+       SLIDE TEXT
+       ============================================ */
+    .content h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-md);
+      line-height: 1.2;
+    }
+
+    .content p {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    /* Slide-specific accent colors */
+    .slide:nth-child(1) h2 {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .slide:nth-child(2) h2 {
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-soft) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ============================================
+       NAVIGATION BUTTONS
+       ============================================ */
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 50%;
+      background: var(--surface-elevated);
+      box-shadow: var(--shadow-md);
+      color: var(--text-primary);
+      font-size: 1.25rem;
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 
+        transform var(--transition-fast),
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        opacity var(--transition-fast);
+    }
+
+    .nav-button:hover {
+      background: var(--accent-glow);
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .nav-button:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .nav-button.prev {
+      left: var(--space-md);
+    }
+
+    .nav-button.next {
+      right: var(--space-md);
+    }
+
+    .nav-button.prev:hover {
+      transform: translateY(-50%) translateX(-4px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateY(-50%) translateX(4px);
+    }
+
+    /* Hide buttons at edges */
+    .nav-button.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ============================================
+       BOTTOM SECTION
+       ============================================ */
+    .bottom-section {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: var(--space-xl);
+      padding-bottom: calc(var(--space-xl) + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.95) 30%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+
+    /* ============================================
+       DOTS INDICATOR
+       ============================================ */
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-sm);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: 
+        transform var(--transition-bounce),
+        background-color var(--transition-fast),
+        width var(--transition-smooth);
+    }
+
+    .dot:hover {
+      transform: scale(1.2);
+      background: var(--text-muted);
+    }
+
+    .dot.active {
+      width: 28px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 100%);
+    }
+
+    /* ============================================
+       ACTION BUTTONS
+       ============================================ */
+    .action-buttons {
+      display: flex;
+      gap: var(--space-md);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .skip-tour {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-md) var(--space-lg);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      background: var(--surface-elevated);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: 
+        transform var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+    }
+
+    .skip-tour:hover {
+      transform: translateY(-2px);
+      border-color: var(--text-muted);
+      color: var(--text-primary);
+    }
+
+    .continue-btn {
+      flex: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-lg);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      box-shadow: 
+        0 4px 16px rgba(255, 107, 53, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-base);
+    }
+
+    /* Shine effect */
+    .continue-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+      );
+      transition: left 0.5s ease;
+    }
+
+    .continue-btn:hover::before {
+      left: 100%;
+    }
+
+    .continue-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 8px 24px rgba(255, 107, 53, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .continue-btn:active {
+      transform: translateY(-1px);
+    }
+
+    .continue-btn .btn-icon {
+      transition: transform var(--transition-fast);
+    }
+
+    .continue-btn:hover .btn-icon {
+      transform: translateX(4px);
+    }
+
+    /* ============================================
+       PROGRESS BAR (Alternative to dots)
+       ============================================ */
+    .progress-bar {
+      width: 100%;
+      max-width: 200px;
+      height: 4px;
+      background: var(--border);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 100%);
+      border-radius: var(--radius-full);
+      transition: width 0.4s var(--transition-smooth);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 480px) {
+      .slide {
+        padding: var(--space-lg);
+        padding-bottom: 140px;
+      }
+      
+      .tour-image {
+        width: 220px;
+        height: 220px;
+      }
+      
+      .image-bg {
+        width: 200px;
+        height: 200px;
+      }
+      
+      .content h2 {
+        font-size: 1.5rem;
+      }
+      
+      .content p {
+        font-size: 0.95rem;
+      }
+      
+      .nav-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+      
+      .nav-button.prev {
+        left: var(--space-sm);
+      }
+      
+      .nav-button.next {
+        right: var(--space-sm);
+      }
+      
+      .bottom-section {
+        padding: var(--space-lg);
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .skip-tour,
+      .continue-btn {
+        flex: none;
+        width: 100%;
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 30% 20%, rgba(255, 107, 53, 0.06) 0%, transparent 50%),
+          radial-gradient(ellipse at 70% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+          var(--surface);
+      }
+      
+      .bottom-section {
+        background: linear-gradient(180deg, transparent 0%, rgba(15, 15, 20, 0.95) 30%);
+      }
+      
+      .skip-tour {
+        background: var(--surface-subtle);
+        border-color: var(--border);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .nav-button:focus-visible,
+    .dot:focus-visible,
+    .skip-tour:focus-visible,
+    .continue-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ============================================
+       TOUCH SWIPE HINT
+       ============================================ */
+    @media (pointer: coarse) {
+      .nav-button {
+        display: none;
+      }
+      
+      .slide {
+        padding-left: var(--space-lg);
+        padding-right: var(--space-lg);
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="tour-container">
-        <button class="nav-button prev" onclick="changeSlide(-1)">&#10094;</button>
-        <div class="slider-wrapper">
-            <div class="slides">
-                <!-- Slide 1 -->
-                <div class="slide">
-                    <div class="content">
-                        <img src="{% static 'assets/images/t1.png' %}" alt="Discover Top Doctors" class="tour-image">
-                        <h2>Discover Top Doctors</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                </div>
-                <!-- Slide 2 -->
-                <div class="slide">
-                    <div class="content">
-                        <img src="{% static 'assets/images/t2.png' %}" alt="Get Expert Advice" class="tour-image">
-                        <h2>Get Expert Advice</h2>
-                        <p>Our onboard assistant provides curated health advice.</p>
-                    </div>
-                </div>
+  <div class="tour-container">
+    
+    <!-- Slider Wrapper -->
+    <div class="slider-wrapper">
+      <div class="slides">
+        
+        <!-- Slide 1 -->
+        <div class="slide">
+          <div class="content">
+            <div class="tour-image-wrapper">
+              <div class="image-bg"></div>
+              <img src="{% static 'assets/images/t1.png' %}" alt="Discover Top Doctors" class="tour-image">
             </div>
+            <h2>Discover Top Doctors</h2>
+            <p>Connect with experienced healthcare professionals who care about your wellbeing.</p>
+          </div>
         </div>
-        <button class="nav-button next" onclick="changeSlide(1)">&#10095;</button>
-        <div class="dots">
-            <span class="dot active"></span>
-            <span class="dot"></span>
+        
+        <!-- Slide 2 -->
+        <div class="slide">
+          <div class="content">
+            <div class="tour-image-wrapper">
+              <div class="image-bg"></div>
+              <img src="{% static 'assets/images/t2.png' %}" alt="Get Expert Advice" class="tour-image">
+            </div>
+            <h2>Get Expert Advice</h2>
+            <p>Our intelligent assistant provides personalized health guidance just for you.</p>
+          </div>
         </div>
+        
+      </div>
     </div>
-    <a href="{% url 'addprofile'%}" class="skip-tour">Skip Tour</a>
+    
+    <!-- Navigation Buttons -->
+    <button class="nav-button prev hidden" onclick="changeSlide(-1)" aria-label="Previous slide">‹</button>
+    <button class="nav-button next" onclick="changeSlide(1)" aria-label="Next slide">›</button>
+    
+    <!-- Bottom Section -->
+    <div class="bottom-section">
+      
+      <!-- Dots Indicator -->
+      <div class="dots">
+        <span class="dot active" onclick="goToSlide(0)" tabindex="0" role="button" aria-label="Go to slide 1"></span>
+        <span class="dot" onclick="goToSlide(1)" tabindex="0" role="button" aria-label="Go to slide 2"></span>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <a href="{% url 'addprofile' %}" class="skip-tour">Skip</a>
+        <button class="continue-btn" onclick="nextOrFinish()">
+          <span class="btn-text">Next</span>
+          <span class="btn-icon">→</span>
+        </button>
+      </div>
+      
+    </div>
+    
+  </div>
 
-    <script>
-        let currentIndex = 0;
-        const slidesContainer = document.querySelector(".slides");
-        const slides = document.querySelectorAll(".slide");
-        const dots = document.querySelectorAll(".dot");
+  <!-- Scripts -->
+  <script>
+    let currentIndex = 0;
+    const slidesContainer = document.querySelector(".slides");
+    const slides = document.querySelectorAll(".slide");
+    const dots = document.querySelectorAll(".dot");
+    const prevBtn = document.querySelector(".nav-button.prev");
+    const nextBtn = document.querySelector(".nav-button.next");
+    const continueBtn = document.querySelector(".continue-btn");
+    const btnText = continueBtn.querySelector(".btn-text");
+    const totalSlides = slides.length;
 
-        // Ensure the slides container matches the number of slides
-        slidesContainer.style.width = `${slides.length * 100}vw`;
+    // Initialize
+    slidesContainer.style.width = `${totalSlides * 100}vw`;
 
-        function updateSlidePosition() {
-            slidesContainer.style.transform = `translateX(-${currentIndex * 100}vw)`;
-            dots.forEach(dot => dot.classList.remove("active"));
-            dots[currentIndex].classList.add("active");
-        }
+    function updateSlidePosition() {
+      slidesContainer.style.transform = `translateX(-${currentIndex * 100}vw)`;
+      
+      // Update dots
+      dots.forEach((dot, index) => {
+        dot.classList.toggle("active", index === currentIndex);
+      });
+      
+      // Update nav buttons visibility
+      prevBtn.classList.toggle("hidden", currentIndex === 0);
+      nextBtn.classList.toggle("hidden", currentIndex === totalSlides - 1);
+      
+      // Update continue button text
+      if (currentIndex === totalSlides - 1) {
+        btnText.textContent = "Get Started";
+        continueBtn.querySelector(".btn-icon").textContent = "✓";
+      } else {
+        btnText.textContent = "Next";
+        continueBtn.querySelector(".btn-icon").textContent = "→";
+      }
+    }
 
-        function changeSlide(direction) {
-            currentIndex += direction;
-            if (currentIndex < 0) currentIndex = 0;
-            if (currentIndex >= slides.length) currentIndex = slides.length - 1;
-            updateSlidePosition();
-        }
-    </script>
-    {% include 'chatbot.html' %}
+    function changeSlide(direction) {
+      currentIndex += direction;
+      if (currentIndex < 0) currentIndex = 0;
+      if (currentIndex >= totalSlides) currentIndex = totalSlides - 1;
+      updateSlidePosition();
+    }
+
+    function goToSlide(index) {
+      currentIndex = index;
+      updateSlidePosition();
+    }
+
+    function nextOrFinish() {
+      if (currentIndex === totalSlides - 1) {
+        // Last slide - go to profile
+        window.location.href = "{% url 'addprofile' %}";
+      } else {
+        changeSlide(1);
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+      if (e.key === 'ArrowRight') changeSlide(1);
+    });
+
+    // Dot keyboard support
+    dots.forEach(dot => {
+      dot.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') this.click();
+      });
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    slidesContainer.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    slidesContainer.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const diff = touchStartX - touchEndX;
+      
+      if (diff > swipeThreshold) {
+        changeSlide(1); // Swipe left - next
+      } else if (diff < -swipeThreshold) {
+        changeSlide(-1); // Swipe right - prev
+      }
+    }
+
+    // Initialize
+    updateSlidePosition();
+  </script>
+
+  <!-- Chatbot -->
+  {% include 'chatbot.html' %}
 </body>
 </html>
