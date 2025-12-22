@@ -5,20 +5,597 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
   <title>My Family</title>
-
-  <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
-
-  <!-- Firebase v8 SDKs (must come before your firebase-config.js) -->
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Firebase v8 SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
-
   <!-- Your Firebase code -->
   <script src="{% static 'assets/firebase/firebase-config.js' %}"></script>
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --info: #3B82F6;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding-bottom: 100px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.05) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
+    }
+
+    /* ============================================
+       CONTAINER
+       ============================================ */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       HEADER
+       ============================================ */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg);
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-soft) 100%);
+      border-radius: var(--radius-xl);
+      box-shadow: 
+        0 8px 32px rgba(139, 92, 246, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      margin-bottom: var(--space-xl);
+      position: relative;
+      overflow: hidden;
+      
+      animation: headerSlideDown 0.5s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
+    }
+
+    @keyframes headerSlideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Decorative circles */
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 180px;
+      height: 180px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -50%;
+      left: -5%;
+      width: 120px;
+      height: 120px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .header h1 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.02em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header img {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      position: relative;
+      z-index: 1;
+      transition: transform var(--transition-bounce);
+    }
+
+    .header img:hover {
+      transform: scale(1.1);
+    }
+
+    /* ============================================
+       SECTION TITLE
+       ============================================ */
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      
+      animation: fadeIn 0.5s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    h2::before {
+      content: '👨‍👩‍👧‍👦';
+      font-size: 1.25rem;
+    }
+
+    /* ============================================
+       FAMILY SECTION
+       ============================================ */
+    .family-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: var(--space-md);
+    }
+
+    /* ============================================
+       FAMILY CARD
+       ============================================ */
+    .family-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--space-xl) var(--space-lg);
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      text-decoration: none;
+      color: var(--text-primary);
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-smooth),
+        box-shadow var(--transition-smooth);
+    }
+
+    /* Accent bar on top */
+    .family-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--purple) 0%, var(--purple-soft) 100%);
+      transform: scaleX(0);
+      transition: transform var(--transition-smooth);
+    }
+
+    .family-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .family-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .family-card:active {
+      transform: translateY(-4px) scale(0.98);
+    }
+
+    /* "Me" card special styling */
+    .family-card.me-card::before {
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 100%);
+    }
+
+    .family-card.me-card {
+      border: 2px solid var(--accent-glow);
+    }
+
+    /* Stagger animation */
+    .family-card:nth-child(1) { animation: cardFadeUp 0.4s var(--transition-smooth) 0.25s forwards; opacity: 0; }
+    .family-card:nth-child(2) { animation: cardFadeUp 0.4s var(--transition-smooth) 0.35s forwards; opacity: 0; }
+    .family-card:nth-child(3) { animation: cardFadeUp 0.4s var(--transition-smooth) 0.45s forwards; opacity: 0; }
+    .family-card:nth-child(4) { animation: cardFadeUp 0.4s var(--transition-smooth) 0.55s forwards; opacity: 0; }
+    .family-card:nth-child(5) { animation: cardFadeUp 0.4s var(--transition-smooth) 0.65s forwards; opacity: 0; }
+    .family-card:nth-child(n+6) { animation: cardFadeUp 0.4s var(--transition-smooth) 0.75s forwards; opacity: 0; }
+
+    @keyframes cardFadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .family-card img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--purple-glow);
+      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.2);
+      margin-bottom: var(--space-md);
+      transition: 
+        transform var(--transition-bounce),
+        border-color var(--transition-fast);
+    }
+
+    .family-card:hover img {
+      transform: scale(1.1);
+      border-color: var(--purple-soft);
+    }
+
+    .family-card.me-card img {
+      border-color: var(--accent-glow);
+    }
+
+    .family-card.me-card:hover img {
+      border-color: var(--accent-soft);
+    }
+
+    .family-card h3 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* "Me" badge */
+    .me-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      margin-top: var(--space-sm);
+      padding: var(--space-xs) var(--space-sm);
+      background: var(--accent-glow);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: var(--radius-full);
+    }
+
+    /* Relationship badge */
+    .relationship-badge {
+      display: inline-flex;
+      align-items: center;
+      margin-top: var(--space-sm);
+      padding: var(--space-xs) var(--space-sm);
+      background: var(--purple-glow);
+      color: var(--purple);
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+    }
+
+    /* ============================================
+       BOTTOM NAVIGATION
+       ============================================ */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface-elevated);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: var(--space-sm) var(--space-md);
+      padding-bottom: calc(var(--space-sm) + env(safe-area-inset-bottom, 0px));
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+      z-index: 50;
+      
+      /* Glassmorphism */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      padding: var(--space-sm) var(--space-md);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      position: relative;
+      min-width: 56px;
+      min-height: 48px;
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    /* Active indicator */
+    .bottom-nav a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 24px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: var(--radius-full);
+      transition: transform var(--transition-smooth);
+    }
+
+    .bottom-nav a:first-child::before {
+      transform: translateX(-50%) scaleX(1);
+    }
+
+    .bottom-nav a:hover,
+    .bottom-nav a:first-child {
+      background: var(--accent-glow);
+    }
+
+    .bottom-nav a:active {
+      transform: scale(0.92);
+    }
+
+    .bottom-nav img {
+      width: 24px;
+      height: 24px;
+      opacity: 0.5;
+      transition: 
+        opacity var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .bottom-nav a:hover img,
+    .bottom-nav a:first-child img {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* ============================================
+       EMPTY STATE
+       ============================================ */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: var(--space-2xl);
+      color: var(--text-muted);
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+    }
+
+    .empty-state::before {
+      content: '👨‍👩‍👧‍👦';
+      display: block;
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+      opacity: 0.5;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 480px) {
+      .container {
+        padding: var(--space-md);
+      }
+      
+      .header {
+        padding: var(--space-md);
+      }
+      
+      .header h1 {
+        font-size: 1.25rem;
+      }
+      
+      .header img {
+        width: 48px;
+        height: 48px;
+      }
+      
+      h2 {
+        font-size: 1.25rem;
+      }
+      
+      .family-section {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .family-card {
+        padding: var(--space-lg) var(--space-md);
+      }
+      
+      .family-card img {
+        width: 64px;
+        height: 64px;
+      }
+      
+      .family-card h3 {
+        font-size: 0.85rem;
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.03) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .family-card {
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+      
+      .bottom-nav {
+        background: rgba(26, 26, 36, 0.92);
+        border-top-color: rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .family-card:focus-visible,
+    .bottom-nav a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
 
 <body data-user-id="{{ request.user.id|default:'' }}">
   <div class="container">
+    
+    <!-- Header / Greeting -->
     <div class="header">
       <h1>👋 Hi {{ user.username }}!</h1>
       {% if profile.photo %}
@@ -27,54 +604,91 @@
         <img src="{% static 'assets/images/profile.png' %}" alt="Profile Picture">
       {% endif %}
     </div>
-
-    <h2 style="color: #432c81;">My Family</h2>
-
+    
+    <!-- Section Title -->
+    <h2>My Family</h2>
+    
+    <!-- Family Grid -->
     <div class="family-section">
+      
+      <!-- "Me" Card -->
       {% if profile %}
-        <a href="{% url 'home' %}" class="family-card">
-          <h3>Me</h3>
+        <a href="{% url 'home' %}" class="family-card me-card">
           {% if profile.photo %}
             <img src="{{ profile.photo.url }}" alt="Me">
           {% else %}
             <img src="{% static 'assets/images/office-man.png' %}" alt="Me">
           {% endif %}
+          <h3>Me</h3>
+          <span class="me-badge">👤 Primary</span>
         </a>
       {% endif %}
-
+      
+      <!-- Family Member Cards -->
       {% for member in family_members %}
         <a href="{% url 'home' member.id %}" class="family-card">
-          <h3>{{ member.name }} ({{ member.relationship }})</h3>
           {% if member.photo %}
             <img src="{{ member.photo.url }}" alt="{{ member.name }}">
           {% else %}
             <img src="{% static 'assets/images/default-avatar.png' %}" alt="{{ member.name }}">
           {% endif %}
+          <h3>{{ member.name }}</h3>
+          <span class="relationship-badge">{{ member.relationship }}</span>
         </a>
+      {% empty %}
+        <!-- Empty state if no family members -->
       {% endfor %}
+      
     </div>
+    
   </div>
 
-  <div class="bottom-nav">
-    <a href="{% url 'famil' %}"><img src="{% static 'assets/images/navbar/modules-active.png' %}"></a>
-    <a href="{% url 'leaderboard' %}"><img src="{% static 'assets/images/navbar/graph.png' %}"></a>
-    <a href="{% url 'notifications' %}"><img src="{% static 'assets/images/navbar/bell.png' %}"></a>
-    <a href="{% url 'settings' %}"><img src="{% static 'assets/images/navbar/settings.png' %}"></a>
-  </div>
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="{% url 'famil' %}">
+      <img src="{% static 'assets/images/navbar/modules-active.png' %}" alt="Family">
+    </a>
+    <a href="{% url 'leaderboard' %}">
+      <img src="{% static 'assets/images/navbar/graph.png' %}" alt="Leaderboard">
+    </a>
+    <a href="{% url 'notifications' %}">
+      <img src="{% static 'assets/images/navbar/bell.png' %}" alt="Notifications">
+    </a>
+    <a href="{% url 'settings' %}">
+      <img src="{% static 'assets/images/navbar/settings.png' %}" alt="Settings">
+    </a>
+  </nav>
 
-  <script src="{% static 'assets/js/scripts.js' %}"></script>
+  <!-- Chatbot -->
   {% include 'chatbot.html' %}
 
+  <!-- Django Messages -->
   {% if messages %}
     {% for message in messages %}
       <script>alert("{{ message|escapejs }}");</script>
     {% endfor %}
   {% endif %}
 
-  <!-- Fallback helpers -->
+  <!-- Scripts -->
+  <script src="{% static 'assets/js/scripts.js' %}"></script>
+  
+  <!-- Fallback Modal Helpers -->
   <script>
-    window.openModal = window.openModal || function (id) { const el = document.getElementById(id); if (el) el.style.display = 'flex'; };
-    window.closeModal = window.closeModal || function (id) { const el = document.getElementById(id); if (el) el.style.display = 'none'; };
+    window.openModal = window.openModal || function(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = 'flex';
+        setTimeout(() => el.classList.add('active'), 10);
+      }
+    };
+    
+    window.closeModal = window.closeModal || function(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('active');
+        setTimeout(() => el.style.display = 'none', 250);
+      }
+    };
   </script>
 </body>
 </html>
