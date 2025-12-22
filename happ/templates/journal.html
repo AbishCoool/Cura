@@ -5,95 +5,714 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
   <title>My Journal</title>
-  <link rel="stylesheet" href="{% static 'assets/css/journal.css' %}">
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      --surface-input: #F8F9FB;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --teal: #14B8A6;
+      --teal-soft: #2DD4BF;
+      --teal-glow: rgba(20, 184, 166, 0.12);
+      
+      --info: #3B82F6;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      --shadow-input-focus: 0 0 0 4px var(--teal-glow);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(20, 184, 166, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
+    }
+
+    /* ============================================
+       CONTAINER
+       ============================================ */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      padding-bottom: var(--space-2xl);
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       HEADER
+       ============================================ */
+    .header {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    /* ============================================
+       BACK BUTTON
+       ============================================ */
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      background: var(--surface-elevated);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      transition: 
+        transform var(--transition-fast),
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+      
+      animation: slideDown 0.4s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .back-button:hover {
+      background: var(--teal-glow);
+      transform: translateX(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .back-button:active {
+      transform: scale(0.95);
+    }
+
+    /* ============================================
+       TITLE CARD
+       ============================================ */
+    .title-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-xl);
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-soft) 100%);
+      border-radius: var(--radius-xl);
+      box-shadow: 
+        0 8px 32px rgba(20, 184, 166, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      
+      animation: titleCardEnter 0.5s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes titleCardEnter {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Decorative circles */
+    .title-card::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -10%;
+      width: 150px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .title-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40%;
+      left: -5%;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+    }
+
+    .title-card h1 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.02em;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .title-card h1::before {
+      content: '📔';
+      font-size: 1.25rem;
+    }
+
+    .title-card img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* ============================================
+       ENTRY CONTAINER
+       ============================================ */
+    .entry-container {
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      
+      animation: entryFadeIn 0.5s var(--transition-smooth) 0.3s forwards;
+      opacity: 0;
+    }
+
+    @keyframes entryFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .entry-container h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .entry-container h3::before {
+      content: '📊';
+      font-size: 1rem;
+    }
+
+    /* ============================================
+       PROGRESS BAR
+       ============================================ */
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--surface-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: var(--space-lg);
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal) 0%, var(--teal-soft) 100%);
+      width: 0;
+      border-radius: var(--radius-full);
+      transition: width 0.4s var(--transition-smooth);
+      position: relative;
+    }
+
+    /* Shine effect */
+    .progress-bar-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+      );
+      animation: progressShine 2s ease-in-out infinite;
+    }
+
+    @keyframes progressShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* ============================================
+       QUESTION SECTION
+       ============================================ */
     .question-section {
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transition: opacity 0.5s var(--transition-smooth), transform 0.5s var(--transition-smooth);
       position: relative;
+      min-height: 100px;
     }
+
     .question-section.active {
       opacity: 1;
       transform: translateY(0);
     }
-    .journal-button {
-      width: 100%;
-      padding: 15px;
-      background-color: #7DFFD4;
-      color: #353535;
+
+    /* ============================================
+       PERSONAL LOG CONTAINER
+       ============================================ */
+    .personal-log-container {
+      margin-top: var(--space-lg);
+      margin-bottom: var(--space-md);
+    }
+
+    .personal-log-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-lg);
+      background: linear-gradient(135deg, var(--purple-glow) 0%, var(--surface-subtle) 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+    }
+
+    .personal-log-text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .personal-log-text strong {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .personal-log-text strong::before {
+      content: '✏️';
+      font-size: 0.9rem;
+    }
+
+    .personal-log-text p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .personal-log-button {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-soft) 100%);
       border: none;
-      border-radius: 8px;
-      font-size: 18px;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 300;
       cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+      transition: 
+        transform var(--transition-bounce),
+        box-shadow var(--transition-fast);
     }
-    .journal-button:hover {
-      background-color: #7DFFDF;
+
+    .personal-log-button:hover {
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
     }
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background-color: #e0e0e0;
-      border-radius: 5px;
-      overflow: hidden;
-      margin-bottom: 20px;
+
+    .personal-log-button.active {
+      transform: rotate(45deg);
     }
-    .progress-bar-fill {
-      height: 100%;
-      background-color: #7DFFD4;
-      width: 0;
-      transition: width 0.4s ease;
-    }
-    .entry-container {
-      animation: fadeIn 0.8s ease-in;
-      position: relative;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .notes-toggle {
-      position: relative;
-      display: block;
-      text-align: center;
-      margin-top: 10px;
-      margin-bottom: 5px;
-      font-size: 16px;
-      color: #353535;
-      text-decoration: none;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    .notes-toggle:hover { color: #353535; }
+
+    /* ============================================
+       EXTRA NOTES TEXTAREA
+       ============================================ */
     .extra-notes {
       display: none;
       width: 100%;
-      margin-bottom: 20px;
-      padding: 15px;
-      border-radius: 10px;
-      background-color: hsla(156, 10%, 90%, 0.5);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-      box-sizing: border-box;
-      text-align: center;
-      border: none;
-      outline: none;
+      min-height: 120px;
+      margin-bottom: var(--space-lg);
+      padding: var(--space-lg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--surface-input);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--text-primary);
+      resize: vertical;
+      transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        opacity 0.3s ease,
+        max-height 0.3s ease;
     }
-    .notes-container {
-      margin-top: 10px;
+
+    .extra-notes:focus {
+      outline: none;
+      border-color: var(--purple);
+      box-shadow: 0 0 0 4px var(--purple-glow);
+    }
+
+    .extra-notes::placeholder {
+      color: var(--text-muted);
+    }
+
+    .extra-notes.visible {
+      display: block;
+      animation: slideDown 0.3s var(--transition-smooth);
+    }
+
+    /* ============================================
+       BUTTON GROUP
+       ============================================ */
+    .button-group {
+      display: flex;
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    .journal-button {
+      flex: 1;
+      padding: var(--space-md) var(--space-lg);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
       position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-base);
+    }
+
+    /* Next/Submit Button */
+    #nextButton {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-soft) 100%);
+      color: white;
+      box-shadow: 
+        0 4px 16px rgba(20, 184, 166, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    #nextButton::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+      );
+      transition: left 0.5s ease;
+    }
+
+    #nextButton:hover::before {
+      left: 100%;
+    }
+
+    #nextButton:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 8px 24px rgba(20, 184, 166, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    /* Previous Button */
+    #prevButton {
+      background: var(--surface-subtle);
+      color: var(--text-secondary);
+      border: 2px solid var(--border);
+    }
+
+    #prevButton:hover {
+      background: var(--surface-elevated);
+      border-color: var(--text-muted);
+      transform: translateY(-2px);
+    }
+
+    /* ============================================
+       SEE PREVIOUS CONTAINER
+       ============================================ */
+    .see-previous-container {
+      margin-top: var(--space-xl);
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--border);
+    }
+
+    .see-previous-container h3 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-md);
+    }
+
+    .see-previous-container h3::before {
+      content: '📚';
+      margin-right: var(--space-sm);
+    }
+
+    .previous-entry-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--surface-subtle);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .previous-entry-card:hover {
+      background: var(--info-glow);
+      transform: translateX(4px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .previous-entry-card p {
+      font-weight: 500;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .clock-icon {
+      font-size: 1.25rem;
+      opacity: 0.7;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 480px) {
+      .container {
+        padding: var(--space-md);
+      }
+      
+      .title-card {
+        padding: var(--space-lg);
+      }
+      
+      .title-card h1 {
+        font-size: 1.25rem;
+      }
+      
+      .title-card img {
+        width: 48px;
+        height: 48px;
+      }
+      
+      .entry-container {
+        padding: var(--space-lg);
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+      
+      .journal-button {
+        width: 100%;
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        --surface-input: #1F1F2E;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(20, 184, 166, 0.05) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.04) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .entry-container,
+      .back-button {
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .back-button:focus-visible,
+    .journal-button:focus-visible,
+    .personal-log-button:focus-visible,
+    .previous-entry-card:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 2px;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
+    
+    <!-- Header -->
     <div class="header">
       {% if member %}
-  <a href="{% url 'home' member.id %}" class="back-button">&#8592;</a>
-{% else %}
-  <a href="{% url 'home' %}" class="back-button">&#8592;</a>
-{% endif %}
+        <a href="{% url 'home' member.id %}" class="back-button">←</a>
+      {% else %}
+        <a href="{% url 'home' %}" class="back-button">←</a>
+      {% endif %}
 
       <div class="title-card">
         <h1>My Journal</h1>
@@ -101,27 +720,31 @@
       </div>
     </div>
 
+    <!-- Journal Entry Container -->
     <div class="entry-container">
+      
+      <!-- Progress Bar -->
       <div class="progress-bar">
         <div class="progress-bar-fill" id="progressBar"></div>
       </div>
+      
       <h3>Daily Health Tracker</h3>
 
-      <!-- ✅ JOURNAL FORM START -->
+      <!-- Journal Form -->
       <form method="POST" action="{% if member %}{% url 'family_journal' member.id %}{% else %}{% url 'journal' %}{% endif %}" id="journalForm">
         {% csrf_token %}
 
-        <!-- ✅ Injected Hidden Field for Family Member -->
+        <!-- Hidden Field for Family Member -->
         {% if member %}
-  <input type="hidden" name="family_member_id" value="{{ member.id }}">
-{% endif %}
+          <input type="hidden" name="family_member_id" value="{{ member.id }}">
+        {% endif %}
 
-
+        <!-- Question Section (JS populated) -->
         <div class="question-section" id="question-container">
           <!-- JS will populate this -->
         </div>
 
-        <!-- ✅ Personal Log Section -->
+        <!-- Personal Log Section -->
         <div class="personal-log-container">
           <div class="personal-log-card">
             <div class="personal-log-text">
@@ -136,27 +759,51 @@
 
         <textarea name="extraNote" id="extraNote" class="extra-notes" placeholder="Write your personal log here..."></textarea>
 
-        <!-- Buttons -->
+        <!-- Navigation Buttons -->
         <div class="button-group">
-          <button type="button" id="prevButton" class="journal-button" style="display: none;">Previous</button>
-          <button type="button" id="nextButton" class="journal-button">Next</button>
+          <button type="button" id="prevButton" class="journal-button" style="display: none;">← Previous</button>
+          <button type="button" id="nextButton" class="journal-button">Next →</button>
         </div>
 
-        <!-- Optional Previous Entry Display -->
+        <!-- Previous Entry Section -->
         <div class="see-previous-container">
           <h3>See Previous</h3>
-          <div class="previous-entry-card">
+          <div class="previous-entry-card" tabindex="0" role="button">
             <p>Yesterday</p>
             <span class="clock-icon">🕒</span>
           </div>
         </div>
       </form>
-      <!-- ✅ JOURNAL FORM END -->
 
     </div>
 
-    <!-- ✅ JS + Chatbot -->
+    <!-- Scripts -->
     <script src="{% static 'assets/js/journal.js' %}"></script>
+    
+    <!-- Toggle Notes Enhancement -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('toggleNotes');
+        const extraNotes = document.getElementById('extraNote');
+        
+        if (toggleBtn && extraNotes) {
+          toggleBtn.addEventListener('click', function() {
+            this.classList.toggle('active');
+            extraNotes.classList.toggle('visible');
+            
+            const span = this.querySelector('span');
+            if (extraNotes.classList.contains('visible')) {
+              span.textContent = '−';
+              extraNotes.focus();
+            } else {
+              span.textContent = '+';
+            }
+          });
+        }
+      });
+    </script>
+    
+    <!-- Chatbot -->
     {% include 'chatbot.html' %}
   </div>
 </body>
