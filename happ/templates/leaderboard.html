@@ -1,91 +1,738 @@
-{% load static %} 
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title>Leaderboard</title>
-    <link rel="stylesheet" href="{% static 'assets/css/leaderboard.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Leaderboard</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --gold: #F59E0B;
+      --gold-soft: #FBBF24;
+      --gold-glow: rgba(245, 158, 11, 0.15);
+      
+      --silver: #94A3B8;
+      --silver-soft: #CBD5E1;
+      --silver-glow: rgba(148, 163, 184, 0.15);
+      
+      --bronze: #CD7F32;
+      --bronze-soft: #D4956A;
+      --bronze-glow: rgba(205, 127, 50, 0.15);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --health: #10B981;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding-bottom: 100px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 50% 0%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 100%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.05) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
+    }
+
+    /* ============================================
+       LEAD CONTAINER
+       ============================================ */
+    .lead {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       HEADER
+       ============================================ */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-xl);
+      
+      animation: headerSlide 0.5s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
+    }
+
+    @keyframes headerSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header h1 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .header h1::before {
+      content: '🏆';
+      font-size: 1.5rem;
+    }
+
+    .xp-score {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-sm) var(--space-md);
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-radius: var(--radius-full);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .xp-score::before {
+      content: '⚡';
+    }
+
+    /* ============================================
+       TOP LEADERBOARD (Podium)
+       ============================================ */
+    .top-leaderboard {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+      padding: var(--space-xl) 0;
+      
+      animation: podiumEnter 0.6s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes podiumEnter {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Leader Card (Top 3) */
+    .top-leaderboard .leader-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--space-lg);
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      position: relative;
+      transition: 
+        transform var(--transition-smooth),
+        box-shadow var(--transition-smooth);
+    }
+
+    .top-leaderboard .leader-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .top-leaderboard .leader-card p {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    /* Medal */
+    .medal {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      margin-bottom: var(--space-sm);
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    /* Avatar */
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid transparent;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform var(--transition-bounce);
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .leader-card:hover .avatar {
+      transform: scale(1.1);
+    }
+
+    /* First Place */
+    .leader-card.first {
+      order: 2;
+      padding: var(--space-xl);
+      background: linear-gradient(135deg, #FEF9E7 0%, var(--surface-elevated) 100%);
+      border: 2px solid var(--gold-glow);
+      transform: translateY(-20px);
+    }
+
+    .leader-card.first .avatar {
+      width: 80px;
+      height: 80px;
+      border-color: var(--gold);
+      box-shadow: 
+        0 0 0 4px var(--gold-glow),
+        0 8px 24px rgba(245, 158, 11, 0.25);
+    }
+
+    .leader-card.first::after {
+      content: '👑';
+      position: absolute;
+      top: -16px;
+      font-size: 1.5rem;
+      animation: crownBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes crownBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    /* Second Place */
+    .leader-card.second {
+      order: 1;
+    }
+
+    .leader-card.second .avatar {
+      border-color: var(--silver);
+      box-shadow: 0 0 0 4px var(--silver-glow);
+    }
+
+    .leader-card.second.selected {
+      background: linear-gradient(135deg, var(--purple-glow) 0%, var(--surface-elevated) 100%);
+      border: 2px solid var(--purple);
+    }
+
+    .leader-card.second.selected::before {
+      content: '← You';
+      position: absolute;
+      left: -50px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--purple);
+      background: var(--purple-glow);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+
+    /* Third Place */
+    .leader-card.third {
+      order: 3;
+    }
+
+    .leader-card.third .avatar {
+      border-color: var(--bronze);
+      box-shadow: 0 0 0 4px var(--bronze-glow);
+    }
+
+    /* ============================================
+       LIST LEADERBOARD
+       ============================================ */
+    .list-leaderboard {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      padding: var(--space-md);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .list-leaderboard .leader-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--surface-subtle);
+      border-radius: var(--radius-lg);
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .list-leaderboard .leader-card:hover {
+      background: var(--surface-elevated);
+      transform: translateX(4px);
+    }
+
+    /* Stagger animation */
+    .list-leaderboard .leader-card:nth-child(1) { animation: listSlideIn 0.4s var(--transition-smooth) 0.3s forwards; opacity: 0; }
+    .list-leaderboard .leader-card:nth-child(2) { animation: listSlideIn 0.4s var(--transition-smooth) 0.35s forwards; opacity: 0; }
+    .list-leaderboard .leader-card:nth-child(3) { animation: listSlideIn 0.4s var(--transition-smooth) 0.4s forwards; opacity: 0; }
+    .list-leaderboard .leader-card:nth-child(4) { animation: listSlideIn 0.4s var(--transition-smooth) 0.45s forwards; opacity: 0; }
+    .list-leaderboard .leader-card:nth-child(5) { animation: listSlideIn 0.4s var(--transition-smooth) 0.5s forwards; opacity: 0; }
+    .list-leaderboard .leader-card:nth-child(6) { animation: listSlideIn 0.4s var(--transition-smooth) 0.55s forwards; opacity: 0; }
+    .list-leaderboard .leader-card:nth-child(7) { animation: listSlideIn 0.4s var(--transition-smooth) 0.6s forwards; opacity: 0; }
+
+    @keyframes listSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .leader-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .leader-name::before {
+      content: '';
+      width: 32px;
+      height: 32px;
+      background: var(--purple-glow);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Different colors for list items */
+    .list-leaderboard .leader-card:nth-child(1) .leader-name::before { background: linear-gradient(135deg, #E0E7FF 0%, #C7D2FE 100%); }
+    .list-leaderboard .leader-card:nth-child(2) .leader-name::before { background: linear-gradient(135deg, #FCE7F3 0%, #FBCFE8 100%); }
+    .list-leaderboard .leader-card:nth-child(3) .leader-name::before { background: linear-gradient(135deg, #CCFBF1 0%, #99F6E4 100%); }
+    .list-leaderboard .leader-card:nth-child(4) .leader-name::before { background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); }
+    .list-leaderboard .leader-card:nth-child(5) .leader-name::before { background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%); }
+    .list-leaderboard .leader-card:nth-child(6) .leader-name::before { background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%); }
+    .list-leaderboard .leader-card:nth-child(7) .leader-name::before { background: linear-gradient(135deg, #FFEDD5 0%, #FED7AA 100%); }
+
+    .rank {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--surface-elevated);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+    }
+
+    /* ============================================
+       BOTTOM NAVIGATION
+       ============================================ */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface-elevated);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: var(--space-sm) var(--space-md);
+      padding-bottom: calc(var(--space-sm) + env(safe-area-inset-bottom, 0px));
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+      z-index: 50;
+      
+      /* Glassmorphism */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      padding: var(--space-sm) var(--space-md);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      position: relative;
+      min-width: 56px;
+      min-height: 48px;
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    /* Active indicator */
+    .bottom-nav a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 24px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: var(--radius-full);
+      transition: transform var(--transition-smooth);
+    }
+
+    .bottom-nav a:nth-child(2)::before {
+      transform: translateX(-50%) scaleX(1);
+    }
+
+    .bottom-nav a:hover,
+    .bottom-nav a:nth-child(2) {
+      background: var(--accent-glow);
+    }
+
+    .bottom-nav a:active {
+      transform: scale(0.92);
+    }
+
+    .bottom-nav img {
+      width: 24px;
+      height: 24px;
+      opacity: 0.5;
+      transition: 
+        opacity var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .bottom-nav a:hover img,
+    .bottom-nav a:nth-child(2) img {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 480px) {
+      .container {
+        padding: var(--space-md);
+      }
+      
+      .header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .top-leaderboard {
+        gap: var(--space-sm);
+        padding: var(--space-lg) 0;
+      }
+      
+      .top-leaderboard .leader-card {
+        padding: var(--space-md);
+      }
+      
+      .leader-card.first {
+        padding: var(--space-lg);
+      }
+      
+      .avatar {
+        width: 52px;
+        height: 52px;
+      }
+      
+      .leader-card.first .avatar {
+        width: 64px;
+        height: 64px;
+      }
+      
+      .leader-card.second.selected::before {
+        display: none;
+      }
+      
+      .list-leaderboard {
+        padding: var(--space-sm);
+      }
+      
+      .list-leaderboard .leader-card {
+        padding: var(--space-md);
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 50% 0%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+          radial-gradient(ellipse at 20% 100%, rgba(139, 92, 246, 0.04) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .leader-card.first {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, var(--surface-elevated) 100%);
+      }
+      
+      .leader-card.second.selected {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, var(--surface-elevated) 100%);
+      }
+      
+      .list-leaderboard,
+      .top-leaderboard .leader-card {
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+      
+      .bottom-nav {
+        background: rgba(26, 26, 36, 0.92);
+        border-top-color: rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .bottom-nav a:focus-visible,
+    .leader-card:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="lead">
-        <div class="container">
-            <div class="header">
-                <h1>Leaderboard</h1>
-                <div class="xp-score">XP 200</div>
-            </div>
-
-            <!-- Top leaderboard section -->
-            <div class="top-leaderboard">
-                <div class="leader-card first">
-                    <p>James</p>
-                    <img src="{% static 'assets/images/1st-prize.png' %}" class="medal" alt="1st Place">
-                    <div class="avatar">
-                        <img src="{% static 'assets/images/leaderboard3.png' %}" alt="Profile Picture">
-                    </div>
-                </div>
-
-                <div class="leader-card second selected">
-                    <p>Sally</p>
-                    <img src="{% static 'assets/images/2nd-place.png' %}" class="medal" alt="2nd Place">
-                    <div class="avatar">
-                        <img src="{% static 'assets/images/leaderboard2.png' %}" alt="Profile Picture">
-                    </div>
-                </div>
-
-                <div class="leader-card third">
-                    <p>Boyle</p>
-                    <img src="{% static 'assets/images/3rd-place.png' %}" class="medal" alt="3rd Place">
-                    <div class="avatar">
-                        <img src="{% static 'assets/images/leaderboard1.png' %}" alt="Profile Picture">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Lower leaderboard -->
-            <div class="list-leaderboard">
-                <div class="leader-card">
-                    <p class="leader-name">Juliana</p>
-                    <p class="rank">4th</p>
-                </div>
-                <div class="leader-card">
-                    <p class="leader-name">Natalie</p>
-                    <p class="rank">5th</p>
-                </div>
-                <div class="leader-card">
-                    <p class="leader-name">John</p>
-                    <p class="rank">6th</p>
-                </div>
-                <div class="leader-card">
-                    <p class="leader-name">Nirmala</p>
-                    <p class="rank">7th</p>
-                </div>
-                <div class="leader-card">
-                    <p class="leader-name">Adharv</p>
-                    <p class="rank">8th</p>
-                </div>
-                <div class="leader-card">
-                    <p class="leader-name">Qi Lin</p>
-                    <p class="rank">9th</p>
-                </div>
-                <div class="leader-card">
-                    <p class="leader-name">Juliana</p>
-                    <p class="rank">10th</p>
-                </div>
-            </div>
+  <div class="lead">
+    <div class="container">
+      
+      <!-- Header -->
+      <div class="header">
+        <h1>Leaderboard</h1>
+        <div class="xp-score">XP 200</div>
+      </div>
+      
+      <!-- Top 3 Podium -->
+      <div class="top-leaderboard">
+        <!-- First Place (center, elevated) -->
+        <div class="leader-card first">
+          <p>James</p>
+          <img src="{% static 'assets/images/1st-prize.png' %}" class="medal" alt="1st Place">
+          <div class="avatar">
+            <img src="{% static 'assets/images/leaderboard3.png' %}" alt="James">
+          </div>
         </div>
+        
+        <!-- Second Place (left) - Selected/You -->
+        <div class="leader-card second selected">
+          <p>Sally</p>
+          <img src="{% static 'assets/images/2nd-place.png' %}" class="medal" alt="2nd Place">
+          <div class="avatar">
+            <img src="{% static 'assets/images/leaderboard2.png' %}" alt="Sally">
+          </div>
+        </div>
+        
+        <!-- Third Place (right) -->
+        <div class="leader-card third">
+          <p>Boyle</p>
+          <img src="{% static 'assets/images/3rd-place.png' %}" class="medal" alt="3rd Place">
+          <div class="avatar">
+            <img src="{% static 'assets/images/leaderboard1.png' %}" alt="Boyle">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Remaining Rankings -->
+      <div class="list-leaderboard">
+        <div class="leader-card">
+          <p class="leader-name">Juliana</p>
+          <p class="rank">4th</p>
+        </div>
+        <div class="leader-card">
+          <p class="leader-name">Natalie</p>
+          <p class="rank">5th</p>
+        </div>
+        <div class="leader-card">
+          <p class="leader-name">John</p>
+          <p class="rank">6th</p>
+        </div>
+        <div class="leader-card">
+          <p class="leader-name">Nirmala</p>
+          <p class="rank">7th</p>
+        </div>
+        <div class="leader-card">
+          <p class="leader-name">Adharv</p>
+          <p class="rank">8th</p>
+        </div>
+        <div class="leader-card">
+          <p class="leader-name">Qi Lin</p>
+          <p class="rank">9th</p>
+        </div>
+        <div class="leader-card">
+          <p class="leader-name">Juliana</p>
+          <p class="rank">10th</p>
+        </div>
+      </div>
+      
     </div>
+  </div>
 
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <a href="{% url 'famil' %}"><img src="{% static 'assets/images/navbar/modules.png' %}"></a>
-        <a href="{% url 'leaderboard' %}"><img src="{% static 'assets/images/navbar/graph-active.png' %}"></a>
-        <a href="{% url 'notifications' %}"><img src="{% static 'assets/images/navbar/bell.png' %}"></a>
-        <a href="{% url 'settings' %}"><img src="{% static 'assets/images/navbar/settings.png' %}"></a>
-    </div>
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="{% url 'famil' %}">
+      <img src="{% static 'assets/images/navbar/modules.png' %}" alt="Home">
+    </a>
+    <a href="{% url 'leaderboard' %}">
+      <img src="{% static 'assets/images/navbar/graph-active.png' %}" alt="Leaderboard">
+    </a>
+    <a href="{% url 'notifications' %}">
+      <img src="{% static 'assets/images/navbar/bell.png' %}" alt="Notifications">
+    </a>
+    <a href="{% url 'settings' %}">
+      <img src="{% static 'assets/images/navbar/settings.png' %}" alt="Settings">
+    </a>
+  </nav>
 
-    <script src="{% static 'assets/js/scripts.js' %}"></script>
-    {% include 'chatbot.html' %}
+  <!-- Scripts -->
+  <script src="{% static 'assets/js/scripts.js' %}"></script>
+  
+  <!-- Chatbot -->
+  {% include 'chatbot.html' %}
 </body>
 </html>
