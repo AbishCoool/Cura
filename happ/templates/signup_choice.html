@@ -3,23 +3,553 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
   <title>Choose Account Type</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --info: #3B82F6;
+      --info-soft: #60A5FA;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-2xl: 32px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-  <link rel="stylesheet" href="{% static 'assets/css/doctor.css' %}">
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding: var(--space-xl);
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 30% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+        linear-gradient(135deg, #F0FFF4 0%, #FAFBFC 40%, #F5F0FF 100%);
+      background-attachment: fixed;
+    }
+
+    /* Animated background shapes */
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    body::before {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
+      top: -150px;
+      left: -150px;
+    }
+
+    body::after {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%);
+      bottom: -100px;
+      right: -100px;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(40px, -40px) scale(1.05); }
+      50% { transform: translate(-30px, 30px) scale(0.95); }
+      75% { transform: translate(30px, 40px) scale(1.02); }
+    }
+
+    /* ============================================
+       CHOICE PAGE CONTAINER
+       ============================================ */
+    .choice-page {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================
+       LOGO (Optional)
+       ============================================ */
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin-bottom: var(--space-xl);
+      animation: logoFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ============================================
+       HEADING
+       ============================================ */
+    h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-sm);
+      
+      animation: headingEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes headingEnter {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      margin-bottom: var(--space-2xl);
+      
+      animation: subtitleEnter 0.6s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
+    }
+
+    @keyframes subtitleEnter {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       CHOICE BUTTONS CONTAINER
+       ============================================ */
+    .choice-buttons {
+      display: flex;
+      gap: var(--space-lg);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ============================================
+       BUTTON BASE
+       ============================================ */
+    .btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      width: 200px;
+      height: 220px;
+      padding: var(--space-xl);
+      border-radius: var(--radius-2xl);
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-smooth),
+        box-shadow var(--transition-smooth);
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Icon container */
+    .btn-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      font-size: 2.5rem;
+      transition: transform var(--transition-bounce);
+    }
+
+    .btn:hover .btn-icon {
+      transform: scale(1.15);
+    }
+
+    /* Decorative circle */
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -30%;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      pointer-events: none;
+      transition: transform var(--transition-smooth);
+    }
+
+    .btn:hover::before {
+      transform: scale(1.2);
+    }
+
+    /* ============================================
+       PATIENT BUTTON
+       ============================================ */
+    .patient-btn {
+      background: linear-gradient(135deg, var(--health) 0%, var(--health-soft) 100%);
+      color: white;
+      box-shadow: 
+        0 8px 32px rgba(16, 185, 129, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      
+      animation: patientBtnEnter 0.5s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes patientBtnEnter {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .patient-btn::before {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .patient-btn .btn-icon {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .patient-btn:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 
+        0 16px 48px rgba(16, 185, 129, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    /* ============================================
+       DOCTOR BUTTON
+       ============================================ */
+    .doctor-btn {
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-soft) 100%);
+      color: white;
+      box-shadow: 
+        0 8px 32px rgba(139, 92, 246, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      
+      animation: doctorBtnEnter 0.5s var(--transition-smooth) 0.3s forwards;
+      opacity: 0;
+    }
+
+    @keyframes doctorBtnEnter {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .doctor-btn::before {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .doctor-btn .btn-icon {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .doctor-btn:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 
+        0 16px 48px rgba(139, 92, 246, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    /* ============================================
+       BUTTON LABELS
+       ============================================ */
+    .btn-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .btn-sublabel {
+      font-size: 0.85rem;
+      font-weight: 400;
+      opacity: 0.85;
+    }
+
+    /* ============================================
+       LOGIN LINK
+       ============================================ */
+    .login-link {
+      margin-top: var(--space-2xl);
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      
+      animation: loginLinkEnter 0.5s var(--transition-smooth) 0.4s forwards;
+      opacity: 0;
+    }
+
+    @keyframes loginLinkEnter {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-link a {
+      color: var(--purple);
+      font-weight: 600;
+      text-decoration: none;
+      position: relative;
+      transition: color var(--transition-fast);
+    }
+
+    .login-link a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--purple);
+      transition: width var(--transition-base);
+    }
+
+    .login-link a:hover {
+      color: var(--purple-soft);
+    }
+
+    .login-link a:hover::after {
+      width: 100%;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 520px) {
+      body {
+        padding: var(--space-lg);
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+      
+      .choice-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn {
+        width: 100%;
+        max-width: 280px;
+        height: 160px;
+        flex-direction: row;
+        padding: var(--space-lg);
+      }
+      
+      .btn-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.75rem;
+      }
+      
+      .btn-label {
+        align-items: flex-start;
+        text-align: left;
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 30% 20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+          radial-gradient(ellipse at 70% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+          var(--surface);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .btn:focus-visible,
+    .login-link a:focus-visible {
+      outline: 3px solid white;
+      outline-offset: 4px;
+    }
+  </style>
 </head>
-<body class="choice-page">
-  <h2>Who is signing up?</h2>
 
- <div class="choice-buttons">
-  <a href="{% url 'signup' %}" class="btn patient-btn">
-    <i class="fas fa-user"></i> Patient
-  </a>
-  <a href="{% url 'doctor_signup' %}" class="btn doctor-btn">
-    <i class="fas fa-user-md"></i> Doctor
-  </a>
-</div>
-
+<body>
+  <div class="choice-page">
+    
+    <!-- Heading -->
+    <h2>Who is signing up?</h2>
+    <p class="subtitle">Select your account type to continue</p>
+    
+    <!-- Choice Buttons -->
+    <div class="choice-buttons">
+      
+      <!-- Patient Button -->
+      <a href="{% url 'signup' %}" class="btn patient-btn">
+        <div class="btn-icon">👤</div>
+        <div class="btn-label">
+          <span>Patient</span>
+          <span class="btn-sublabel">Track your health</span>
+        </div>
+      </a>
+      
+      <!-- Doctor Button -->
+      <a href="{% url 'doctor_signup' %}" class="btn doctor-btn">
+        <div class="btn-icon">👨‍⚕️</div>
+        <div class="btn-label">
+          <span>Doctor</span>
+          <span class="btn-sublabel">Manage patients</span>
+        </div>
+      </a>
+      
+    </div>
+    
+    <!-- Login Link -->
+    <p class="login-link">
+      Already have an account? <a href="{% url 'login' %}">Login</a>
+    </p>
+    
+  </div>
 </body>
 </html>
