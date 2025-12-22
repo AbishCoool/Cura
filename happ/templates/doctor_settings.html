@@ -2,71 +2,635 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Settings</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'assets/css/settings.css' %}">
-</head>
-<body>
-    <div class="settings-page">
-        <h2>Settings</h2>
-        <div class="profile-section">
-            <img src="{% static 'assets/images/profile-pic.png' %}" alt="Profile Picture" class="profile-pic">
-            <h1>{{ user.username}}</h1>
-            <p>{{ user.email}}</p>
-        </div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Settings</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --info: #3B82F6;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --warning: #F59E0B;
+      --warning-glow: rgba(245, 158, 11, 0.12);
+      
+      --danger: #EF4444;
+      --danger-glow: rgba(239, 68, 68, 0.1);
+      
+      --teal: #14B8A6;
+      --teal-glow: rgba(20, 184, 166, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-        <div class="settings-options">
-            <a href="#" class="option">
-                <div class="left-section">
-                    <img src="{% static 'assets/images/icons/account-icon.png' %}" alt="Account Icon" class="option-icon">
-                    <span>Account</span>
-                </div>
-                <span class="arrow">&#8250;</span>
-            </a>
-            <a href="#" class="option">
-                <div class="left-section">
-                    <img src="{% static 'assets/images/icons/notification-icon.png' %}" alt="Notification Icon" class="option-icon">
-                    <span>Notification</span>
-                </div>
-                <span class="arrow">&#8250;</span>
-            </a>
-            <a href="{% url 'rewards' %}" class="option">
-                <div class="left-section">
-                    <img src="{% static 'assets/images/icons/awards-icon.png' %}" alt="Awards Icon" class="option-icon">
-                    <span>My Rewards</span>
-                </div>
-                <span class="arrow">&#8250;</span>
-            </a>
-            <a href="#" class="option">
-                <div class="left-section">
-                    <img src="{% static 'assets/images/icons/privacy-icon.png' %}" alt="Privacy Icon" class="option-icon">
-                    <span>Privacy & Security</span>
-                </div>
-                <span class="arrow">&#8250;</span>
-            </a>
-            <a href="#" class="option">
-                <div class="left-section">
-                    <img src="{% static 'assets/images/icons/sound-icon.png' %}" alt="Sound Icon" class="option-icon">
-                    <span>Sound</span>
-                </div>
-                <span class="arrow">&#8250;</span>
-            </a>
-            <a href="#" class="option">
-                <div class="left-section">
-                    <img src="{% static 'assets/images/icons/language-icon.png' %}" alt="Language Icon" class="option-icon">
-                    <span>Language</span>
-                </div>
-                <span class="arrow">&#8250;</span>
-            </a>
-            <a href="{% url 'logout' %}" class="option">
-                <div class="left-section">
-                    <img src="{% static 'assets/images/logout.png' %}" alt="Logout Icon" class="option-icon">
-                    <span>Logout</span>
-                </div>
-                <span class="arrow">&#8250;</span>
-            </a>           
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.05) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
+    }
+
+    /* ============================================
+       SETTINGS PAGE CONTAINER
+       ============================================ */
+    .settings-page {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      padding-bottom: var(--space-2xl);
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       PAGE TITLE
+       ============================================ */
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      
+      animation: titleSlide 0.5s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
+    }
+
+    @keyframes titleSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2::before {
+      content: '⚙️';
+      font-size: 1.5rem;
+    }
+
+    /* ============================================
+       PROFILE SECTION
+       ============================================ */
+    .profile-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--space-xl);
+      margin-bottom: var(--space-xl);
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-soft) 100%);
+      border-radius: var(--radius-xl);
+      box-shadow: 
+        0 8px 32px rgba(139, 92, 246, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      
+      animation: profileEnter 0.5s var(--transition-smooth) 0.15s forwards;
+      opacity: 0;
+    }
+
+    @keyframes profileEnter {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Decorative circles */
+    .profile-section::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -15%;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .profile-section::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 150px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.2),
+        0 0 0 4px rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 1;
+      transition: transform var(--transition-bounce);
+    }
+
+    .profile-pic:hover {
+      transform: scale(1.05);
+    }
+
+    .profile-section h1 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-top: var(--space-md);
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-section p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.95rem;
+      margin-top: var(--space-xs);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Edit profile button (optional) */
+    .edit-profile-btn {
+      margin-top: var(--space-md);
+      padding: var(--space-sm) var(--space-lg);
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: var(--radius-full);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .edit-profile-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    /* ============================================
+       SETTINGS OPTIONS
+       ============================================ */
+    .settings-options {
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      
+      animation: optionsEnter 0.5s var(--transition-smooth) 0.25s forwards;
+      opacity: 0;
+    }
+
+    @keyframes optionsEnter {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       OPTION ITEM
+       ============================================ */
+    .option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg);
+      text-decoration: none;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border);
+      transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .option:last-child {
+      border-bottom: none;
+    }
+
+    .option:hover {
+      background: var(--surface-subtle);
+      transform: translateX(4px);
+    }
+
+    .option:active {
+      transform: translateX(2px) scale(0.99);
+    }
+
+    /* Left section */
+    .left-section {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    /* Icon container with colored backgrounds */
+    .icon-wrapper {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform var(--transition-bounce);
+    }
+
+    .option:hover .icon-wrapper {
+      transform: scale(1.1);
+    }
+
+    .option-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    /* Individual icon colors */
+    .option:nth-child(1) .icon-wrapper { background: var(--purple-glow); }
+    .option:nth-child(2) .icon-wrapper { background: var(--accent-glow); }
+    .option:nth-child(3) .icon-wrapper { background: var(--warning-glow); }
+    .option:nth-child(4) .icon-wrapper { background: var(--health-glow); }
+    .option:nth-child(5) .icon-wrapper { background: var(--info-glow); }
+    .option:nth-child(6) .icon-wrapper { background: var(--teal-glow); }
+    .option:nth-child(7) .icon-wrapper { background: var(--danger-glow); }
+
+    .option span:not(.arrow) {
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    /* Arrow */
+    .arrow {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      transition: 
+        transform var(--transition-fast),
+        color var(--transition-fast);
+    }
+
+    .option:hover .arrow {
+      transform: translateX(4px);
+      color: var(--accent);
+    }
+
+    /* ============================================
+       LOGOUT SPECIAL STYLING
+       ============================================ */
+    .option.logout {
+      color: var(--danger);
+    }
+
+    .option.logout .icon-wrapper {
+      background: var(--danger-glow);
+    }
+
+    .option.logout:hover {
+      background: var(--danger-glow);
+    }
+
+    .option.logout:hover .arrow {
+      color: var(--danger);
+    }
+
+    /* ============================================
+       SECTION HEADERS (Optional)
+       ============================================ */
+    .section-header {
+      padding: var(--space-md) var(--space-lg);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: var(--surface-subtle);
+    }
+
+    /* ============================================
+       VERSION INFO (Optional)
+       ============================================ */
+    .version-info {
+      text-align: center;
+      margin-top: var(--space-xl);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .version-info strong {
+      color: var(--text-secondary);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 480px) {
+      .settings-page {
+        padding: var(--space-md);
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .profile-section {
+        padding: var(--space-lg);
+      }
+      
+      .profile-pic {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .profile-section h1 {
+        font-size: 1.25rem;
+      }
+      
+      .option {
+        padding: var(--space-md);
+      }
+      
+      .icon-wrapper {
+        width: 40px;
+        height: 40px;
+      }
+      
+      .option-icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(255, 107, 53, 0.03) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .settings-options {
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .option:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: -2px;
+      background: var(--accent-glow);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="settings-page">
+    
+    <!-- Page Title -->
+    <h2>Settings</h2>
+    
+    <!-- Profile Section -->
+    <div class="profile-section">
+      <img src="{% static 'assets/images/profile-pic.png' %}" alt="Profile Picture" class="profile-pic">
+      <h1>{{ user.username }}</h1>
+      <p>{{ user.email }}</p>
+      <!-- Optional: Edit Profile Button -->
+      <!-- <button class="edit-profile-btn">Edit Profile</button> -->
+    </div>
+    
+    <!-- Settings Options -->
+    <div class="settings-options">
+      
+      <!-- Account -->
+      <a href="#" class="option">
+        <div class="left-section">
+          <div class="icon-wrapper">
+            <img src="{% static 'assets/images/icons/account-icon.png' %}" alt="Account" class="option-icon">
+          </div>
+          <span>Account</span>
         </div>
+        <span class="arrow">›</span>
+      </a>
+      
+      <!-- Notifications -->
+      <a href="#" class="option">
+        <div class="left-section">
+          <div class="icon-wrapper">
+            <img src="{% static 'assets/images/icons/notification-icon.png' %}" alt="Notifications" class="option-icon">
+          </div>
+          <span>Notifications</span>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+      
+      <!-- My Rewards -->
+      <a href="{% url 'rewards' %}" class="option">
+        <div class="left-section">
+          <div class="icon-wrapper">
+            <img src="{% static 'assets/images/icons/awards-icon.png' %}" alt="My Rewards" class="option-icon">
+          </div>
+          <span>My Rewards</span>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+      
+      <!-- Privacy & Security -->
+      <a href="#" class="option">
+        <div class="left-section">
+          <div class="icon-wrapper">
+            <img src="{% static 'assets/images/icons/privacy-icon.png' %}" alt="Privacy & Security" class="option-icon">
+          </div>
+          <span>Privacy & Security</span>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+      
+      <!-- Sound -->
+      <a href="#" class="option">
+        <div class="left-section">
+          <div class="icon-wrapper">
+            <img src="{% static 'assets/images/icons/sound-icon.png' %}" alt="Sound" class="option-icon">
+          </div>
+          <span>Sound</span>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+      
+      <!-- Language -->
+      <a href="#" class="option">
+        <div class="left-section">
+          <div class="icon-wrapper">
+            <img src="{% static 'assets/images/icons/language-icon.png' %}" alt="Language" class="option-icon">
+          </div>
+          <span>Language</span>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+      
+      <!-- Logout -->
+      <a href="{% url 'logout' %}" class="option logout">
+        <div class="left-section">
+          <div class="icon-wrapper">
+            <img src="{% static 'assets/images/logout.png' %}" alt="Logout" class="option-icon">
+          </div>
+          <span>Logout</span>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+      
+    </div>
+    
+    <!-- Optional: Version Info -->
+    <p class="version-info">CURA Health v<strong>2.0.0</strong></p>
+    
+  </div>
 </body>
 </html>
