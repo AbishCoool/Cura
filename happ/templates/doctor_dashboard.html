@@ -1,69 +1,620 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title>My Patients</title>
-
-    <!-- 👇 Drop this in your static folder as shown below -->
-    <link rel="stylesheet" href="{% static 'assets/css/doctor_dashboard.css' %}">
-</head>
-<style>
-    .id-badge{
-    display:inline-block;
-    margin-top:6px;
-    padding:4px 10px;
-    font-size:12px;
-    color:#414056;
-    background:#eef0f5;
-    border:1px solid #d9dbe7;
-    border-radius:9999px; /* pill */
-    letter-spacing:.2px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>My Patients</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --info: #3B82F6;
+      --info-glow: rgba(59, 130, 246, 0.12);
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-</style>
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+        var(--surface);
+      background-attachment: fixed;
+    }
+
+    /* ============================================
+       CONTAINER
+       ============================================ */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      padding-bottom: var(--space-2xl);
+      
+      animation: pageEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes pageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       HEADER / GREETING
+       ============================================ */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg);
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-soft) 100%);
+      border-radius: var(--radius-xl);
+      box-shadow: 
+        0 8px 32px rgba(139, 92, 246, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      margin-bottom: var(--space-xl);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      transition: 
+        transform var(--transition-smooth),
+        box-shadow var(--transition-smooth);
+      
+      animation: headerSlideDown 0.5s var(--transition-smooth) 0.1s forwards;
+      opacity: 0;
+    }
+
+    @keyframes headerSlideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 12px 40px rgba(139, 92, 246, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    /* Decorative circles */
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 180px;
+      height: 180px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -50%;
+      left: -5%;
+      width: 120px;
+      height: 120px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .header h1 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.02em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header img {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      position: relative;
+      z-index: 1;
+      transition: transform var(--transition-bounce);
+    }
+
+    .header:hover img {
+      transform: scale(1.1);
+    }
+
+    /* Settings hint */
+    .header-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    /* ============================================
+       SECTION TITLE
+       ============================================ */
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      
+      animation: fadeIn 0.5s var(--transition-smooth) 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .section-title::before {
+      content: '🩺';
+      font-size: 1.25rem;
+    }
+
+    /* Patient count badge */
+    .patient-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 var(--space-sm);
+      background: var(--health-glow);
+      color: var(--health);
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: var(--radius-full);
+    }
+
+    /* ============================================
+       FAMILY/PATIENTS SECTION
+       ============================================ */
+    .family-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-md);
+    }
+
+    /* ============================================
+       PATIENT CARD
+       ============================================ */
+    .family-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg);
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      text-decoration: none;
+      color: var(--text-primary);
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-smooth),
+        box-shadow var(--transition-smooth);
+    }
+
+    /* Accent bar on left */
+    .family-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--health) 0%, var(--health-soft) 100%);
+      transform: scaleY(0);
+      transition: transform var(--transition-smooth);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .family-card:hover {
+      transform: translateY(-4px) translateX(4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .family-card:hover::before {
+      transform: scaleY(1);
+    }
+
+    .family-card:active {
+      transform: translateY(-2px) scale(0.99);
+    }
+
+    /* Stagger animation */
+    .family-card:nth-child(1) { animation: cardSlideIn 0.4s var(--transition-smooth) 0.25s forwards; opacity: 0; }
+    .family-card:nth-child(2) { animation: cardSlideIn 0.4s var(--transition-smooth) 0.35s forwards; opacity: 0; }
+    .family-card:nth-child(3) { animation: cardSlideIn 0.4s var(--transition-smooth) 0.45s forwards; opacity: 0; }
+    .family-card:nth-child(4) { animation: cardSlideIn 0.4s var(--transition-smooth) 0.55s forwards; opacity: 0; }
+    .family-card:nth-child(5) { animation: cardSlideIn 0.4s var(--transition-smooth) 0.65s forwards; opacity: 0; }
+    .family-card:nth-child(n+6) { animation: cardSlideIn 0.4s var(--transition-smooth) 0.75s forwards; opacity: 0; }
+
+    @keyframes cardSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Card content wrapper */
+    .card-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .family-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+
+    /* ID Badge */
+    .id-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      margin-top: var(--space-xs);
+      padding: var(--space-xs) var(--space-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      letter-spacing: 0.02em;
+    }
+
+    .id-badge::before {
+      content: '🏷️';
+      font-size: 0.7rem;
+    }
+
+    .family-card img {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--health-glow);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform var(--transition-bounce);
+      flex-shrink: 0;
+    }
+
+    .family-card:hover img {
+      transform: scale(1.1);
+    }
+
+    /* Arrow indicator */
+    .family-card::after {
+      content: '→';
+      position: absolute;
+      right: var(--space-lg);
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      opacity: 0;
+      transition: 
+        opacity var(--transition-fast),
+        transform var(--transition-fast),
+        color var(--transition-fast);
+    }
+
+    .family-card:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) translateX(4px);
+      color: var(--accent);
+    }
+
+    /* ============================================
+       EMPTY STATE
+       ============================================ */
+    .empty-text {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: var(--space-2xl);
+      color: var(--text-muted);
+      font-size: 1rem;
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      
+      animation: fadeIn 0.5s var(--transition-smooth) 0.3s forwards;
+      opacity: 0;
+    }
+
+    .empty-text::before {
+      content: '🩺';
+      display: block;
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+      opacity: 0.5;
+    }
+
+    /* ============================================
+       STATS CARDS (Optional)
+       ============================================ */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    .stat-card {
+      background: var(--surface-elevated);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: var(--space-xs);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 600px) {
+      .container {
+        padding: var(--space-md);
+      }
+      
+      .header {
+        padding: var(--space-md);
+      }
+      
+      .header h1 {
+        font-size: 1.25rem;
+      }
+      
+      .header img {
+        width: 48px;
+        height: 48px;
+      }
+      
+      .family-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .family-card {
+        padding: var(--space-md);
+      }
+      
+      .family-card img {
+        width: 48px;
+        height: 48px;
+      }
+      
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(16, 185, 129, 0.03) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .family-card {
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .header:focus-visible,
+    .family-card:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+
 <body>
-    <div class="container">
-        <!-- ─── Greeting ─────────────────────────────────────────── -->
-        <a href="{% url 'doctor_settings' %}" style="text-decoration: none; color: inherit;">
-            <div class="header" style="cursor: pointer;">
-                <h1>👋 Hi {{ doctor.doctor_full_name|default:user.username }}!</h1>
-
-                {% if doctor.photo %}
-                <img src="{{ doctor.photo.url }}" alt="Doctor Avatar">
-                {% else %}
-                <img src="{% static 'assets/images/profile.png' %}" alt="Doctor Avatar">
-                {% endif %}
+  <div class="container">
+    
+    <!-- Greeting Header (Links to Settings) -->
+    <a href="{% url 'doctor_settings' %}" class="header-link">
+      <div class="header">
+        <h1>👋 Hi {{ doctor.doctor_full_name|default:user.username }}!</h1>
+        {% if doctor.photo %}
+          <img src="{{ doctor.photo.url }}" alt="Doctor Avatar">
+        {% else %}
+          <img src="{% static 'assets/images/profile.png' %}" alt="Doctor Avatar">
+        {% endif %}
+      </div>
+    </a>
+    
+    <!-- Section Title -->
+    <h2 class="section-title">
+      My Patients
+      {% if patients %}
+        <span class="patient-count">{{ patients|length }}</span>
+      {% endif %}
+    </h2>
+    
+    <!-- Patients Grid -->
+    <div class="family-section">
+      {% if patients %}
+        {% for pat in patients %}
+          <a href="{% url 'view_user_and_family' pat.user.id %}" class="family-card">
+            <div class="card-info">
+              <h3>{{ pat.user.username|title }}</h3>
+              {% if pat.patient_code %}
+                <span class="id-badge">ID: {{ pat.patient_code }}</span>
+              {% endif %}
             </div>
-        </a>
-
-        <!-- ─── Patients list ────────────────────────────────────── -->
-        <h2 class="section-title">My Patients</h2>
-
-        <div class="family-section">
-            {% if patients %}
-            {% for pat in patients %}
-            <a href="{% url 'view_user_and_family' pat.user.id %}" class="family-card">
-                <h3>{{ pat.user.username|title }}</h3>
-                {% if pat.patient_code %}<span class="id-badge">ID: {{ pat.patient_code }}</span>{% endif %}
-                {% if pat.photo %}
-                <img src="{{ pat.photo.url }}" alt="{{ pat.user.username }}">
-                {% else %}
-                <img src="{% static 'assets/images/default-avatar.png' %}" alt="{{ pat.user.username }}">
-                {% endif %}
-            </a>
-
-
-            {% endfor %}
+            {% if pat.photo %}
+              <img src="{{ pat.photo.url }}" alt="{{ pat.user.username }}">
             {% else %}
-            <p class="empty-text">No patients assigned yet.</p>
+              <img src="{% static 'assets/images/default-avatar.png' %}" alt="{{ pat.user.username }}">
             {% endif %}
-        </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        <p class="empty-text">No patients assigned yet.</p>
+      {% endif %}
     </div>
-
-
+    
+  </div>
 </body>
-
 </html>
