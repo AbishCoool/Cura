@@ -3,19 +3,607 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
   <title>Doctor Login</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+       ============================================ */
+    :root {
+      /* Color Palette */
+      --surface: #FAFBFC;
+      --surface-elevated: #FFFFFF;
+      --surface-subtle: #F5F3F0;
+      --surface-input: #F8F9FB;
+      
+      --primary: #1A1A2E;
+      --primary-soft: #2D2D44;
+      
+      --accent: #FF6B35;
+      --accent-soft: #FF8C5A;
+      --accent-glow: rgba(255, 107, 53, 0.15);
+      
+      --health: #10B981;
+      --health-soft: #34D399;
+      --health-glow: rgba(16, 185, 129, 0.12);
+      
+      --purple: #8B5CF6;
+      --purple-soft: #A78BFA;
+      --purple-glow: rgba(139, 92, 246, 0.12);
+      
+      --danger: #EF4444;
+      --danger-glow: rgba(239, 68, 68, 0.1);
+      
+      --warning: #F59E0B;
+      --warning-glow: rgba(245, 158, 11, 0.12);
+      
+      --info: #3B82F6;
+      
+      --text-primary: #1A1A2E;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      
+      --border: #E2E8F0;
+      
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+      --shadow-input-focus: 0 0 0 4px var(--purple-glow);
+      
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'assets/css/doctor.css' %}">
-  <script defer src="{% static 'assets/js/scripts.js' %}"></script>
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      
+      /* Beautiful gradient background */
+      background: 
+        radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+        linear-gradient(135deg, #F0F4FF 0%, #FAFBFC 50%, #F5FFF8 100%);
+      background-attachment: fixed;
+      padding: var(--space-lg);
+    }
+
+    /* Animated background shapes */
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    body::before {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
+      top: -100px;
+      left: -100px;
+    }
+
+    body::after {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
+      bottom: -50px;
+      right: -50px;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 30px) scale(1.02); }
+    }
+
+    /* ============================================
+       LOGIN PAGE CONTAINER
+       ============================================ */
+    .login-page {
+      width: 100%;
+      max-width: 420px;
+      background: var(--surface-elevated);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      
+      animation: cardEnter 0.6s var(--transition-smooth) forwards;
+    }
+
+    @keyframes cardEnter {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* ============================================
+       LOGO
+       ============================================ */
+    .logo {
+      width: 100px;
+      height: auto;
+      margin-bottom: var(--space-lg);
+      filter: drop-shadow(0 4px 12px rgba(139, 92, 246, 0.2));
+      animation: logoFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ============================================
+       HEADING
+       ============================================ */
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+    }
+
+    h2::before {
+      content: '👨‍⚕️';
+      font-size: 1.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: var(--space-xl);
+    }
+
+    /* ============================================
+       MESSAGES (Django)
+       ============================================ */
+    .messages {
+      list-style: none;
+      margin-bottom: var(--space-lg);
+      padding: 0;
+    }
+
+    .messages li {
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      animation: messageSlide 0.4s var(--transition-smooth);
+    }
+
+    @keyframes messageSlide {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .messages li.error,
+    .messages li.danger {
+      background: var(--danger-glow);
+      color: var(--danger);
+      border-left: 4px solid var(--danger);
+    }
+
+    .messages li.error::before,
+    .messages li.danger::before {
+      content: '⚠️';
+    }
+
+    .messages li.success {
+      background: var(--health-glow);
+      color: var(--health);
+      border-left: 4px solid var(--health);
+    }
+
+    .messages li.success::before {
+      content: '✓';
+    }
+
+    .messages li.warning {
+      background: var(--warning-glow);
+      color: #B45309;
+      border-left: 4px solid var(--warning);
+    }
+
+    .messages li.warning::before {
+      content: '⚡';
+    }
+
+    .messages li.info {
+      background: var(--purple-glow);
+      color: var(--purple);
+      border-left: 4px solid var(--purple);
+    }
+
+    .messages li.info::before {
+      content: 'ℹ️';
+    }
+
+    /* ============================================
+       LOGIN FORM
+       ============================================ */
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    /* ============================================
+       INPUT FIELDS
+       ============================================ */
+    .input-field {
+      font-family: var(--font-body);
+      width: 100%;
+      padding: var(--space-md) var(--space-lg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: var(--surface-input);
+      transition: 
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .input-field:hover {
+      border-color: var(--text-muted);
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--purple);
+      background: var(--surface-elevated);
+      box-shadow: var(--shadow-input-focus);
+      transform: translateY(-1px);
+    }
+
+    .input-field::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ============================================
+       PASSWORD CONTAINER
+       ============================================ */
+    .password-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .password-container .input-field {
+      padding-right: 50px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: var(--space-md);
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      padding: var(--space-sm);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color var(--transition-fast);
+    }
+
+    .toggle-password:hover {
+      background: var(--surface-subtle);
+    }
+
+    .toggle-password img {
+      width: 20px;
+      height: 20px;
+      opacity: 0.6;
+      transition: opacity var(--transition-fast);
+    }
+
+    .toggle-password:hover img {
+      opacity: 1;
+    }
+
+    /* ============================================
+       LOGIN BUTTON
+       ============================================ */
+    .login-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      padding: var(--space-md) var(--space-lg);
+      margin-top: var(--space-sm);
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-soft) 100%);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      box-shadow: 
+        0 4px 16px rgba(139, 92, 246, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      transition: 
+        transform var(--transition-fast),
+        box-shadow var(--transition-base);
+    }
+
+    /* Shine effect */
+    .login-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+      );
+      transition: left 0.5s ease;
+    }
+
+    .login-button:hover::before {
+      left: 100%;
+    }
+
+    .login-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 8px 24px rgba(139, 92, 246, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .login-button:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+
+    .login-button::after {
+      content: '→';
+      font-size: 1.2rem;
+      transition: transform var(--transition-fast);
+    }
+
+    .login-button:hover::after {
+      transform: translateX(4px);
+    }
+
+    /* ============================================
+       SIGNUP TEXT
+       ============================================ */
+    .signup-text {
+      margin-top: var(--space-xl);
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .signup-text a {
+      color: var(--purple);
+      font-weight: 600;
+      text-decoration: none;
+      position: relative;
+      transition: color var(--transition-fast);
+    }
+
+    .signup-text a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--purple);
+      transition: width var(--transition-base);
+    }
+
+    .signup-text a:hover {
+      color: var(--purple-soft);
+    }
+
+    .signup-text a:hover::after {
+      width: 100%;
+    }
+
+    /* ============================================
+       DECORATIVE ELEMENTS
+       ============================================ */
+    .login-page::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--purple) 0%, var(--purple-soft) 100%);
+      border-radius: var(--radius-full);
+    }
+
+    /* ============================================
+       FORGOT PASSWORD (Optional)
+       ============================================ */
+    .forgot-password {
+      text-align: right;
+      margin-top: calc(var(--space-sm) * -1);
+    }
+
+    .forgot-password a {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    .forgot-password a:hover {
+      color: var(--purple);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 480px) {
+      body {
+        padding: var(--space-md);
+      }
+      
+      .login-page {
+        padding: var(--space-xl);
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .logo {
+        width: 80px;
+      }
+      
+      .input-field {
+        font-size: 16px; /* Prevents iOS zoom */
+      }
+    }
+
+    /* ============================================
+       DARK MODE
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #0F0F14;
+        --surface-elevated: #1A1A24;
+        --surface-subtle: #252532;
+        --surface-input: #1F1F2E;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        
+        --border: #3D3D52;
+      }
+      
+      body {
+        background: 
+          radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+          var(--surface);
+      }
+      
+      .login-page {
+        border-color: rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================
+       FOCUS STYLES
+       ============================================ */
+    .login-button:focus-visible,
+    .signup-text a:focus-visible {
+      outline: 2px solid var(--purple);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
+
 <body>
   <div class="login-page">
-    <h2>Welcome Back, Doctor</h2>
+    <!-- Logo -->
     <img src="{% static 'assets/images/cura-logo.png' %}" alt="CURA Logo" class="logo">
-
+    
+    <!-- Heading -->
+    <h2>Welcome Back, Doctor</h2>
+    <p class="subtitle">Sign in to access your patient dashboard</p>
+    
+    <!-- Django Messages -->
     {% if messages %}
       <ul class="messages">
         {% for message in messages %}
@@ -23,27 +611,64 @@
         {% endfor %}
       </ul>
     {% endif %}
-
+    
+    <!-- Login Form -->
     <form class="login-form" method="POST" action="{% url 'doctor_login' %}"
           onsubmit="console.log('🚀 Doctor login form submitted')">
       {% csrf_token %}
-      <input  type="text" name="doctor_id" placeholder="Doctor ID" class="input-field" required>
-      <div class="password-container" style="width: 100%; position: relative;">
-  <input type="password" name="password" id="doctorLoginPassword"
-         placeholder="Password" class="input-field" style="width: 100%;" required>
-  <span class="toggle-password"
-        onclick="togglePassword('doctorLoginPassword')"
-        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer;">
-    <img id="eyeIcon" src="{% static 'assets/images/eye.png' %}" alt="toggle-password" width="20">
-  </span>
-</div>
-
+      
+      <!-- Doctor ID Input -->
+      <input type="text" 
+             name="doctor_id" 
+             placeholder="Doctor ID" 
+             class="input-field" 
+             autocomplete="username"
+             required>
+      
+      <!-- Password Input with Toggle -->
+      <div class="password-container">
+        <input type="password" 
+               name="password" 
+               id="doctorLoginPassword"
+               placeholder="Password" 
+               class="input-field" 
+               autocomplete="current-password"
+               required>
+        <span class="toggle-password" onclick="togglePassword('doctorLoginPassword')">
+          <img id="eyeIcon" src="{% static 'assets/images/eye.png' %}" alt="Toggle password visibility">
+        </span>
+      </div>
+      
+      <!-- Optional: Forgot Password -->
+      <!-- <p class="forgot-password"><a href="#">Forgot password?</a></p> -->
+      
+      <!-- Submit Button -->
       <button type="submit" class="login-button">Login</button>
     </form>
-
+    
+    <!-- Signup Link -->
     <p class="signup-text">
       Need an account? <a href="{% url 'doctor_signup' %}">Sign Up</a>
     </p>
   </div>
+
+  <!-- Password Toggle Script -->
+  <script>
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      const eyeIcon = document.getElementById('eyeIcon');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        eyeIcon.style.opacity = '1';
+      } else {
+        input.type = 'password';
+        eyeIcon.style.opacity = '0.6';
+      }
+    }
+  </script>
+  
+  <!-- External Scripts (if needed) -->
+  <script defer src="{% static 'assets/js/scripts.js' %}"></script>
 </body>
 </html>
