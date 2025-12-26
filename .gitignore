@@ -4,3 +4,15 @@ __pycache__/
 .DS_Store
 .DS_Store
 db.sqlite3
+venv/
+.venv/
+my_health_app_env/
+*_env/
+family_photos/
+profile_pics/
+__pycache__/
+*.pyc
+.env
+db.sqlite3
+staticfiles/
+media/
